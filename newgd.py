@@ -266,9 +266,9 @@ while game:
             elif jump_velocity == 0:
                 air_ticks += 1
 
-            if air_ticks == 4:
-                air_ticks = 0
-                jump_velocity = -2
+                if air_ticks == 4:
+                    air_ticks = 0
+                    jump_velocity = -2
             elif jump_velocity <= (-2) and jump_velocity > (-32):
                 jump_velocity=jump_velocity*2
             else:
@@ -343,5 +343,5 @@ while game:
         pass
 
 FILL(0, 0, 322, 222, "black")
-STR("GAME OVER", 100, 100, "green", "black")
+STR("YOU WON", 100, 100, "green", "black")
 STR("SCORE:" + str(score), 100, 140, "white", "black")
