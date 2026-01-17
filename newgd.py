@@ -78,7 +78,7 @@ sleep(0.5)
 game_started = False
 start_prompt_timer = False
 
-current_level = False
+current_level = 0
 
 is_falling = False
 
@@ -268,7 +268,7 @@ while game:
 
             if air_ticks == 4:
                 air_ticks = 0
-                jump_velocity =- 2
+                jump_velocity = -2
             elif jump_velocity <= (-2) and jump_velocity > (-32):
                 jump_velocity=jump_velocity*2
             else:
