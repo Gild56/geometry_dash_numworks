@@ -17,7 +17,7 @@ while not KEY(KEY_EXE):
     STR("Key [Up]/[OK] = Jump", 40, 80, "white", bg_color)
     STR("Key [Backspace] = Pause/Resume", 10, 120, "cyan", bg_color)
 
-lives = 6
+lives = 999
 score = 0
 energy= 40
 game = True
@@ -240,7 +240,7 @@ while game:
                 or KEY(KEY_UP) and can_jump == True
             ):
                 draw_player(bg_color)
-                jump = True
+                is_jumping = True
                 player_y -= int(jump_velocity)
                 jump_velocity = jump_velocity / 2
                 draw_player(player_color)
@@ -255,7 +255,7 @@ while game:
                 levels[current_level][0][k][0] * 10 + map_offset_x-19 < 50 < levels[current_level][0][k][0] * 10 + map_offset_x + levels[current_level][0][k][2] * 10 + 20
             ):
                 is_jumping = False
-            break
+                break
 
         if is_jumping == True:
             player_y -= int(jump_velocity)
@@ -272,11 +272,11 @@ while game:
             elif jump_velocity <= (-2) and jump_velocity > (-32):
                 jump_velocity=jump_velocity*2
             else:
-                jump = False
+                is_jumping  = False
                 jump_velocity = 32
                 can_jump = True
         else:
-            jump = False
+            is_jumping  = False
             jump_velocity = 32
             can_jump = True
 

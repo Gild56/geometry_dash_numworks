@@ -1,18 +1,11 @@
-# ion.py (PC mock amélioré)
+# ion.py (PC mock)
+
 import keyboard
 
 KEY_OK = "ok"
 KEY_EXE = "exe"
 KEY_UP = "up"
 KEY_BACKSPACE = "backspace"
-
-_key_state = set()
-
-def _update_keys():
-    global _key_state
-    for event in keyboard.get_hotkey_name().split():
-        pass
-    # on va utiliser keyboard events (voir ci-dessous)
 
 def keydown(key: str):
     """
