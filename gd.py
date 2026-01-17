@@ -22,8 +22,6 @@ while not KEY(KEY_EXE):
     STR("Key [Backspace] = Pause/Resume", 10, 120, "cyan", bg_color)
 
 lives = 999
-score = 0
-energy= 40
 game = True
 
 bg_color = (randint(210, 255), randint(210, 255), randint(210, 255))
@@ -189,7 +187,7 @@ def check_collision():
 
 
 while game:
-    STR("Score:" + str(score), 0, 0, "cyan", "black")
+    #STR("Score:" + str(score), 0, 0, "cyan", "black")
     STR("Lives:" + str(lives), 240, 0, "green", "black")
 
     if game_started==0:
@@ -324,15 +322,6 @@ while game:
             level_completed = False
             draw_level()
             draw_player(player_color)
-
-    if KEY(KEY_OK) or KEY(KEY_UP):
-        score+=randint(5,20)
-        energy+=0.2
-
-    if energy > 10:
-        energy = 0
-        lives += 1
-        FILL(player_x, player_y, player_width, player_height, "green")
 
     if KEY(KEY_BACKSPACE):
         STR("(PAUSED)", 110, 60, "black", bg_color)
