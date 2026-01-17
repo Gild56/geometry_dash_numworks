@@ -1,3 +1,6 @@
+# A recreation of Geometry Dash for Numworks calculators. Probably won't work after the Numworks update
+## Credits: Calm_Repeat_7267 and wperez274
+
 from time import sleep
 from random import randint
 from kandinsky import fill_rect as FILL
@@ -27,11 +30,11 @@ player_color = (randint(0, 155), randint(0, 155), randint(0, 155))
 ground_color = (randint(0, 55), randint(0, 55), randint(0, 55))
 
 Level = tuple[
-    list[list[int]],    # blocks
-    list[list[int]],    # spikes
-    int,                # level end
-    tuple[int,int,int], # bg color
-    tuple[int,int,int]  # ground
+    list[list[int]],    # blocks[x_tile, y_tile, width_tiles, height_tiles]
+    list[list[int]],    # spikes[x_tile, y_tile, orientation]
+    int,                # level end (mesured in tiles)
+    tuple[int,int,int], # bg color (red, green, blue)
+    tuple[int,int,int]  # ground color (red, green, blue)
 ]
 
 levels: list[Level] = [

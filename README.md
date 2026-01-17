@@ -1,6 +1,6 @@
 # GD on Numworks
 
-A recreation of Geometry Dash on Numworks. Probably won't work after the Numworks update
+A recreation of Geometry Dash on Numworks calculators. Probably won't work after the Numworks update
 
 ## Credits
 
