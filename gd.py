@@ -73,7 +73,6 @@ levels = [  #: list[Level]
 ]
 
 game_started = False
-win = False
 
 current_level = 0
 
@@ -315,7 +314,6 @@ while game:  # Game loop
 
         current_level += 1  # Next level
         if len(levels) == current_level:  # No more levels
-            win = True
             break
 
         while not KEY(KEY_OK) and not KEY(KEY_EXE):
@@ -325,14 +323,7 @@ while game:  # Game loop
 
 # Game endscreen
 
-if win:
-    FILL(0, 0, 322, 222, DARK_GREEN)
-    STR("GAME COMPLETED!", 85, 60, "white", DARK_GREEN)
-    STR("Attempts:" + str(attempts), 110, 100, "white", DARK_GREEN)
-    STR("By Gild56 (Subscribe on YT)", 30, 140, "white", DARK_GREEN)
-
-else:
-    FILL(0, 0, 322, 222, DARK_BLUE)
-    STR("GAME CRASHED", 95, 60, "white", DARK_BLUE)
-    STR("Contact me on", 90, 100, "white", DARK_BLUE)
-    STR("github.com/Gild56 pls", 55, 140, "white", DARK_BLUE)
+FILL(0, 0, 322, 222, DARK_GREEN)
+STR("GAME COMPLETED!", 85, 60, "white", DARK_GREEN)
+STR("Attempts:" + str(attempts), 110, 100, "white", DARK_GREEN)
+STR("By Gild56 (Subscribe on YT)", 30, 140, "white", DARK_GREEN)
