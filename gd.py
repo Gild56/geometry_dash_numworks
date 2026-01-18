@@ -9,18 +9,14 @@ from kandinsky import draw_string as STR
 from ion import KEY_OK, KEY_EXE, KEY_UP, keydown as KEY
 
 
-bg_color, player_color, ground_color = (0, 0, 0), (0, 0, 0), (0, 0, 0)
+START_MENU_COLOR = (0, 0, 0)
 
-FILL(0, 0, 322, 222, bg_color)
-while not KEY(KEY_EXE):
-    FILL(0, 10, 322, 5, "red")
-    FILL(0, 50, 322, 5, "red")
+FILL(0, 0, 322, 222, START_MENU_COLOR)
+STR("Geometry Dash", 90, 80, "white", START_MENU_COLOR)
+STR("Key [Up]/[OK] = Jump", 60, 120, "white", START_MENU_COLOR)
 
-    FILL(0, 180, 322, 2, "red")
-
-    STR("Geometry Dash", 90, 25, "white", bg_color)
-    STR("Key [Up]/[OK] = Jump", 40, 80, "white", bg_color)
-    STR("Key [Backspace] = Pause/Resume", 10, 120, "cyan", bg_color)
+while not KEY(KEY_EXE):  # Waiting for a key to be pressed
+    pass
 
 game = True
 TICK = 1/30  # 30 FPS
@@ -100,14 +96,24 @@ RESPAWN_TIME = 1
 
 attempts = 0
 
+bg_color = (0, 0, 0)
+player_color = (0, 0, 0)
+ground_color = (0, 0, 0)
 RANDOMIZE_COLORS = False
 DARK_GREEN = (0, 150, 0)
 DARK_BLUE = (0, 0, 150)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 
 
-def draw_player(color: tuple[int, int, int]):
-    global PLAYER_WIDTH, PLAYER_HEIGHT
-    FILL(player_x, player_y, PLAYER_WIDTH, PLAYER_HEIGHT, color)
+def draw_player(color: tuple[int, int, int] | None = None):
+    global PLAYER_WIDTH, PLAYER_HEIGHT, player_color
+    if color:
+        FILL(player_x, player_y, PLAYER_WIDTH, PLAYER_HEIGHT, color)
+    else:
+        FILL(player_x, player_y, PLAYER_WIDTH, PLAYER_HEIGHT, player_color)
 
 def draw_spike(x_tile: int, y_tile: int, orientation: int):
     for i in range(5):
@@ -136,7 +142,15 @@ def height_tiles(tile_x: int):
     FILL(map_offset_x + tile_x * 10 + 10, 0, 6, 222, bg_color)
 
 def draw_level():
-    for i in range(len(levels[current_level][0])):
+    for spike in range(len(levels[current_level][1])):  # Draw spikes
+        if -10 < map_offset_x+levels[current_level][1][spike][0] * 10 + 20 < 340:
+            draw_spike(
+                levels[current_level][1][spike][0],
+                levels[current_level][1][spike][1],
+                levels[current_level][1][spike][2]
+            )
+
+    for i in range(len(levels[current_level][0])):  # Draw blocks
         if (
             map_offset_x+levels[current_level][0][i][0] * 10 < 320
             and map_offset_x+levels[current_level][0][i][0] * 10 + levels[current_level][0][i][2] * 10 > -10
@@ -146,14 +160,6 @@ def draw_level():
                 levels[current_level][0][i][1],
                 levels[current_level][0][i][2],
                 levels[current_level][0][i][3]
-            )
-
-    for j in range(len(levels[current_level][1])):
-        if -10 < map_offset_x+levels[current_level][1][j][0] * 10 + 20 < 340:
-            draw_spike(
-                levels[current_level][1][j][0],
-                levels[current_level][1][j][1],
-                levels[current_level][1][j][2]
             )
 
     height_tiles(levels[current_level][2])
@@ -167,7 +173,7 @@ def respawn():
     map_offset_x = 0
     player_y = 172
     draw_level()
-    draw_player(player_color)
+    draw_player()
 
 def set_colors():
     global bg_color, player_color, ground_color, current_level, levels
@@ -183,50 +189,30 @@ def set_colors():
         ground_color = levels[current_level][4]
 
 def check_collision():
-    collision_detected = False
     for i in range(len(levels[current_level][0])):
-        if (
+        if not (
             player_x + 20 < levels[current_level][0][i][0] * 10 + map_offset_x
             or player_x > levels[current_level][0][i][0] * 10 + levels[current_level][0][i][2] * 10 + map_offset_x
             or player_y < levels[current_level][0][i][1] * 32
             or player_y > levels[current_level][0][i][1] * 32 + levels[current_level][0][i][3] * 32
         ):
-            collision_detected = False
-        else:
-            collision_detected = True
-            break
-    if collision_detected == False:
-        for i in range(len(levels[current_level][1])):
-            if (
-                player_x + 20 < levels[current_level][1][i][0] * 10 + map_offset_x
-                or player_x > levels[current_level][1][i][0] * 10 + 15 + map_offset_x
-                or player_y > levels[current_level][1][i][1] * 32 + levels[current_level][1][i][2] * 32
-                or player_y < levels[current_level][1][i][1] * 32 - (1 - levels[current_level][1][i][2]) * 32
-            ):
-                collision_detected = False
-            else:
-                collision_detected = True
-                break
-    return collision_detected
+            return True
+
+    for i in range(len(levels[current_level][1])):
+        if not (
+            player_x + 20 < levels[current_level][1][i][0] * 10 + map_offset_x
+            or player_x > levels[current_level][1][i][0] * 10 + 15 + map_offset_x
+            or player_y > levels[current_level][1][i][1] * 32 + levels[current_level][1][i][2] * 32
+            or player_y < levels[current_level][1][i][1] * 32 - (1 - levels[current_level][1][i][2]) * 32
+        ):
+            return True
+    return False
 
 
 respawn()
 
 
 while game:  # Game loop
-    # Labels
-
-    attempts_label = str(attempts)
-
-    if attempts < 100:
-        attempts_label = "0" + attempts_label
-        if attempts < 10:
-            attempts_label = "0" + attempts_label
-
-    STR(" Level:" + str(current_level + 1) + " ", 0, 0, bg_color, "black")
-    STR(" Attempts:" + attempts_label + " ", 180, 0, "red", "black")
-
-
     # Physics
 
     if not is_jumping:
@@ -244,7 +230,6 @@ while game:  # Game loop
         if is_falling == True:
             draw_player(bg_color)
             player_y += 16
-            draw_player(player_color)
 
         if (
             KEY(KEY_OK) and can_jump == True
@@ -254,7 +239,6 @@ while game:  # Game loop
             is_jumping = True
             player_y -= int(jump_velocity)
             jump_velocity = jump_velocity / 2
-            draw_player(player_color)
 
     elif can_jump:
         draw_player(bg_color)
@@ -292,15 +276,30 @@ while game:  # Game loop
             can_jump = True
 
 
+    # Labels
+
+    attempts_label = str(attempts)
+
+    if attempts < 100:
+        attempts_label = "0" + attempts_label
+        if attempts < 10:
+            attempts_label = "0" + attempts_label
+
+    STR(" Level:" + str(current_level + 1) + " ", 0, 0, bg_color, BLACK)
+    STR(" Attempts:" + attempts_label + " ", 180, 0, "red", BLACK)
+
+
     # Drawing
 
     draw_player(player_color)
+
     map_offset_x -= 6
     draw_level()
 
-    if player_y + PLAYER_HEIGHT > 222 or check_collision():  # player crashes
-        draw_player((255, 0, 0))
+    if player_y + PLAYER_HEIGHT > 222 or check_collision():  # player dies
         draw_level()
+        draw_player(RED)
+
         sleep(RESPAWN_TIME)
         respawn()
 
@@ -311,16 +310,16 @@ while game:  # Game loop
     # Endscreen
 
     if player_x + PLAYER_WIDTH > levels[current_level][2] * 10 + map_offset_x:
-        FILL(0, 0, 322, 222, "black")
-        STR("LEVEL COMPLETED", 85, 60, "green", "black")
-        STR("Click [EXE] to go", 75, 100, "white", "black")
-        STR("to the level " + str(current_level + 2), 90, 140, "white", "black")
+        FILL(0, 0, 322, 222, BLACK)
+        STR("LEVEL COMPLETED", 85, 60, GREEN, BLACK)
+        STR("Click [EXE] to go", 75, 100, WHITE, BLACK)
+        STR("to the level " + str(current_level + 2), 90, 140, WHITE, BLACK)
 
         current_level += 1  # Next level
         if len(levels) == current_level:  # No more levels
             break
 
-        while not KEY(KEY_OK) and not KEY(KEY_EXE):
+        while not KEY(KEY_OK) and not KEY(KEY_EXE):  # Waiting for a key to be pressed
             pass
 
         respawn()
@@ -328,6 +327,6 @@ while game:  # Game loop
 # Game endscreen
 
 FILL(0, 0, 322, 222, DARK_GREEN)
-STR("GAME COMPLETED!", 85, 60, "white", DARK_GREEN)
-STR("Attempts:" + str(attempts), 110, 100, "white", DARK_GREEN)
-STR("By Gild56 (Subscribe on YT)", 30, 140, "white", DARK_GREEN)
+STR("GAME COMPLETED!", 85, 60, WHITE, DARK_GREEN)
+STR("Attempts:" + str(attempts), 110, 100, WHITE, DARK_GREEN)
+STR("By Gild56 (Subscribe on YT)", 30, 140, WHITE, DARK_GREEN)
