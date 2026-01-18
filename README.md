@@ -2,7 +2,7 @@
 
 A recreation of Geometry Dash on Numworks calculators.
 
-Probably won't work after the Numworks update
+Four levels available for now :D
 
 ## PC Emulator Controls
 
