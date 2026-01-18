@@ -189,24 +189,56 @@ def set_colors():
         bg_color = levels[current_level][3]
         ground_color = levels[current_level][4]
 
+def get_player_tile_x():
+    return (-map_offset_x + player_x) // 10
+
 def check_collision():
-    for i in range(len(levels[current_level][0])):
-        if not (
-            player_x + 20 < levels[current_level][0][i][0] * 10 + map_offset_x
-            or player_x > levels[current_level][0][i][0] * 10 + levels[current_level][0][i][2] * 10 + map_offset_x
-            or player_y < levels[current_level][0][i][1] * 32
-            or player_y > levels[current_level][0][i][1] * 32 + levels[current_level][0][i][3] * 32
+    px = player_x
+    py = player_y
+    pw = PLAYER_WIDTH
+    ph = PLAYER_HEIGHT
+
+    player_tile = get_player_tile_x()
+    first_tile = player_tile - 2
+    last_tile = player_tile + 2
+
+    # Platforms
+    for x, y, w, h in levels[current_level][0]:
+        if x > last_tile or x + w < first_tile:
+            continue
+
+        rx = x * 10 + map_offset_x
+        ry = y * 32
+        rw = w * 10
+        rh = h * 32
+
+        if (
+            px + pw > rx and px < rx + rw and
+            py + ph > ry and py < ry + rh
         ):
             return True
 
-    for i in range(len(levels[current_level][1])):
-        if not (
-            player_x + 20 < levels[current_level][1][i][0] * 10 + map_offset_x
-            or player_x > levels[current_level][1][i][0] * 10 + 15 + map_offset_x
-            or player_y > levels[current_level][1][i][1] * 32 + levels[current_level][1][i][2] * 32
-            or player_y < levels[current_level][1][i][1] * 32 - (1 - levels[current_level][1][i][2]) * 32
+    # Spikes
+    for x, y, orientation in levels[current_level][1]:
+        if x < first_tile or x > last_tile:
+            continue
+
+        rx = x * 10 + map_offset_x
+        ry = y * 32
+
+        if orientation == 0:  # regular spike
+            hit_y1 = ry - 16
+            hit_y2 = ry
+        else:  # upside down spike
+            hit_y1 = ry
+            hit_y2 = ry + 16
+
+        if (
+            px + pw > rx and px < rx + 16 and
+            py + ph > hit_y1 and py < hit_y2
         ):
             return True
+
     return False
 
 
