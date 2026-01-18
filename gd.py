@@ -306,7 +306,7 @@ while game:
 
     # Endscreen
 
-    if player_x + PLAYER_WIDTH > levels[current_level][2] * 10 + map_offset_x or True:
+    if player_x + PLAYER_WIDTH > levels[current_level][2] * 10 + map_offset_x:
         FILL(0, 0, 322, 222, "black")
         STR("LEVEL COMPLETED", 85, 60, "green", "black")
         STR("Click [EXE] to go", 75, 100, "white", "black")
