@@ -33,6 +33,10 @@ TICK = 1/30  # 30 FPS
 #    tuple[int,int,int]  # ground color (red, green, blue)
 #]
 
+# Numworks MicroPython 1.17 doesn't support
+# list[] / tuple[] or List[] / Tuple[] annotations
+# even from the 'typing' lib
+
 levels = [  #: list[Level]
     (  # Level 1
         [
