@@ -94,20 +94,22 @@ can_jump = True
 
 map_offset_x = 0
 
-level_completed = False
 is_jumping = False
 
 jump_velocity = 32
 air_ticks = 0
 
-FILL(0, 0, 320, 222, bg_color)
+PLAYER_WIDTH = 20
+PLAYER_HEIGHT = 20
 
-player_width = 20
-player_height = 20
+RESPAWN_TIME = 1
+
+attempts = 0
+
 
 def draw_player(color: tuple[int, int, int]):
-    global player_width, player_height
-    FILL(player_x, player_y, player_width, player_height, color)
+    global PLAYER_WIDTH, PLAYER_HEIGHT
+    FILL(player_x, player_y, PLAYER_WIDTH, PLAYER_HEIGHT, color)
 
 def draw_spike(x_tile: int, y_tile: int, orientation: int):
     for i in range(5):
@@ -158,8 +160,19 @@ def draw_level():
 
     height_tiles(levels[current_level][2])
 
-draw_level()
-draw_player(player_color)
+def respawn():
+    global attempts, map_offset_x, player_y, bg_color
+    attempts += 1
+
+    randomize_colors()
+    FILL(0, 0, 320, 222, bg_color)
+    map_offset_x = 0
+    player_y = 172
+    draw_level()
+    draw_player(player_color)
+
+
+respawn()
 
 
 def check_collision():
@@ -191,12 +204,9 @@ def check_collision():
 
 
 while game:
-    STR("Level:" + str(current_level + 1), 0, 0, "cyan", "black")
-    #STR("Lives:" + str(lives), 240, 0, "green", "black")
-
     # Physics
 
-    if not is_jumping and not level_completed:
+    if not is_jumping:
         for i in range(len(levels[current_level][0])):
             if (
                 player_y + 20 == levels[current_level][0][i][1] * 32 and levels[current_level][0][i][0] * 10 + map_offset_x -19 <= 50 <= levels[current_level][0][i][2] * 10 + levels[current_level][0][i][0] * 10 + map_offset_x
@@ -223,7 +233,7 @@ while game:
             jump_velocity = jump_velocity / 2
             draw_player(player_color)
 
-    if is_jumping and not level_completed and can_jump:
+    elif can_jump:
         draw_player(bg_color)
 
         for k in range(len(levels[current_level][0])):
@@ -258,37 +268,53 @@ while game:
             jump_velocity = 32
             can_jump = True
 
+
+    # Drawing
+
     draw_player(player_color)
+    map_offset_x -= 6
+    draw_level()
 
-    if not level_completed:
-        map_offset_x -= 6
+    if player_y + PLAYER_HEIGHT > 222 or check_collision():  # player crashes
+        draw_player((255, 0, 0))
         draw_level()
+        sleep(RESPAWN_TIME)
+        respawn()
 
-    if player_y + player_height > 222 or check_collision():  # player crashes
-        randomize_colors()
-        FILL(0, 0, 320, 222, bg_color)
-        map_offset_x = 0
-        player_y = 172
+
+    # Labels
+
+    attempts_label = str(attempts)
+
+    if attempts < 100:
+        attempts_label = "0" + attempts_label
+        if attempts < 10:
+            attempts_label = "0" + attempts_label
+
+    STR("Level:" + str(current_level + 1), 0, 0, "cyan", "black")
+    STR("Attempts:" + attempts_label, 200, 0, "green", "black")
+
 
     sleep(TICK)  # tick
 
-    if player_x + player_width > levels[current_level][2] * 10 + map_offset_x:
+
+    # Endscreen
+
+    if player_x + PLAYER_WIDTH > levels[current_level][2] * 10 + map_offset_x:
         FILL(0, 0, 322, 222, "black")
         STR("LEVEL COMPLETED", 85, 80, "green", "black")
         STR("Click [OK] or [EXE]", 65, 120, "white", "black")
 
         current_level += 1  # Next level
         if len(levels) == current_level:  # No more levels
-            break
+            game = False
 
         while not KEY(KEY_OK) or KEY(KEY_EXE):
             pass
 
-        FILL(0, 0, 320, 222, bg_color)
-        map_offset_x = 0
-        player_y = 172
-        draw_level()
-        draw_player(player_color)
+        respawn()
+
+# Game endscreen
 
 FILL(0, 0, 322, 222, "black")
 STR("GAME COMPLETED", 85, 80, "green", "black")

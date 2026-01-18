@@ -14,8 +14,7 @@ def keydown(key: str):
     - UP -> up
     - BACKSPACE -> backspace
     """
-    if keyboard.is_pressed("space"):
-        print("space")
+
     if keyboard.is_pressed("enter"):
         print("enter")
 
