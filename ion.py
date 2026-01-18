@@ -9,12 +9,16 @@ KEY_BACKSPACE = "backspace"
 
 def keydown(key: str):
     """
-    Retourne True si la touche correspondante est pressée.
     - OK -> space
     - EXE -> enter
     - UP -> up
     - BACKSPACE -> backspace
     """
+    if keyboard.is_pressed("space"):
+        print("space")
+    if keyboard.is_pressed("enter"):
+        print("enter")
+
     if key == KEY_OK:
         return keyboard.is_pressed("space")
     elif key == KEY_EXE:

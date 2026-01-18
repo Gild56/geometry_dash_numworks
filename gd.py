@@ -6,9 +6,10 @@ from time import sleep
 from random import randint
 from kandinsky import fill_rect as FILL
 from kandinsky import draw_string as STR
-from ion import KEY_BACKSPACE, KEY_OK, KEY_EXE, KEY_UP, keydown as KEY
+from ion import KEY_OK, KEY_EXE, KEY_UP, keydown as KEY
 
-bg_color=(0, 0, 0)
+
+bg_color, player_color, ground_color = (0, 0, 0), (0, 0, 0), (0, 0, 0)
 
 FILL(0, 0, 322, 222, bg_color)
 while not KEY(KEY_EXE):
@@ -21,12 +22,8 @@ while not KEY(KEY_EXE):
     STR("Key [Up]/[OK] = Jump", 40, 80, "white", bg_color)
     STR("Key [Backspace] = Pause/Resume", 10, 120, "cyan", bg_color)
 
-lives = 999
 game = True
-
-bg_color = (randint(210, 255), randint(210, 255), randint(210, 255))
-player_color = (randint(0, 155), randint(0, 155), randint(0, 155))
-ground_color = (randint(0, 55), randint(0, 55), randint(0, 55))
+TICK = 1/30  # 30 FPS
 
 Level = tuple[
     list[list[int]],    # blocks[x_tile, y_tile, width_tiles, height_tiles]
@@ -75,17 +72,24 @@ levels: list[Level] = [
     )
 ]
 
-sleep(0.5)
+#sleep(0.5)
 
 game_started = False
-start_prompt_timer = False
+
+def randomize_colors():
+    global bg_color, player_color, ground_color
+    bg_color = (randint(210, 255), randint(210, 255), randint(210, 255))
+    player_color = (randint(0, 155), randint(0, 155), randint(0, 155))
+    ground_color = (randint(0, 55), randint(0, 55), randint(0, 55))
+
+randomize_colors()
 
 current_level = 0
 
 is_falling = False
 
 player_x = 50
-player_y = 50
+player_y = 172
 can_jump = True
 
 map_offset_x = 0
@@ -93,7 +97,7 @@ map_offset_x = 0
 level_completed = False
 is_jumping = False
 
-jump_velocity = 38
+jump_velocity = 32
 air_ticks = 0
 
 FILL(0, 0, 320, 222, bg_color)
@@ -187,67 +191,39 @@ def check_collision():
 
 
 while game:
-    #STR("Score:" + str(score), 0, 0, "cyan", "black")
-    STR("Lives:" + str(lives), 240, 0, "green", "black")
+    STR("Level:" + str(current_level + 1), 0, 0, "cyan", "black")
+    #STR("Lives:" + str(lives), 240, 0, "green", "black")
 
-    if game_started==0:
+    # Physics
 
-        STR("Press [EXE] to Randomize", 20, 110)
-        STR("the Theme!", 20, 130)
+    if not is_jumping and not level_completed:
+        for i in range(len(levels[current_level][0])):
+            if (
+                player_y + 20 == levels[current_level][0][i][1] * 32 and levels[current_level][0][i][0] * 10 + map_offset_x -19 <= 50 <= levels[current_level][0][i][2] * 10 + levels[current_level][0][i][0] * 10 + map_offset_x
+            ):
+                can_jump = True
+                is_falling=False
+                break
+            else:
+                can_jump = False
+                is_falling = True
 
-        if KEY(KEY_EXE):
-            sleep(0.2)
-            bg_color = (randint(0, 255), randint(0, 255), randint(0, 255))
-            ground_color = (randint(0, 255),randint(0, 255),randint(0, 255))
-            FILL(0, 0, 320, 222, bg_color)
-            draw_level()
+        if is_falling == True:
+            draw_player(bg_color)
+            player_y += 16
             draw_player(player_color)
 
-        if KEY(KEY_OK) or KEY(KEY_EXE):
-            FILL(0, 0, 322, 222, bg_color)
-            game_started = True
-            start_prompt_timer = 80
+        if (
+            KEY(KEY_OK) and can_jump == True
+            or KEY(KEY_UP) and can_jump == True
+        ):
+            draw_player(bg_color)
+            is_jumping = True
+            player_y -= int(jump_velocity)
+            jump_velocity = jump_velocity / 2
+            draw_player(player_color)
 
-        if start_prompt_timer < 50:
-            STR("Press [OK] to Start", 40, 50, ground_color, bg_color)
-            start_prompt_timer += 1
-
-        if start_prompt_timer > 49:
-            STR("Press [OK] to Start", 40, 50, bg_color, bg_color)
-            start_prompt_timer += 1
-
-        if start_prompt_timer > 79:
-            start_prompt_timer = 0
-
-    if game_started==True:
-        if is_jumping == False and level_completed == False:
-            for i in range(len(levels[current_level][0])):
-                if (
-                    player_y + 20 == levels[current_level][0][i][1] * 32 and levels[current_level][0][i][0] * 10 + map_offset_x -19 <= 50 <= levels[current_level][0][i][2] * 10 + levels[current_level][0][i][0] * 10 + map_offset_x
-                ):
-                    can_jump = True
-                    is_falling=False
-                    break
-                else:
-                    can_jump = False
-                    is_falling = True
-
-            if is_falling == True:
-                draw_player(bg_color)
-                player_y += 16
-                draw_player(player_color)
-
-            if (
-                KEY(KEY_OK) and can_jump == True
-                or KEY(KEY_UP) and can_jump == True
-            ):
-                draw_player(bg_color)
-                is_jumping = True
-                player_y -= int(jump_velocity)
-                jump_velocity = jump_velocity / 2
-                draw_player(player_color)
-
-    if is_jumping == True and level_completed==False and can_jump==True:
+    if is_jumping and not level_completed and can_jump:
         draw_player(bg_color)
 
         for k in range(len(levels[current_level][0])):
@@ -259,7 +235,7 @@ while game:
                 is_jumping = False
                 break
 
-        if is_jumping == True:
+        if is_jumping:
             player_y -= int(jump_velocity)
             if jump_velocity > 2:
                 jump_velocity = jump_velocity / 2
@@ -284,56 +260,36 @@ while game:
 
     draw_player(player_color)
 
-    if level_completed==False:
-        map_offset_x-=6
+    if not level_completed:
+        map_offset_x -= 6
         draw_level()
 
-    else:  # level completed
-        STR("MISSION COMPLETE!!", 100, 50, ground_color, bg_color)
-        STR("Press [OK] key", 110, 150, ground_color, bg_color)
-        game = False
-
     if player_y + player_height > 222 or check_collision():  # player crashes
-        lives -= 1
-
-        #randomize colors
-        bg_color = (randint(210, 255), randint(210, 255), randint(210, 255))
-        ground_color = (randint(0, 55), randint(0, 55), randint(0, 55))
-        player_color = (randint(0, 155), randint(0, 155), randint(0, 155))
-
+        randomize_colors()
         FILL(0, 0, 320, 222, bg_color)
         map_offset_x = 0
         player_y = 172
 
-    if lives < 1:
-        game = False
-    sleep(0.03)
+    sleep(TICK)  # tick
 
     if player_x + player_width > levels[current_level][2] * 10 + map_offset_x:
-        level_completed = True
+        FILL(0, 0, 322, 222, "black")
+        STR("LEVEL COMPLETED", 85, 80, "green", "black")
+        STR("Click [OK] or [EXE]", 65, 120, "white", "black")
 
-    if level_completed == True and KEY(KEY_OK):
-        sleep(0.5)
-        if not KEY(KEY_OK):
-            game_started=False
-            FILL(0, 0, 320, 222, bg_color)
-            map_offset_x = 0
-            player_y = 172
-            level_completed = False
-            draw_level()
-            draw_player(player_color)
+        current_level += 1  # Next level
+        if len(levels) == current_level:  # No more levels
+            break
 
-    if KEY(KEY_BACKSPACE):
-        STR("(PAUSED)", 110, 60, "black", bg_color)
-        STR("Press [Backspack] to Resume", 15, 100, "blue", bg_color)
-        while KEY(KEY_BACKSPACE):
+        while not KEY(KEY_OK) or KEY(KEY_EXE):
             pass
-        while not KEY(KEY_BACKSPACE):
-            pass
-        while KEY(KEY_BACKSPACE):
-            STR("        ", 110, 60, bg_color, bg_color)
-            STR("                            ", 15, 100, bg_color, bg_color)
-        pass
+
+        FILL(0, 0, 320, 222, bg_color)
+        map_offset_x = 0
+        player_y = 172
+        draw_level()
+        draw_player(player_color)
 
 FILL(0, 0, 322, 222, "black")
-STR("LEVEL COMPLETED", 100, 100, "green", "black")
+STR("GAME COMPLETED", 85, 80, "green", "black")
+STR("By Gild56 (Subscribe on YT)", 30, 120, "white", "black")
