@@ -4,6 +4,8 @@ A recreation of Geometry Dash on Numworks calculators.
 
 Four levels available for now :D
 
+Execute `gd.py` to play the game!
+
 ## PC Emulator Controls
 
 - OK -> Space

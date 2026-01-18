@@ -103,6 +103,14 @@ GREEN = (0, 255, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
+SCREEN_WIDTH = 320
+TILE_SIZE_X = 10
+
+
+def get_visible_tile_range():
+    first_tile = (-map_offset_x) // TILE_SIZE_X - 2
+    last_tile = first_tile + (SCREEN_WIDTH // TILE_SIZE_X) + 4
+    return first_tile, last_tile
 
 def draw_player(color: tuple[int, int, int] | None = None):
     global PLAYER_WIDTH, PLAYER_HEIGHT, player_color
@@ -138,27 +146,24 @@ def height_tiles(tile_x: int):
     FILL(map_offset_x + tile_x * 10 + 10, 0, 6, 222, bg_color)
 
 def draw_level():
-    for spike in range(len(levels[current_level][1])):  # Draw spikes
-        if -10 < map_offset_x+levels[current_level][1][spike][0] * 10 + 20 < 340:
-            draw_spike(
-                levels[current_level][1][spike][0],
-                levels[current_level][1][spike][1],
-                levels[current_level][1][spike][2]
-            )
+    first_tile, last_tile = get_visible_tile_range()
 
-    for i in range(len(levels[current_level][0])):  # Draw blocks
-        if (
-            map_offset_x+levels[current_level][0][i][0] * 10 < 320
-            and map_offset_x+levels[current_level][0][i][0] * 10 + levels[current_level][0][i][2] * 10 > -10
-        ):
-            draw_platform(
-                levels[current_level][0][i][0],
-                levels[current_level][0][i][1],
-                levels[current_level][0][i][2],
-                levels[current_level][0][i][3]
-            )
+    # Spikes
+    for x, y, orientation in levels[current_level][1]:
+        if first_tile <= x <= last_tile:
+            draw_spike(x, y, orientation)
 
-    height_tiles(levels[current_level][2])
+    # Platforms
+    for x, y, w, h in levels[current_level][0]:
+        if x + w >= first_tile and x <= last_tile:
+            draw_platform(x, y, w, h)
+
+    # Endwall
+    end_x = levels[current_level][2]
+    if first_tile <= end_x <= last_tile:
+        FILL(map_offset_x + end_x * 10, 0, 10, 222, (0, 255, 0))
+        FILL(map_offset_x + end_x * 10 + 10, 0, 6, 222, bg_color)
+
 
 def respawn():
     global attempts, map_offset_x, player_y, bg_color
