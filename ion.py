@@ -15,9 +15,6 @@ def keydown(key: str):
     - BACKSPACE -> backspace
     """
 
-    if keyboard.is_pressed("enter"):
-        print("enter")
-
     if key == KEY_OK:
         return keyboard.is_pressed("space")
     elif key == KEY_EXE:

@@ -34,7 +34,7 @@ Level = tuple[
 ]
 
 levels: list[Level] = [
-    (
+    (  # Level 1
         [
             [0, 6, 32, 1], [32, 5, 58, 2], [90, 4, 30, 3], [108, 3, 12, 1], [120, 6, 74, 1], [128, 3, 8, 1], [132, 2, 22, 1], [150, 1, 26, 1], [162, 5, 32, 1], [172, 2, 20, 1], [202, 5, 42, 2], [248, 4, 4, 3], [254, 5, 4, 2], [260, 6, 16, 1]
         ],
@@ -43,7 +43,7 @@ levels: list[Level] = [
         ],
         276, (0, 130, 240), (0, 0, 70)
     ),
-    (
+    (  # Level 2
         [
             [0, 6, 32,1], [28, 5, 26, 1], [42, 4, 12, 1], [62, 5, 24, 1], [82, 4, 4, 1], [94, 6, 108, 1], [94, 5, 42, 1], [94, 4, 38, 1], [118, 3, 14, 1], [138, 3, 8, 1], [142, 2, 24, 1], [162, 3, 8, 1], [174, 5, 14, 1], [206, 6, 4, 1], [216, 6, 20, 1], [240, 5, 10, 1], [254, 4, 8, 1], [266, 3, 6, 1], [32, 6, 54, 1]
         ],
@@ -52,7 +52,7 @@ levels: list[Level] = [
         ],
         272, (0, 250, 80), (0, 70, 70)
     ),
-    (
+    (  # Level 3
         [
             [0, 6, 32, 1], [172, 6, 42, 1], [110, 6, 24, 1], [66, 4, 32, 1], [56, 5, 46, 2], [52, 5, 2, 2], [32, 5, 18, 2], [120, 5, 4, 1], [120, 3, 4, 1], [140, 5, 4, 2], [148, 4, 4, 3], [154, 3, 4, 4], [160, 4, 4, 3], [166, 5, 4, 2], [220, 6, 52, 1], [248, 5, 24, 1], [258, 4, 14, 1]
         ],
@@ -61,7 +61,7 @@ levels: list[Level] = [
         ],
         272, (200, 0, 0), (50, 0, 0)
     ),
-    (
+    (  # Level 4
         [
             [0, 6, 32, 1], [48, 4, 23, 1], [35, 5, 36, 1], [32, 6, 77, 1], [104, 5, 5, 1], [79, 5, 14, 1]
         ],
@@ -72,29 +72,20 @@ levels: list[Level] = [
     )
 ]
 
-#sleep(0.5)
-
 game_started = False
-
-def randomize_colors():
-    global bg_color, player_color, ground_color
-    bg_color = (randint(210, 255), randint(210, 255), randint(210, 255))
-    player_color = (randint(0, 155), randint(0, 155), randint(0, 155))
-    ground_color = (randint(0, 55), randint(0, 55), randint(0, 55))
-
-randomize_colors()
+win = False
 
 current_level = 0
 
-is_falling = False
-
 player_x = 50
 player_y = 172
-can_jump = True
 
 map_offset_x = 0
 
+can_jump = True
+
 is_jumping = False
+is_falling = False
 
 jump_velocity = 32
 air_ticks = 0
@@ -105,6 +96,8 @@ PLAYER_HEIGHT = 20
 RESPAWN_TIME = 1
 
 attempts = 0
+
+RANDOMIZE_COLORS = False
 
 
 def draw_player(color: tuple[int, int, int]):
@@ -164,12 +157,25 @@ def respawn():
     global attempts, map_offset_x, player_y, bg_color
     attempts += 1
 
-    randomize_colors()
+    set_colors()
     FILL(0, 0, 320, 222, bg_color)
     map_offset_x = 0
     player_y = 172
     draw_level()
     draw_player(player_color)
+
+def set_colors():
+    global bg_color, player_color, ground_color, current_level, levels
+
+    if RANDOMIZE_COLORS:
+        player_color = (randint(0, 155), randint(0, 155), randint(0, 155))
+        bg_color = (randint(210, 255), randint(210, 255), randint(210, 255))
+        ground_color = (randint(0, 55), randint(0, 55), randint(0, 55))
+
+    else:
+        player_color = (255, 255, 0)
+        bg_color = levels[current_level][3]
+        ground_color = levels[current_level][4]
 
 
 respawn()
@@ -300,22 +306,30 @@ while game:
 
     # Endscreen
 
-    if player_x + PLAYER_WIDTH > levels[current_level][2] * 10 + map_offset_x:
+    if player_x + PLAYER_WIDTH > levels[current_level][2] * 10 + map_offset_x or True:
         FILL(0, 0, 322, 222, "black")
-        STR("LEVEL COMPLETED", 85, 80, "green", "black")
-        STR("Click [OK] or [EXE]", 65, 120, "white", "black")
+        STR("LEVEL COMPLETED", 85, 60, "green", "black")
+        STR("Click [EXE] to go", 75, 100, "white", "black")
+        STR("to the level " + str(current_level + 2), 90, 140, "white", "black")
 
         current_level += 1  # Next level
         if len(levels) == current_level:  # No more levels
-            game = False
+            win = True
+            break
 
-        while not KEY(KEY_OK) or KEY(KEY_EXE):
+        while not KEY(KEY_OK) and not KEY(KEY_EXE):
             pass
 
         respawn()
 
 # Game endscreen
 
-FILL(0, 0, 322, 222, "black")
-STR("GAME COMPLETED", 85, 80, "green", "black")
-STR("By Gild56 (Subscribe on YT)", 30, 120, "white", "black")
+if win:
+    FILL(0, 0, 322, 222, "black")
+    STR("GAME COMPLETED", 85, 80, "green", "black")
+    STR("By Gild56 (Subscribe on YT)", 30, 120, "white", "black")
+
+else:
+    FILL(0, 0, 322, 222, "blue")
+    STR("GAME CRASHED", 85, 80, "white", "blue")
+    STR("Contact me on GitHub (Gild56)", 30, 120, "white", "blue")
