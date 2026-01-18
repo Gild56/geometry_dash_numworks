@@ -25,15 +25,15 @@ while not KEY(KEY_EXE):
 game = True
 TICK = 1/30  # 30 FPS
 
-Level = tuple[
-    list[list[int]],    # blocks[x_tile, y_tile, width_tiles, height_tiles]
-    list[list[int]],    # spikes[x_tile, y_tile, orientation]
-    int,                # level end (mesured in tiles)
-    tuple[int,int,int], # bg color (red, green, blue)
-    tuple[int,int,int]  # ground color (red, green, blue)
-]
+#Level = tuple[
+#    list[list[int]],    # blocks[x_tile, y_tile, width_tiles, height_tiles]
+#    list[list[int]],    # spikes[x_tile, y_tile, orientation]
+#    int,                # level end (mesured in tiles)
+#    tuple[int,int,int], # bg color (red, green, blue)
+#    tuple[int,int,int]  # ground color (red, green, blue)
+#]
 
-levels: list[Level] = [
+levels = [  #: list[Level]
     (  # Level 1
         [
             [0, 6, 32, 1], [32, 5, 58, 2], [90, 4, 30, 3], [108, 3, 12, 1], [120, 6, 74, 1], [128, 3, 8, 1], [132, 2, 22, 1], [150, 1, 26, 1], [162, 5, 32, 1], [172, 2, 20, 1], [202, 5, 42, 2], [248, 4, 4, 3], [254, 5, 4, 2], [260, 6, 16, 1]
@@ -98,6 +98,8 @@ RESPAWN_TIME = 1
 attempts = 0
 
 RANDOMIZE_COLORS = False
+DARK_GREEN = (0, 150, 0)
+DARK_BLUE = (0, 0, 150)
 
 
 def draw_player(color: tuple[int, int, int]):
@@ -177,10 +179,6 @@ def set_colors():
         bg_color = levels[current_level][3]
         ground_color = levels[current_level][4]
 
-
-respawn()
-
-
 def check_collision():
     collision_detected = False
     for i in range(len(levels[current_level][0])):
@@ -209,7 +207,23 @@ def check_collision():
     return collision_detected
 
 
-while game:
+respawn()
+
+
+while game:  # Game loop
+    # Labels
+
+    attempts_label = str(attempts)
+
+    if attempts < 100:
+        attempts_label = "0" + attempts_label
+        if attempts < 10:
+            attempts_label = "0" + attempts_label
+
+    STR(" Level:" + str(current_level + 1) + " ", 0, 0, bg_color, "black")
+    STR(" Attempts:" + attempts_label + " ", 180, 0, "red", "black")
+
+
     # Physics
 
     if not is_jumping:
@@ -288,19 +302,6 @@ while game:
         respawn()
 
 
-    # Labels
-
-    attempts_label = str(attempts)
-
-    if attempts < 100:
-        attempts_label = "0" + attempts_label
-        if attempts < 10:
-            attempts_label = "0" + attempts_label
-
-    STR("Level:" + str(current_level + 1), 0, 0, "cyan", "black")
-    STR("Attempts:" + attempts_label, 200, 0, "green", "black")
-
-
     sleep(TICK)  # tick
 
 
@@ -325,11 +326,13 @@ while game:
 # Game endscreen
 
 if win:
-    FILL(0, 0, 322, 222, "black")
-    STR("GAME COMPLETED", 85, 80, "green", "black")
-    STR("By Gild56 (Subscribe on YT)", 30, 120, "white", "black")
+    FILL(0, 0, 322, 222, DARK_GREEN)
+    STR("GAME COMPLETED!", 85, 60, "white", DARK_GREEN)
+    STR("Attempts:" + str(attempts), 110, 100, "white", DARK_GREEN)
+    STR("By Gild56 (Subscribe on YT)", 30, 140, "white", DARK_GREEN)
 
 else:
-    FILL(0, 0, 322, 222, "blue")
-    STR("GAME CRASHED", 85, 80, "white", "blue")
-    STR("Contact me on GitHub (Gild56)", 30, 120, "white", "blue")
+    FILL(0, 0, 322, 222, DARK_BLUE)
+    STR("GAME CRASHED", 95, 60, "white", DARK_BLUE)
+    STR("Contact me on", 90, 100, "white", DARK_BLUE)
+    STR("github.com/Gild56 pls", 55, 140, "white", DARK_BLUE)
