@@ -16,25 +16,21 @@ STR("Geometry Dash", 90, 60, "white", START_MENU_COLOR)
 STR("Key [Up]/[OK] = Jump", 60, 100, "white", START_MENU_COLOR)
 STR("Click [EXE] to play", 65, 140, "white", START_MENU_COLOR)
 
+sleep(0.5)
+
 while not KEY(KEY_EXE):  # Waiting for a key to be pressed
     pass
 
 game = True
 TICK = 1/30  # 30 FPS
 
-#Level = tuple[
-#    list[list[int]],    # blocks[x_tile, y_tile, width_tiles, height_tiles]
-#    list[list[int]],    # spikes[x_tile, y_tile, orientation]
-#    int,                # level end (mesured in tiles)
-#    tuple[int,int,int], # bg color (red, green, blue)
-#    tuple[int,int,int]  # ground color (red, green, blue)
-#]
-
-# Numworks MicroPython 1.17 doesn't support
-# list[] / tuple[] or List[] / Tuple[] annotations
-# even from the 'typing' lib
-
-levels = [  #: list[Level]
+levels: list[tuple[
+    list[list[int]],    # blocks[x_tile, y_tile, width_tiles, height_tiles]
+    list[list[int]],    # spikes[x_tile, y_tile, orientation]
+    int,                # level end (mesured in tiles)
+    tuple[int,int,int], # bg color (red, green, blue)
+    tuple[int,int,int]  # ground color (red, green, blue)
+]] = [
     (  # Level 1
         [
             [0, 6, 32, 1], [32, 5, 58, 2], [90, 4, 30, 3], [108, 3, 12, 1], [120, 6, 74, 1], [128, 3, 8, 1], [132, 2, 22, 1], [150, 1, 26, 1], [162, 5, 32, 1], [172, 2, 20, 1], [202, 5, 42, 2], [248, 4, 4, 3], [254, 5, 4, 2], [260, 6, 16, 1]
@@ -320,7 +316,7 @@ while game:  # Game loop
         if len(levels) == current_level:  # No more levels
             break
 
-        while not KEY(KEY_OK) and not KEY(KEY_EXE):  # Waiting for a key to be pressed
+        while not KEY(KEY_EXE):  # Waiting for a key to be pressed
             pass
 
         respawn()
