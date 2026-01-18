@@ -12,8 +12,9 @@ from ion import KEY_OK, KEY_EXE, KEY_UP, keydown as KEY
 START_MENU_COLOR = (0, 0, 0)
 
 FILL(0, 0, 322, 222, START_MENU_COLOR)
-STR("Geometry Dash", 90, 80, "white", START_MENU_COLOR)
-STR("Key [Up]/[OK] = Jump", 60, 120, "white", START_MENU_COLOR)
+STR("Geometry Dash", 90, 60, "white", START_MENU_COLOR)
+STR("Key [Up]/[OK] = Jump", 60, 100, "white", START_MENU_COLOR)
+STR("Click [EXE] to play", 65, 140, "white", START_MENU_COLOR)
 
 while not KEY(KEY_EXE):  # Waiting for a key to be pressed
     pass

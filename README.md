@@ -9,7 +9,6 @@ Probably won't work after the Numworks update
 - OK -> Space
 - EXE -> Enter
 - UP -> Up Arrow
-- BACKSPACE -> Backspace
 
 ## Credits
 
