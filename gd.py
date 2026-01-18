@@ -3,8 +3,7 @@
 
 from time import sleep
 from random import randint
-from kandinsky import fill_rect as FILL
-from kandinsky import draw_string as STR
+from kandinsky import fill_rect as FILL, draw_string as STR
 from ion import KEY_OK, KEY_EXE, KEY_UP, keydown as KEY
 
 
