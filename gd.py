@@ -7,7 +7,7 @@ from kandinsky import fill_rect as FILL, draw_string as STR
 from ion import KEY_OK, KEY_EXE, KEY_UP, keydown as KEY
 
 
-START_MENU_COLOR = (0, 0, 0)
+START_MENU_COLOR = (0, 60, 255)
 
 FILL(0, 0, 322, 222, START_MENU_COLOR)
 STR("Geometry Dash", 90, 60, "white", START_MENU_COLOR)
@@ -355,6 +355,7 @@ while game:  # Game loop
             pass
 
         respawn()
+
 
 # Game endscreen
 
