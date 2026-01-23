@@ -19,53 +19,62 @@ sleep(0.5)
 while not KEY(KEY_EXE):  # Waiting for a key to be pressed
     pass
 
-game = True
-TICK = 1/30  # 30 FPS
+"""```
+levels: list[
+    list[
+        list[int, int, int, int],   # [0] = blocks[x_tile, y_tile, width_tiles, height_tiles]
+        list[int, int, int],        # [1] = spikes[x_tile, y_tile, orientation]
+        int,                        # [2] = level end (mesured in tiles)
+        tuple[int, int, int],       # [3] = bg color (red, green, blue)
+        tuple[int, int, int],       # [4] = ground color (red, green, blue)
+        str,                        # [5] = level name
+        float                       # [6] = personal best (0 when starting)
+    ]
+]
+```"""
 
-levels: list[tuple[
-    list[list[int]],    # blocks[x_tile, y_tile, width_tiles, height_tiles]
-    list[list[int]],    # spikes[x_tile, y_tile, orientation]
-    int,                # level end (mesured in tiles)
-    tuple[int,int,int], # bg color (red, green, blue)
-    tuple[int,int,int]  # ground color (red, green, blue)
-]] = [
-    (  # Level 1
+levels = [
+    [  # Level 1
         [
             [0, 6, 32, 1], [32, 5, 58, 2], [90, 4, 30, 3], [108, 3, 12, 1], [120, 6, 74, 1], [128, 3, 8, 1], [132, 2, 22, 1], [150, 1, 26, 1], [162, 5, 32, 1], [172, 2, 20, 1], [202, 5, 42, 2], [248, 4, 4, 3], [254, 5, 4, 2], [260, 6, 16, 1]
         ],
         [
             [218, 5, 0], [133, 4, 1], [42, 5, 0], [52, 5, 0], [62, 5, 0], [73, 5, 0], [82, 5, 0], [144, 6, 0], [146, 6, 0], [142, 2, 0], [151, 1, 0], [164, 1, 0], [160, 6, 0], [166, 5, 0], [153, 3, 1], [158, 2, 1], [176, 3, 1], [220, 5, 0], [230, 5, 0], [240, 5, 0], [268, 6, 0]
         ],
-        276, (0, 130, 240), (0, 0, 70)
-    ),
-    (  # Level 2
+        276, (0, 130, 240), (0, 0, 70), "Blue Madness", 0
+    ],
+    [  # Level 2
         [
             [0, 6, 32,1], [28, 5, 26, 1], [42, 4, 12, 1], [62, 5, 24, 1], [82, 4, 4, 1], [94, 6, 108, 1], [94, 5, 42, 1], [94, 4, 38, 1], [118, 3, 14, 1], [138, 3, 8, 1], [142, 2, 24, 1], [162, 3, 8, 1], [174, 5, 14, 1], [206, 6, 4, 1], [216, 6, 20, 1], [240, 5, 10, 1], [254, 4, 8, 1], [266, 3, 6, 1], [32, 6, 54, 1]
         ],
         [
             [158, 6, 0], [159, 2, 0], [126, 3, 0], [106, 4, 0], [104, 4, 0], [73, 5, 0], [63, 5, 0], [50, 4, 0], [35, 5, 0], [124, 3, 0], [149, 2, 0], [151, 2, 0], [157, 2, 0], [150, 6, 0], [156, 6, 0], [195, 6, 0], [224, 6, 0], [226, 6, 0], [181, 5, 0], [244, 5, 0]
         ],
-        272, (0, 250, 80), (0, 70, 70)
-    ),
-    (  # Level 3
+        272, (0, 250, 80), (0, 70, 70), "Back in Green", 0
+    ],
+    [  # Level 3
         [
             [0, 6, 32, 1], [172, 6, 42, 1], [110, 6, 24, 1], [66, 4, 32, 1], [56, 5, 46, 2], [52, 5, 2, 2], [32, 5, 18, 2], [120, 5, 4, 1], [120, 3, 4, 1], [140, 5, 4, 2], [148, 4, 4, 3], [154, 3, 4, 4], [160, 4, 4, 3], [166, 5, 4, 2], [220, 6, 52, 1], [248, 5, 24, 1], [258, 4, 14, 1]
         ],
         [
             [184, 6, 0], [169, 5, 0], [167, 5, 0], [121, 3, 0], [123, 3, 0], [92, 4, 0], [53, 5, 0], [41, 5, 0], [83, 4, 0], [74, 4, 0], [186, 6, 0], [194, 6, 0], [202, 6, 0], [204, 6, 0], [217, 6, 1], [217, 6, 0], [249, 5, 0], [230, 6, 0], [239, 6, 0], [259, 4, 0]
         ],
-        272, (200, 0, 0), (50, 0, 0)
-    ),
-    (  # Level 4
+        272, (200, 0, 0), (50, 0, 0), "Polar Hell", 0
+    ],
+    [  # Level 4
         [
             [0, 6, 32, 1], [48, 4, 23, 1], [35, 5, 36, 1], [32, 6, 77, 1], [104, 5, 5, 1], [79, 5, 14, 1]
         ],
         [
             [92, 5, 0], [80, 5, 0], [59, 4, 0], [61, 4, 0], [36, 5, 0], [20, 6, 0], [103, 6, 0]
         ],
-        109, (0, 190, 190), (0, 30, 30)
-    )
+        109, (0, 190, 190), (0, 30, 30), "Dry One", 0
+    ]
 ]
+
+
+game = True
+TICK = 1/30  # 30 FPS
 
 game_started = False
 
@@ -90,6 +99,7 @@ PLAYER_HEIGHT = 20
 RESPAWN_TIME = 1
 
 attempts = 0
+percentage = 0
 
 bg_color = (0, 0, 0)
 player_color = (0, 0, 0)
@@ -317,8 +327,26 @@ while game:  # Game loop
         if attempts < 10:
             attempts_label = "0" + attempts_label
 
-    STR(" Level:" + str(current_level + 1) + " ", 0, 0, bg_color, BLACK)
-    STR(" Attempts:" + attempts_label + " ", 180, 0, "red", BLACK)
+
+    percentage = round(  # Full Distance / Payer Position * 100
+        (
+            ((levels[current_level][2] * 10) - (levels[current_level][2] * 10 + map_offset_x))
+            / (levels[current_level][2] * 10 - (player_x + PLAYER_WIDTH))
+            * 100
+        ), 2
+    )
+
+    percentage_label = str(percentage)
+
+    if percentage < 10:
+        percentage_label = "0" + percentage_label
+
+    if len(percentage_label) < 4:
+        percentage_label += "0"
+
+    STR(" " + levels[current_level][5] + " (" + str(current_level + 1) + ") ", 0, 0, bg_color, BLACK)
+    STR(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
+    STR(percentage_label + "%", 130, 20, WHITE, bg_color)
 
 
     # Drawing
@@ -329,6 +357,8 @@ while game:  # Game loop
     draw_level()
 
     if player_y + PLAYER_HEIGHT > 222 or check_collision():  # player dies
+        if levels[current_level][6] < percentage:
+            levels[current_level][6] = percentage
         draw_level()
         draw_player(RED)
 
@@ -342,6 +372,11 @@ while game:  # Game loop
     # Endscreen
 
     if player_x + PLAYER_WIDTH > levels[current_level][2] * 10 + map_offset_x:
+        STR(" " + levels[current_level][5] + " (" + str(current_level + 1) + ") ", 0, 0, bg_color, BLACK)
+        STR(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
+        STR("100.0%", 130, 20, WHITE, bg_color)
+        sleep(1)
+
         FILL(0, 0, 322, 222, BLACK)
         STR("LEVEL COMPLETED", 85, 60, GREEN, BLACK)
         STR("Click [EXE] to go", 75, 100, WHITE, BLACK)
