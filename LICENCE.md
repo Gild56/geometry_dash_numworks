@@ -4,7 +4,7 @@
 
 © Gild56
 
-This software, known as "GD on Numworks", is provided under the following terms:
+This software, known as "Geometry Works", is provided under the following terms:
 
 ## Permissions
 

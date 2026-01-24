@@ -2,29 +2,19 @@
 # Credits: Calm_Repeat_7267 and wperez274
 
 from time import sleep
-from random import randint
 from kandinsky import fill_rect as FILL, draw_string as STR
-from ion import KEY_OK, KEY_EXE, KEY_UP, keydown as KEY
-
-
-START_MENU_COLOR = (0, 60, 255)
-
-FILL(0, 0, 322, 222, START_MENU_COLOR)
-STR("Geometry Dash", 90, 60, "white", START_MENU_COLOR)
-STR("Key [Up]/[OK] = Jump", 60, 100, "white", START_MENU_COLOR)
-STR("Click [EXE] to play", 65, 140, "white", START_MENU_COLOR)
-
-sleep(0.5)
-
-while not KEY(KEY_EXE):  # Waiting for a key to be pressed
-    pass
+from ion import (
+    KEY_OK, KEY_EXE, KEY_UP,
+    KEY_LEFT, KEY_RIGHT, KEY_BACKSPACE,
+    KEY_SHIFT, keydown as KEY
+)
 
 
 """```
 levels: list[
     list[
         list[int, int, int, int],   # [0] = blocks[x_tile, y_tile, width_tiles, height_tiles]
-        list[int, int, int],        # [1] = spikes[x_tile, y_tile, orientation]
+        list[int, int, int],        # [1] = spikes[x_tile, y_tile, orientation (0=normal / 1=upside down)]
         int,                        # [2] = level end (mesured in tiles)
         tuple[int, int, int],       # [3] = bg color (red, green, blue)
         tuple[int, int, int],       # [4] = ground color (red, green, blue)
@@ -76,9 +66,11 @@ levels = [
 
 game = True
 TICK = 1/30  # 30 FPS
-speed = 6  # coordinates / frame
+speed = 6  # pixels / frame
 
-game_started = False
+menu_button = 2
+max_menu_buttons = 3
+menu = "main"
 
 current_level = 0
 
@@ -106,15 +98,18 @@ percentage = 0
 bg_color = (0, 0, 0)
 player_color = (0, 0, 0)
 ground_color = (0, 0, 0)
-RANDOMIZE_COLORS = False
 DARK_GREEN = (0, 150, 0)
 DARK_BLUE = (0, 0, 150)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+YELLOW = (255, 255, 0)
+MAIN_MENU_COLOR = (0, 60, 255)
+GARAGE_MENU_COLOR = (131, 63, 0)
 
 SCREEN_WIDTH = 320
+SCREEN_HEIGHT = 222
 TILE_SIZE_X = 10
 
 
@@ -153,8 +148,8 @@ def draw_platform(x_tile: int, y_tile: int, width_tiles: int, height_tiles: int)
         FILL(map_offset_x + x_tile * 10 + width_tiles * 10, y_tile * 32, 6, height_tiles*32, bg_color)
 
 def height_tiles(tile_x: int):
-    FILL(map_offset_x + tile_x * 10, 0, 10, 222, (0, 255, 0))
-    FILL(map_offset_x + tile_x * 10 + 10, 0, 6, 222, bg_color)
+    FILL(map_offset_x + tile_x * 10, 0, 10, SCREEN_HEIGHT, GREEN)
+    FILL(map_offset_x + tile_x * 10 + 10, 0, 6, SCREEN_HEIGHT, bg_color)
 
 def draw_level():
     first_tile, last_tile = get_visible_tile_range()
@@ -172,16 +167,17 @@ def draw_level():
     # Endwall
     end_x = levels[current_level][2]
     if first_tile <= end_x <= last_tile:
-        FILL(map_offset_x + end_x * 10, 0, 10, 222, (0, 255, 0))
-        FILL(map_offset_x + end_x * 10 + 10, 0, 6, 222, bg_color)
+        FILL(map_offset_x + end_x * 10, 0, 10, SCREEN_HEIGHT, GREEN)
+        FILL(map_offset_x + end_x * 10 + 10, 0, 6, SCREEN_HEIGHT, bg_color)
 
 
 def respawn():
-    global attempts, map_offset_x, player_y, bg_color
+    global attempts, map_offset_x, player_y, bg_color, menu
     attempts += 1
 
+    menu = "level"
     set_colors()
-    FILL(0, 0, 320, 222, bg_color)
+    fill_screen(bg_color)
     map_offset_x = 0
     player_y = 172
     draw_level()
@@ -189,16 +185,9 @@ def respawn():
 
 def set_colors():
     global bg_color, player_color, ground_color, current_level, levels
-
-    if RANDOMIZE_COLORS:
-        player_color = (randint(0, 155), randint(0, 155), randint(0, 155))
-        bg_color = (randint(210, 255), randint(210, 255), randint(210, 255))
-        ground_color = (randint(0, 55), randint(0, 55), randint(0, 55))
-
-    else:
-        player_color = (255, 255, 0)
-        bg_color = levels[current_level][3]
-        ground_color = levels[current_level][4]
+    player_color = (255, 255, 0)
+    bg_color = levels[current_level][3]
+    ground_color = levels[current_level][4]
 
 def get_player_tile_x():
     return (-map_offset_x + player_x) // 10
@@ -252,159 +241,346 @@ def check_collision():
 
     return False
 
+def fill_screen(color: tuple[int, int, int]):
+    FILL(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color)
 
-respawn()
+def enter_main_menu():
+    global menu, menu_button, max_menu_buttons
+    fill_screen(MAIN_MENU_COLOR)
+    menu_button = 2
+    max_menu_buttons = 3
+    menu = "main"
+
+def enter_garage_menu():
+    global menu, menu_button, max_menu_buttons
+    fill_screen(GARAGE_MENU_COLOR)
+    menu_button = 1
+    max_menu_buttons = 3
+    menu = "garage"
+
+
+enter_main_menu()
 
 
 while game:  # Game loop
-    # Physics
+    if menu == "level":
+        # Physics
 
-    if not is_jumping:
-        for i in range(len(levels[current_level][0])):
+        if not is_jumping:
+            for i in range(len(levels[current_level][0])):
+                if (
+                    player_y + 20 == levels[current_level][0][i][1] * 32 and levels[current_level][0][i][0] * 10 + map_offset_x -19 <= 50 <= levels[current_level][0][i][2] * 10 + levels[current_level][0][i][0] * 10 + map_offset_x
+                ):
+                    can_jump = True
+                    is_falling=False
+                    break
+                else:
+                    can_jump = False
+                    is_falling = True
+
+            if is_falling == True:
+                draw_player(bg_color)
+                player_y += 16
+
             if (
-                player_y + 20 == levels[current_level][0][i][1] * 32 and levels[current_level][0][i][0] * 10 + map_offset_x -19 <= 50 <= levels[current_level][0][i][2] * 10 + levels[current_level][0][i][0] * 10 + map_offset_x
+                KEY(KEY_OK) and can_jump == True
+                or KEY(KEY_UP) and can_jump == True
             ):
-                can_jump = True
-                is_falling=False
-                break
-            else:
-                can_jump = False
-                is_falling = True
-
-        if is_falling == True:
-            draw_player(bg_color)
-            player_y += 16
-
-        if (
-            KEY(KEY_OK) and can_jump == True
-            or KEY(KEY_UP) and can_jump == True
-        ):
-            draw_player(bg_color)
-            is_jumping = True
-            player_y -= int(jump_velocity)
-            jump_velocity = jump_velocity / 2
-
-    elif can_jump:
-        draw_player(bg_color)
-
-        for k in range(len(levels[current_level][0])):
-            if player_y + 20 != levels[current_level][0][k][1] * 32:
+                draw_player(bg_color)
                 is_jumping = True
-            elif (
-                levels[current_level][0][k][0] * 10 + map_offset_x-19 < 50 < levels[current_level][0][k][0] * 10 + map_offset_x + levels[current_level][0][k][2] * 10 + 20
-            ):
-                is_jumping = False
-                break
-
-        if is_jumping:
-            player_y -= int(jump_velocity)
-            if jump_velocity > 2:
+                player_y -= int(jump_velocity)
                 jump_velocity = jump_velocity / 2
-            elif jump_velocity == 2:
-                jump_velocity = 0
-            elif jump_velocity == 0:
-                air_ticks += 1
 
-                if air_ticks == 4:
-                    air_ticks = 0
-                    jump_velocity = -2
-            elif jump_velocity <= (-2) and jump_velocity > (-32):
-                jump_velocity=jump_velocity*2
+        elif can_jump:
+            draw_player(bg_color)
+
+            for k in range(len(levels[current_level][0])):
+                if player_y + 20 != levels[current_level][0][k][1] * 32:
+                    is_jumping = True
+                elif (
+                    levels[current_level][0][k][0] * 10 + map_offset_x-19 < 50 < levels[current_level][0][k][0] * 10 + map_offset_x + levels[current_level][0][k][2] * 10 + 20
+                ):
+                    is_jumping = False
+                    break
+
+            if is_jumping:
+                player_y -= int(jump_velocity)
+                if jump_velocity > 2:
+                    jump_velocity = jump_velocity / 2
+                elif jump_velocity == 2:
+                    jump_velocity = 0
+                elif jump_velocity == 0:
+                    air_ticks += 1
+
+                    if air_ticks == 4:
+                        air_ticks = 0
+                        jump_velocity = -2
+                elif jump_velocity <= (-2) and jump_velocity > (-32):
+                    jump_velocity=jump_velocity*2
+                else:
+                    is_jumping  = False
+                    jump_velocity = 32
+                    can_jump = True
             else:
                 is_jumping  = False
                 jump_velocity = 32
                 can_jump = True
-        else:
-            is_jumping  = False
-            jump_velocity = 32
-            can_jump = True
 
 
-    # Labels
+        # Labels
 
-    attempts_label = str(attempts)
+        attempts_label = str(attempts)
 
-    if attempts < 100:
-        attempts_label = "0" + attempts_label
-        if attempts < 10:
+        if attempts < 100:
             attempts_label = "0" + attempts_label
+            if attempts < 10:
+                attempts_label = "0" + attempts_label
 
 
-    percentage = round(  # Full Distance / Payer Position * 100
-        (
-            ((levels[current_level][2] * 10) - (levels[current_level][2] * 10 + map_offset_x))
-            / (levels[current_level][2] * 10 - (player_x + PLAYER_WIDTH))
-            * 100
-        ), 2
-    )
+        percentage = round(  # Full Distance / Payer Position * 100
+            (
+                ((levels[current_level][2] * 10) - (levels[current_level][2] * 10 + map_offset_x))
+                / (levels[current_level][2] * 10 - (player_x + PLAYER_WIDTH))
+                * 100
+            ), 2
+        )
 
-    percentage_label = str(percentage)
+        percentage_label = str(percentage)
 
-    if percentage < 10:
-        percentage_label = "0" + percentage_label
+        if percentage < 10:
+            percentage_label = "0" + percentage_label
 
-    if len(percentage_label) < 4:
-        percentage_label += "0"
+        if len(percentage_label) < 4:
+            percentage_label += "0"
 
-    STR(" " + levels[current_level][5] + " (" + str(current_level + 1) + ") ", 0, 0, bg_color, BLACK)
-    STR(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
-    STR(percentage_label + "%", 130, 20, WHITE, bg_color)
-
-
-    # Drawing
-
-    draw_player(player_color)
-
-    map_offset_x -= speed
-    draw_level()
+        STR(" " + levels[current_level][5] + " (" + str(current_level + 1) + ") ", 0, 0, bg_color, BLACK)
+        STR(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
+        STR(percentage_label + "%", 130, 20, WHITE, bg_color)
 
 
-    # Player Dies
+        # Drawing
 
-    if player_y + PLAYER_HEIGHT > 222 or check_collision():
+        draw_player(player_color)
+
+        map_offset_x -= speed
         draw_level()
-        draw_player(RED)
 
-        if levels[current_level][6] < percentage:  # New best
-            levels[current_level][6] = percentage
-            STR(percentage_label + "%", 130, 80, WHITE, bg_color)
-            STR("NEW BEST!", 120, 100, WHITE, bg_color)
 
-        sleep(RESPAWN_TIME)
-        respawn()
+        if KEY(KEY_BACKSPACE):  # Player exits
+            enter_main_menu()
 
+        elif KEY(KEY_SHIFT):  # Restart an attempt
+            respawn()
+
+
+        # Player Dies
+
+        elif player_y + PLAYER_HEIGHT > SCREEN_HEIGHT or check_collision():
+            draw_player(RED)
+
+            if levels[current_level][6] < percentage:  # New best
+                levels[current_level][6] = percentage
+                STR(percentage_label + "%", 130, 80, WHITE, bg_color)
+                STR("NEW BEST!", 120, 100, WHITE, bg_color)
+
+            sleep(RESPAWN_TIME)
+            respawn()
+
+
+        # Endscreen
+
+        elif player_x + PLAYER_WIDTH > levels[current_level][2] * 10 + map_offset_x:
+            draw_player(bg_color)
+            draw_level()
+            STR(" " + levels[current_level][5] + " (" + str(current_level + 1) + ") ", 0, 0, bg_color, BLACK)
+            STR(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
+            STR("100.0%", 130, 20, WHITE, bg_color)
+            sleep(1)
+
+            fill_screen(BLACK)
+            STR("LEVEL COMPLETED", 85, 60, GREEN, BLACK)
+            STR("Click [EXE] to go", 75, 100, WHITE, BLACK)
+            STR("to the level " + str(current_level + 2), 90, 140, WHITE, BLACK)
+
+            current_level += 1  # Next level
+            if len(levels) == current_level:  # No more levels
+                break
+
+            while not KEY(KEY_EXE):  # Waiting for a key to be pressed
+                pass
+
+            respawn()
+
+    elif menu == "garage":
+        if KEY(KEY_RIGHT):
+            menu_button += 1
+            if menu_button > max_menu_buttons or menu_button < 1:
+                menu_button = 1
+
+        if KEY(KEY_LEFT):
+            menu_button -= 1
+            if menu_button > max_menu_buttons or menu_button < 1:
+                menu_button = max_menu_buttons
+
+        if KEY(KEY_EXE) or KEY(KEY_OK):
+            if menu_button == 1:
+                pass
+
+            elif menu_button == 2:
+                pass
+
+        if KEY(KEY_BACKSPACE):  # Player exits
+            enter_main_menu()
+
+        sleep(0.2)  # bigger tick for buttons to need a longer click
+
+    elif menu == "main":
+        # Big button if chosen
+        if menu_button == 2:
+            chosen_color = WHITE
+        else:
+            chosen_color = MAIN_MENU_COLOR
+
+        CHOSEN_BIG_BUTTON_SIDE = 90
+        CHOSEN_BIG_BUTTON_X_MARGIN = round((SCREEN_WIDTH - CHOSEN_BIG_BUTTON_SIDE) / 2)
+        CHOSEN_BIG_BUTTON_Y_MARGIN = round((SCREEN_HEIGHT - CHOSEN_BIG_BUTTON_SIDE) / 2)
+        FILL(
+            CHOSEN_BIG_BUTTON_X_MARGIN,
+            CHOSEN_BIG_BUTTON_Y_MARGIN,
+            CHOSEN_BIG_BUTTON_SIDE,
+            CHOSEN_BIG_BUTTON_SIDE,
+            chosen_color
+        )
+
+        # Big button in the center
+        BIG_BUTTON_SIDE = 70
+        BIG_BUTTON_X_MARGIN = round((SCREEN_WIDTH - BIG_BUTTON_SIDE) / 2)
+        BIG_BUTTON_Y_MARGIN = round((SCREEN_HEIGHT - BIG_BUTTON_SIDE) / 2)
+        FILL(
+            BIG_BUTTON_X_MARGIN,
+            BIG_BUTTON_Y_MARGIN,
+            BIG_BUTTON_SIDE,
+            BIG_BUTTON_SIDE,
+            GREEN
+        )
+
+        # Play triangle inside the big button
+        PIXELS = 5
+        PIXEL = BIG_BUTTON_SIDE / (PIXELS + 2)
+        MAX_HEIGHT = PIXELS * PIXEL
+        TOTAL_MINI_PIXELS = (PIXELS * 2 - 1)
+        MINI_PIXEL = MAX_HEIGHT / TOTAL_MINI_PIXELS
+        current_pixels = TOTAL_MINI_PIXELS
+
+        for i in range(PIXELS):
+            FILL(
+                round(BIG_BUTTON_X_MARGIN + PIXEL * (i + 1)),
+                round(BIG_BUTTON_Y_MARGIN + PIXEL + MINI_PIXEL * i),
+                round(PIXEL),
+                round(current_pixels * MINI_PIXEL),
+                YELLOW
+            )
+            current_pixels -= 2
+
+        # Small left button if chosen
+        if menu_button == 1:
+            chosen_color = WHITE
+        else:
+            chosen_color = MAIN_MENU_COLOR
+
+        CHOSEN_SMALL_BUTTON_SIDE = 70
+        CHOSEN_SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - CHOSEN_SMALL_BUTTON_SIDE) / 2)
+        CHOSEN_SMALL_BUTTON_Y_MARGIN = round((SCREEN_HEIGHT - CHOSEN_SMALL_BUTTON_SIDE) / 2)
+        FILL(
+            CHOSEN_SMALL_BUTTON_X_MARGIN,
+            CHOSEN_SMALL_BUTTON_Y_MARGIN,
+            CHOSEN_SMALL_BUTTON_SIDE,
+            CHOSEN_SMALL_BUTTON_SIDE,
+            chosen_color
+        )
+
+        # Small left button
+        SMALL_BUTTON_SIDE = 50
+        SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - SMALL_BUTTON_SIDE) / 2)
+        SMALL_BUTTON_Y_MARGIN = round((SCREEN_HEIGHT - SMALL_BUTTON_SIDE) / 2)
+        FILL(
+            SMALL_BUTTON_X_MARGIN,
+            SMALL_BUTTON_Y_MARGIN,
+            SMALL_BUTTON_SIDE,
+            SMALL_BUTTON_SIDE,
+            GREEN
+        )
+
+        # Icon inside the left button
+        CUBE_ICON_SIDE = 30
+        CUBE_ICON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - CUBE_ICON_SIDE) / 2)
+        CUBE_ICON_Y_MARGIN = round((SCREEN_HEIGHT - CUBE_ICON_SIDE) / 2)
+        FILL(
+            CUBE_ICON_X_MARGIN,
+            CUBE_ICON_Y_MARGIN,
+            CUBE_ICON_SIDE,
+            CUBE_ICON_SIDE,
+            YELLOW
+        )
+
+        # Small right button if chosen
+        if menu_button == 3:
+            chosen_color = WHITE
+        else:
+            chosen_color = MAIN_MENU_COLOR
+
+        CHOSEN_RIGHT_SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - CHOSEN_SMALL_BUTTON_SIDE) / 2 + BIG_BUTTON_SIDE + BIG_BUTTON_X_MARGIN)
+        FILL(CHOSEN_RIGHT_SMALL_BUTTON_X_MARGIN,
+            CHOSEN_SMALL_BUTTON_Y_MARGIN,
+            CHOSEN_SMALL_BUTTON_SIDE,
+            CHOSEN_SMALL_BUTTON_SIDE,
+            chosen_color
+        )
+
+        # Small right button
+        RIGHT_SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - SMALL_BUTTON_SIDE) / 2 + BIG_BUTTON_SIDE + BIG_BUTTON_X_MARGIN)
+        FILL(RIGHT_SMALL_BUTTON_X_MARGIN,
+            SMALL_BUTTON_Y_MARGIN,
+            SMALL_BUTTON_SIDE,
+            SMALL_BUTTON_SIDE,
+            GREEN
+        )
+
+        # Text
+
+        STR("GEOMETRY WORKS", 90, 20, WHITE, MAIN_MENU_COLOR)
+
+        STR("Up/OK=Jump | Shift=Restart", 20, 170, WHITE, MAIN_MENU_COLOR)
+        STR("OK/EXE=Choose | Backspace=Exit", 10, 190, WHITE, MAIN_MENU_COLOR)
+
+
+        # Check buttons
+
+        if KEY(KEY_RIGHT):
+            menu_button += 1
+            if menu_button > max_menu_buttons or menu_button < 1:
+                menu_button = 1
+
+        if KEY(KEY_LEFT):
+            menu_button -= 1
+            if menu_button > max_menu_buttons or menu_button < 1:
+                menu_button = max_menu_buttons
+
+        if KEY(KEY_EXE) or KEY(KEY_OK):
+            if menu_button == 1:
+                enter_garage_menu()
+
+            elif menu_button == 2:
+                respawn()
+
+        sleep(0.2)  # bigger tick for buttons to need a longer click
 
     sleep(TICK)  # tick
 
 
-    # Endscreen
-
-    if player_x + PLAYER_WIDTH > levels[current_level][2] * 10 + map_offset_x:
-        draw_player(bg_color)
-        draw_level()
-        STR(" " + levels[current_level][5] + " (" + str(current_level + 1) + ") ", 0, 0, bg_color, BLACK)
-        STR(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
-        STR("100.0%", 130, 20, WHITE, bg_color)
-        sleep(1)
-
-        FILL(0, 0, 322, 222, BLACK)
-        STR("LEVEL COMPLETED", 85, 60, GREEN, BLACK)
-        STR("Click [EXE] to go", 75, 100, WHITE, BLACK)
-        STR("to the level " + str(current_level + 2), 90, 140, WHITE, BLACK)
-
-        current_level += 1  # Next level
-        if len(levels) == current_level:  # No more levels
-            break
-
-        while not KEY(KEY_EXE):  # Waiting for a key to be pressed
-            pass
-
-        respawn()
-
-
 # Game endscreen
 
-FILL(0, 0, 322, 222, DARK_GREEN)
+fill_screen(DARK_GREEN)
 STR("GAME COMPLETED!", 85, 60, WHITE, DARK_GREEN)
 STR("Attempts:" + str(attempts), 110, 100, WHITE, DARK_GREEN)
 STR("By Gild56 (Subscribe on YT)", 30, 140, WHITE, DARK_GREEN)

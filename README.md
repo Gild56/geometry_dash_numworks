@@ -1,4 +1,4 @@
-# GD on Numworks
+# Geometry Works
 
 A recreation of Geometry Dash on Numworks calculators.
 
