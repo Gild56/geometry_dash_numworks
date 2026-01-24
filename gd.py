@@ -1,6 +1,7 @@
 # A recreation of Geometry Dash for Numworks calculators.
 # Credits: Calm_Repeat_7267 and wperez274
 
+from random import choice
 from time import sleep
 from kandinsky import fill_rect, draw_string
 from ion import (
@@ -19,7 +20,8 @@ levels: list[
         tuple[int, int, int],       # [3] = bg color (red, green, blue)
         tuple[int, int, int],       # [4] = ground color (red, green, blue)
         str,                        # [5] = level name
-        float                       # [6] = personal best (0 when starting)
+        float,                      # [6] = record (initially 0)
+        int                         # [7] = attempts (initially 0)
     ]
 ]
 ```"""
@@ -32,7 +34,7 @@ levels = [
         [
             [218, 5, 0], [133, 4, 1], [42, 5, 0], [52, 5, 0], [62, 5, 0], [73, 5, 0], [82, 5, 0], [144, 6, 0], [146, 6, 0], [142, 2, 0], [151, 1, 0], [164, 1, 0], [160, 6, 0], [166, 5, 0], [153, 3, 1], [158, 2, 1], [176, 3, 1], [220, 5, 0], [230, 5, 0], [240, 5, 0], [268, 6, 0]
         ],
-        276, (0, 130, 240), (0, 0, 70), "Blue Madness", 0
+        276, (0, 130, 240), (0, 0, 70), "Blue Madness", 0, 0
     ],
     [  # Level 2
         [
@@ -41,7 +43,7 @@ levels = [
         [
             [158, 6, 0], [159, 2, 0], [126, 3, 0], [106, 4, 0], [104, 4, 0], [73, 5, 0], [63, 5, 0], [50, 4, 0], [35, 5, 0], [124, 3, 0], [149, 2, 0], [151, 2, 0], [157, 2, 0], [150, 6, 0], [156, 6, 0], [195, 6, 0], [224, 6, 0], [226, 6, 0], [181, 5, 0], [244, 5, 0]
         ],
-        272, (0, 250, 80), (0, 70, 70), "Back in Green", 0
+        272, (0, 250, 80), (0, 70, 70), "Back in Green", 0, 0
     ],
     [  # Level 3
         [
@@ -50,7 +52,7 @@ levels = [
         [
             [184, 6, 0], [169, 5, 0], [167, 5, 0], [121, 3, 0], [123, 3, 0], [92, 4, 0], [53, 5, 0], [41, 5, 0], [83, 4, 0], [74, 4, 0], [186, 6, 0], [194, 6, 0], [202, 6, 0], [204, 6, 0], [217, 6, 1], [217, 6, 0], [249, 5, 0], [230, 6, 0], [239, 6, 0], [259, 4, 0]
         ],
-        272, (180, 0, 0), (50, 0, 0), "Polared", 0
+        272, (180, 0, 0), (50, 0, 0), "Polared", 0, 0
     ],
     [  # Level 4
         [
@@ -59,8 +61,13 @@ levels = [
         [
             [92, 5, 0], [80, 5, 0], [59, 4, 0], [61, 4, 0], [36, 5, 0], [20, 6, 0], [103, 6, 0]
         ],
-        109, (0, 190, 190), (0, 30, 30), "Dry One", 0
+        109, (0, 190, 190), (0, 30, 30), "Dry One", 0, 0
     ]
+]
+
+random_sentences = [
+    "brih", "yea", "wiw", "loll", "wot", "wha", "xd",
+    "This is a serious question...", "Don't Hack like uranium"
 ]
 
 
@@ -86,6 +93,16 @@ is_falling = False
 jump_velocity = 32
 air_ticks = 0
 
+respawned = False
+
+SCREEN_WIDTH = 320
+SCREEN_HEIGHT = 222
+TILE_SIZE_X = 10
+
+CHARECTER_WIDTH = 10
+CHARACTER_HEIGHT = 20
+CHARACTERS_LIMIT = SCREEN_WIDTH / CHARECTER_WIDTH
+
 PLAYER_WIDTH = 20
 PLAYER_HEIGHT = 20
 
@@ -106,10 +123,6 @@ WHITE = (255, 255, 255)
 YELLOW = (255, 255, 0)
 MAIN_MENU_COLOR = (0, 60, 255)
 GARAGE_MENU_COLOR = (131, 63, 0)
-
-SCREEN_WIDTH = 320
-SCREEN_HEIGHT = 222
-TILE_SIZE_X = 10
 
 
 def get_visible_tile_range():
@@ -233,7 +246,7 @@ def check_collision():
             hit_y2 = ry + 16
 
         if (
-            px + pw > rx and px < rx + 16 and
+            px + pw > rx and px < rx + 10 and
             py + ph > hit_y1 and py < hit_y2
         ):
             return True
@@ -243,9 +256,23 @@ def check_collision():
 def fill_screen(color: tuple[int, int, int]):
     fill_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color)
 
+def draw_level_menu():
+    fill_screen(levels[menu_button - 1][3])
+    draw_centered_string(levels[menu_button - 1][5], 40, WHITE, levels[menu_button - 1][3])
+
+def enter_browse_levels_menu():
+    global menu, menu_button, max_menu_buttons, attempts
+    attempts = 0
+    menu_button = 1
+    max_menu_buttons = len(levels)
+    menu = "browse_levels"
+    draw_level_menu()
+    sleep(1)
+
 def enter_main_menu():
-    global menu, menu_button, max_menu_buttons
+    global menu, menu_button, max_menu_buttons, attempts
     fill_screen(MAIN_MENU_COLOR)
+    attempts = 0
     menu_button = 2
     max_menu_buttons = 3
     menu = "main"
@@ -265,9 +292,11 @@ def draw_centered_string(
     ):
     global SCREEN_WIDTH
 
-    MAX_SYMBOLS = SCREEN_WIDTH/20
-    SPACES = " " * round(MAX_SYMBOLS - len(text) / 2)
-    draw_string(SPACES + text, 0, y, color, background)
+    if len(text) > CHARACTERS_LIMIT:
+        print(f"WARNING: The string \"{text}\" is too long! ({CHARACTERS_LIMIT} characters maximum)")
+
+    x = round((SCREEN_WIDTH - len(text) * 10) / 2)
+    draw_string(text, x, y, color, background)
 
 
 enter_main_menu()
@@ -364,7 +393,7 @@ while True:  # Game loop
         if len(percentage_label) < 5:
             percentage_label += "0"
 
-        draw_string(" " + levels[current_level][5] + " (" + str(current_level + 1) + ") ", 0, 0, bg_color, BLACK)
+        draw_string(" " + levels[current_level][5] + " ", 0, 0, bg_color, BLACK)
         draw_string(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
         draw_centered_string(percentage_label + "%", 20, WHITE, bg_color)
 
@@ -377,12 +406,16 @@ while True:  # Game loop
         draw_level()
 
 
-        if keydown(KEY_BACKSPACE):  # Player exits
-            enter_main_menu()
-
-        elif keydown(KEY_SHIFT):  # Restart an attempt
+        if keydown(KEY_SHIFT) and not respawned:  # Restart an attempt
             respawn()
+            respawned = True
 
+        elif not keydown(KEY_SHIFT):
+            respawned = False
+
+
+        if keydown(KEY_BACKSPACE):  # Player exits
+            enter_browse_levels_menu()
 
         # Player Dies
 
@@ -401,22 +434,27 @@ while True:  # Game loop
         # Endscreen
 
         elif player_x + PLAYER_WIDTH > levels[current_level][2] * 10 + map_offset_x:
+            # Waiting
             draw_player(bg_color)
             draw_level()
-            draw_string(" " + levels[current_level][5] + " (" + str(current_level + 1) + ") ", 0, 0, bg_color, BLACK)
+            draw_string(" " + levels[current_level][5] + " ", 0, 0, bg_color, BLACK)
             draw_string(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
             draw_centered_string("100.0%", 20, WHITE, bg_color)
             sleep(1)
 
+            # Actual edscreen
             fill_screen(BLACK)
             draw_centered_string("LEVEL COMPLETED", 60, GREEN, BLACK)
-            draw_centered_string("Click [EXE] to exit", 100, WHITE, BLACK)
-            draw_centered_string("Click [EXE] to exit", 140, WHITE, BLACK)
+            draw_centered_string("Attempts: " + str(attempts), 100, WHITE, BLACK)
+            draw_centered_string(choice(random_sentences), 140, WHITE, BLACK)
 
-            while not get_keys:
+            while not get_keys():  # Waiting for a key to be pressed
                 pass
 
-            enter_main_menu()  # TODO: enter_browse_levels_menu()
+            if keydown(KEY_SHIFT):
+                respawn()
+            else:
+                enter_browse_levels_menu()
 
     elif menu == "garage":
         if keydown(KEY_RIGHT):
@@ -436,7 +474,29 @@ while True:  # Game loop
             elif menu_button == 2:
                 pass
 
-        if keydown(KEY_BACKSPACE):  # Player exits
+        if keydown(KEY_BACKSPACE):
+            enter_main_menu()
+
+        sleep(0.2)  # bigger tick for buttons to need a longer click
+
+    elif menu == "browse_levels":
+        if keydown(KEY_RIGHT):
+            menu_button += 1
+            if menu_button > max_menu_buttons or menu_button < 1:
+                menu_button = 1
+            draw_level_menu()
+
+        if keydown(KEY_LEFT):
+            menu_button -= 1
+            if menu_button > max_menu_buttons or menu_button < 1:
+                menu_button = max_menu_buttons
+            draw_level_menu()
+
+        if keydown(KEY_EXE) or keydown(KEY_OK):
+            current_level = menu_button - 1
+            respawn()
+
+        if keydown(KEY_BACKSPACE):
             enter_main_menu()
 
         sleep(0.2)  # bigger tick for buttons to need a longer click
@@ -578,16 +638,8 @@ while True:  # Game loop
                 enter_garage_menu()
 
             elif menu_button == 2:
-                respawn()
+                enter_browse_levels_menu()
 
         sleep(0.2)  # bigger tick for buttons to need a longer click
 
-    sleep(TICK)  # tick
-
-
-# Game endscreen
-
-fill_screen(DARK_GREEN)
-draw_string("GAME COMPLETED!", 85, 60, WHITE, DARK_GREEN)
-draw_string("Attempts:" + str(attempts), 110, 100, WHITE, DARK_GREEN)
-draw_string("By Gild56 (Subscribe on YT)", 30, 140, WHITE, DARK_GREEN)
+    sleep(TICK)
