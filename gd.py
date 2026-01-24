@@ -22,7 +22,7 @@ levels: list[
         str,                       [5] = level name
         float,                     [6] = record (initially 0)
         int,                       [7] = attempts (initially 0)
-        str                        [8] = author
+        str                        [8] = author of the level
     ]
 ]
 ```"""
@@ -30,12 +30,12 @@ levels: list[
 levels = [
     [  # Level 1
         [
-            [0, 6, 32, 1], [32, 5, 58, 2], [90, 4, 30, 3], [108, 3, 12, 1], [120, 6, 74, 1], [128, 3, 8, 1], [132, 2, 22, 1], [150, 1, 26, 1], [162, 5, 32, 1], [172, 2, 20, 1], [202, 5, 42, 2], [248, 4, 4, 3], [254, 5, 4, 2], [260, 6, 16, 1]
+            [0, 6, 32, 1], [48, 4, 23, 1], [35, 5, 36, 1], [32, 6, 77, 1], [104, 5, 5, 1], [79, 5, 14, 1]
         ],
         [
-            [218, 5, 0], [133, 4, 1], [42, 5, 0], [52, 5, 0], [62, 5, 0], [73, 5, 0], [82, 5, 0], [144, 6, 0], [146, 6, 0], [142, 2, 0], [151, 1, 0], [164, 1, 0], [160, 6, 0], [166, 5, 0], [153, 3, 1], [158, 2, 1], [176, 3, 1], [220, 5, 0], [230, 5, 0], [240, 5, 0], [268, 6, 0]
+            [92, 5, 0], [80, 5, 0], [59, 4, 0], [61, 4, 0], [36, 5, 0], [20, 6, 0], [103, 6, 0]
         ],
-        276, (0, 130, 240), (0, 0, 70), "Blue Madness", 0, 0, "wperez274"
+        109, (0, 190, 190), (0, 30, 30), "Gild Madness", 0, 0, "wperez274"
     ],
     [  # Level 2
         [
@@ -48,27 +48,27 @@ levels = [
     ],
     [  # Level 3
         [
+            [0, 6, 32, 1], [32, 5, 58, 2], [90, 4, 30, 3], [108, 3, 12, 1], [120, 6, 74, 1], [128, 3, 8, 1], [132, 2, 22, 1], [150, 1, 26, 1], [162, 5, 32, 1], [172, 2, 20, 1], [202, 5, 42, 2], [248, 4, 4, 3], [254, 5, 4, 2], [260, 6, 16, 1]
+        ],
+        [
+            [218, 5, 0], [133, 4, 1], [42, 5, 0], [52, 5, 0], [62, 5, 0], [73, 5, 0], [82, 5, 0], [144, 6, 0], [146, 6, 0], [142, 2, 0], [151, 1, 0], [164, 1, 0], [160, 6, 0], [166, 5, 0], [153, 3, 1], [158, 2, 1], [176, 3, 1], [220, 5, 0], [230, 5, 0], [240, 5, 0], [268, 6, 0]
+        ],
+        276, (0, 130, 240), (0, 0, 70), "Polablue", 0, 0, "wperez274"
+    ],
+    [  # Level 4
+        [
             [0, 6, 32, 1], [172, 6, 42, 1], [110, 6, 24, 1], [66, 4, 32, 1], [56, 5, 46, 2], [52, 5, 2, 2], [32, 5, 18, 2], [120, 5, 4, 1], [120, 3, 4, 1], [140, 5, 4, 2], [148, 4, 4, 3], [154, 3, 4, 4], [160, 4, 4, 3], [166, 5, 4, 2], [220, 6, 52, 1], [248, 5, 24, 1], [258, 4, 14, 1]
         ],
         [
             [184, 6, 0], [169, 5, 0], [167, 5, 0], [121, 3, 0], [123, 3, 0], [92, 4, 0], [53, 5, 0], [41, 5, 0], [83, 4, 0], [74, 4, 0], [186, 6, 0], [194, 6, 0], [202, 6, 0], [204, 6, 0], [217, 6, 1], [217, 6, 0], [249, 5, 0], [230, 6, 0], [239, 6, 0], [259, 4, 0]
         ],
-        272, (180, 0, 0), (50, 0, 0), "Polared", 0, 0, "wperez274"
-    ],
-    [  # Level 4
-        [
-            [0, 6, 32, 1], [48, 4, 23, 1], [35, 5, 36, 1], [32, 6, 77, 1], [104, 5, 5, 1], [79, 5, 14, 1]
-        ],
-        [
-            [92, 5, 0], [80, 5, 0], [59, 4, 0], [61, 4, 0], [36, 5, 0], [20, 6, 0], [103, 6, 0]
-        ],
-        109, (0, 190, 190), (0, 30, 30), "Dry One", 0, 0, "wperez274"
+        272, (180, 0, 0), (50, 0, 0), "Dry Red", 0, 0, "wperez274"
     ]
 ]
 
 random_sentences = [
     "brih", "yea", "wiw", "loll", "wot", "wha", "xd",
-    "This is a serious question...", "Don't Hack like uranium"
+    "This is a serious question...", "Don't hack like uranium"
 ]
 
 
@@ -83,7 +83,13 @@ menu = "main"
 attempts = 0
 percentage_label = ""
 current_level = 0
+
+
+# Anti-hold variables
+
 respawned = False
+changed_page = False
+clicked_enter = False
 
 
 # Physics
@@ -119,18 +125,38 @@ PLAYER_HEIGHT = 20
 # Colors
 
 bg_color = (0, 0, 0)
-player_color = (0, 0, 0)
+player_color = (255, 255, 0)
 blocks_color = (0, 0, 0)
+
+MAIN_MENU_COLOR = (0, 60, 255)
+GARAGE_MENU_COLOR = (131, 63, 0)
+
 DARK_GREEN = (0, 150, 0)
 DARK_BLUE = (0, 0, 150)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-YELLOW = (255, 255, 0)
-MAIN_MENU_COLOR = (0, 60, 255)
-GARAGE_MENU_COLOR = (131, 63, 0)
 
+YELLOW = (255, 255, 0)
+PINK = (255, 150, 150)
+PURPLE = (255, 0, 255)
+BLUE = (0, 0, 255)
+GREY = (170, 170, 170)
+
+color_chosen = 1
+
+colors = [
+    ["yellow", True, YELLOW, "Default color"],
+    ["blue", False, BLUE, "Complete \"Gild Madness\""],
+    ["green", False, GREEN, "Complete \"Back in Green\""],
+    ["purple", False, PURPLE, "Complete \"Polablue\""],
+    ["pink", False, PINK, "Complete \"Dry Red\""],
+    ["white", False, WHITE, "Complete every level with coins"]
+]  # add brown, grey, black..?
+
+
+# Drawing level
 
 def get_visible_tile_range():
     first_tile = (-map_offset_x) // TILE_SIZE_X - 2
@@ -223,29 +249,11 @@ def draw_level():
     draw_string(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
     draw_centered_string(percentage_label + "%", 20, WHITE, bg_color)
 
-def respawn():
-    global current_level, map_offset_x, player_y, bg_color, menu
-    levels[current_level][7] += 1
 
-    menu = "level"
-    set_colors()
-    fill_screen(bg_color)
-    map_offset_x = 0
-    player_y = 172
-    draw_level()
-    draw_player()
-
-def set_colors():
-    global bg_color, player_color, blocks_color
-    player_color = (255, 255, 0)
-    bg_color = levels[current_level][3]
-    blocks_color = levels[current_level][4]
-
-def get_player_tile_x():
-    return (-map_offset_x + player_x) // 10
+# Physics
 
 def check_collision():
-    player_tile = get_player_tile_x()
+    player_tile = (-map_offset_x + player_x) // 10
     first_tile = player_tile - 2
     last_tile = player_tile + 2
 
@@ -288,58 +296,29 @@ def check_collision():
 
     return False
 
+def respawn():
+    global current_level, map_offset_x, player_y, bg_color
+    global menu, bg_color, player_color, blocks_color
+
+    levels[current_level][7] += 1
+
+    menu = "level"
+
+    bg_color = levels[current_level][3]
+    blocks_color = levels[current_level][4]
+    fill_screen(bg_color)
+
+    map_offset_x = 0
+    player_y = 172
+
+    draw_level()
+    draw_player()
+
+
+# Improved Kadinsky functions
+
 def fill_screen(color: tuple[int, int, int]):
     fill_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color)
-
-def draw_level_menu():
-    completed_color = DARK_GREEN
-    bg_color = levels[menu_button - 1][3]
-    blocks_color = levels[menu_button - 1][4]
-    best = levels[menu_button - 1][6]
-
-    fill_screen(blocks_color)
-    draw_centered_string(levels[menu_button - 1][5], 40, WHITE, blocks_color)
-    draw_centered_string("by " + str(levels[menu_button - 1][8]), 70, bg_color, blocks_color)
-    draw_centered_string("Attempts: " + str(levels[menu_button - 1][7]), 150, bg_color, blocks_color)
-
-    # Progressbar
-    MARGIN = 20
-    Y_POSITION = 110
-
-    LENGTH = SCREEN_WIDTH - (MARGIN * 2)
-    fill_rect(MARGIN, Y_POSITION, LENGTH, CHARACTER_HEIGHT, bg_color)
-
-    COMPLETED_LENGTH = round(LENGTH / 100 * best)
-    fill_rect(MARGIN, Y_POSITION, COMPLETED_LENGTH, CHARACTER_HEIGHT, completed_color)
-
-    if best > 50:
-        bg_text_color = completed_color
-    else:
-        bg_text_color = bg_color
-
-    draw_centered_string(str(round(best)) + "%", Y_POSITION, WHITE, bg_text_color)
-
-def enter_browse_levels_menu():
-    global menu, menu_button, max_menu_buttons
-    menu_button = current_level + 1
-    max_menu_buttons = len(levels)
-    menu = "browse_levels"
-    draw_level_menu()
-    sleep(1)
-
-def enter_main_menu():
-    global menu, menu_button, max_menu_buttons
-    fill_screen(MAIN_MENU_COLOR)
-    menu_button = 2
-    max_menu_buttons = 3
-    menu = "main"
-
-def enter_garage_menu():
-    global menu, menu_button, max_menu_buttons
-    fill_screen(GARAGE_MENU_COLOR)
-    menu_button = 1
-    max_menu_buttons = 3
-    menu = "garage"
 
 def draw_centered_string(
         text: str,
@@ -355,6 +334,231 @@ def draw_centered_string(
     x = round((SCREEN_WIDTH - len(text) * 10) / 2)
     draw_string(text, x, y, color, background)
 
+
+# Pages functions
+
+def enter_main_menu():
+    global menu, menu_button, max_menu_buttons
+
+    menu = "main"
+    max_menu_buttons = 3
+    menu_button = 2
+
+    fill_screen(MAIN_MENU_COLOR)
+    draw_main_menu()
+
+def draw_main_menu():
+    # Big button if chosen
+    if menu_button == 2:
+        chosen_color = WHITE
+    else:
+        chosen_color = MAIN_MENU_COLOR
+
+    CHOSEN_BIG_BUTTON_SIDE = 90
+    CHOSEN_BIG_BUTTON_X_MARGIN = round((SCREEN_WIDTH - CHOSEN_BIG_BUTTON_SIDE) / 2)
+    CHOSEN_BIG_BUTTON_Y_MARGIN = round((SCREEN_HEIGHT - CHOSEN_BIG_BUTTON_SIDE) / 2)
+    fill_rect(
+        CHOSEN_BIG_BUTTON_X_MARGIN,
+        CHOSEN_BIG_BUTTON_Y_MARGIN,
+        CHOSEN_BIG_BUTTON_SIDE,
+        CHOSEN_BIG_BUTTON_SIDE,
+        chosen_color
+    )
+
+    # Big button in the center
+    BIG_BUTTON_SIDE = 70
+    BIG_BUTTON_X_MARGIN = round((SCREEN_WIDTH - BIG_BUTTON_SIDE) / 2)
+    BIG_BUTTON_Y_MARGIN = round((SCREEN_HEIGHT - BIG_BUTTON_SIDE) / 2)
+    fill_rect(
+        BIG_BUTTON_X_MARGIN,
+        BIG_BUTTON_Y_MARGIN,
+        BIG_BUTTON_SIDE,
+        BIG_BUTTON_SIDE,
+        GREEN
+    )
+
+    # Play triangle inside the big button
+    PIXELS = 5
+    PIXEL = BIG_BUTTON_SIDE / (PIXELS + 2)
+    MAX_HEIGHT = PIXELS * PIXEL
+    TOTAL_MINI_PIXELS = (PIXELS * 2 - 1)
+    MINI_PIXEL = MAX_HEIGHT / TOTAL_MINI_PIXELS
+    current_pixels = TOTAL_MINI_PIXELS
+
+    for i in range(PIXELS):
+        fill_rect(
+            round(BIG_BUTTON_X_MARGIN + PIXEL * (i + 1)),
+            round(BIG_BUTTON_Y_MARGIN + PIXEL + MINI_PIXEL * i),
+            round(PIXEL),
+            round(current_pixels * MINI_PIXEL),
+            YELLOW
+        )
+        current_pixels -= 2
+
+    # Small left button if chosen
+    if menu_button == 1:
+        chosen_color = WHITE
+    else:
+        chosen_color = MAIN_MENU_COLOR
+
+    CHOSEN_SMALL_BUTTON_SIDE = 70
+    CHOSEN_SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - CHOSEN_SMALL_BUTTON_SIDE) / 2)
+    CHOSEN_SMALL_BUTTON_Y_MARGIN = round((SCREEN_HEIGHT - CHOSEN_SMALL_BUTTON_SIDE) / 2)
+    fill_rect(
+        CHOSEN_SMALL_BUTTON_X_MARGIN,
+        CHOSEN_SMALL_BUTTON_Y_MARGIN,
+        CHOSEN_SMALL_BUTTON_SIDE,
+        CHOSEN_SMALL_BUTTON_SIDE,
+        chosen_color
+    )
+
+    # Small left button
+    SMALL_BUTTON_SIDE = 50
+    SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - SMALL_BUTTON_SIDE) / 2)
+    SMALL_BUTTON_Y_MARGIN = round((SCREEN_HEIGHT - SMALL_BUTTON_SIDE) / 2)
+    fill_rect(
+        SMALL_BUTTON_X_MARGIN,
+        SMALL_BUTTON_Y_MARGIN,
+        SMALL_BUTTON_SIDE,
+        SMALL_BUTTON_SIDE,
+        GREEN
+    )
+
+    # Icon inside the left button
+    CUBE_ICON_SIDE = 30
+    CUBE_ICON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - CUBE_ICON_SIDE) / 2)
+    CUBE_ICON_Y_MARGIN = round((SCREEN_HEIGHT - CUBE_ICON_SIDE) / 2)
+    fill_rect(
+        CUBE_ICON_X_MARGIN,
+        CUBE_ICON_Y_MARGIN,
+        CUBE_ICON_SIDE,
+        CUBE_ICON_SIDE,
+        YELLOW
+    )
+
+    # Small right button if chosen
+    if menu_button == 3:
+        chosen_color = WHITE
+    else:
+        chosen_color = MAIN_MENU_COLOR
+
+    CHOSEN_RIGHT_SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - CHOSEN_SMALL_BUTTON_SIDE) / 2 + BIG_BUTTON_SIDE + BIG_BUTTON_X_MARGIN)
+    fill_rect(CHOSEN_RIGHT_SMALL_BUTTON_X_MARGIN,
+        CHOSEN_SMALL_BUTTON_Y_MARGIN,
+        CHOSEN_SMALL_BUTTON_SIDE,
+        CHOSEN_SMALL_BUTTON_SIDE,
+        chosen_color
+    )
+
+    # Small right button
+    RIGHT_SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - SMALL_BUTTON_SIDE) / 2 + BIG_BUTTON_SIDE + BIG_BUTTON_X_MARGIN)
+    fill_rect(RIGHT_SMALL_BUTTON_X_MARGIN,
+        SMALL_BUTTON_Y_MARGIN,
+        SMALL_BUTTON_SIDE,
+        SMALL_BUTTON_SIDE,
+        GREEN
+    )
+
+    # Text
+
+    draw_centered_string("GEOMETRY WORKS", 20, WHITE, MAIN_MENU_COLOR)
+
+    draw_centered_string("Up/OK=Jump | Shift=Restart", 170, WHITE, MAIN_MENU_COLOR)
+    draw_centered_string("OK/EXE=Choose | Backspace=Exit", 190, WHITE, MAIN_MENU_COLOR)
+
+
+def enter_browse_levels_menu():
+    global menu, menu_button, max_menu_buttons
+    menu_button = current_level + 1
+    max_menu_buttons = len(levels)
+    menu = "browse_levels"
+    draw_level_menu()
+
+def draw_level_menu():
+    completed_color = DARK_GREEN
+    bg_color = levels[menu_button - 1][3]
+    blocks_color = levels[menu_button - 1][4]
+    best = levels[menu_button - 1][6]
+
+    fill_screen(blocks_color)
+    draw_centered_string(levels[menu_button - 1][5], 40, WHITE, blocks_color)
+    draw_centered_string("by " + str(levels[menu_button - 1][8]), 70, bg_color, blocks_color)
+    draw_centered_string("Attempts: " + str(levels[menu_button - 1][7]), 150, bg_color, blocks_color)
+
+    # Progressbar
+    MARGIN = 30
+    Y_POSITION = 110
+
+    LENGTH = SCREEN_WIDTH - (MARGIN * 2)
+    fill_rect(MARGIN, Y_POSITION, LENGTH, CHARACTER_HEIGHT, bg_color)
+
+    COMPLETED_LENGTH = round(LENGTH / 100 * best)
+    fill_rect(MARGIN, Y_POSITION, COMPLETED_LENGTH, CHARACTER_HEIGHT, completed_color)
+
+    if best > 50:
+        bg_text_color = completed_color
+        letters_color = WHITE
+    else:
+        bg_text_color = bg_color
+        letters_color = blocks_color
+
+    LITTLE_MARGIN = 10
+    draw_string("<", LITTLE_MARGIN, Y_POSITION, WHITE, blocks_color)
+    draw_string(">", SCREEN_WIDTH - LITTLE_MARGIN - CHARECTER_WIDTH, Y_POSITION, WHITE, blocks_color)
+
+    draw_centered_string(str(round(best)) + "%", Y_POSITION, letters_color, bg_text_color)
+
+
+def enter_garage_menu():
+    global menu, menu_button, max_menu_buttons
+    menu_button = 1
+    max_menu_buttons = len(colors)
+    menu = "garage"
+    draw_garage_menu()
+
+def draw_garage_menu():
+    global player_color
+    fill_screen(GARAGE_MENU_COLOR)
+    draw_centered_string("You:", 20, WHITE, GARAGE_MENU_COLOR)
+    draw_centered_string("Choose your color:", 110, WHITE, GARAGE_MENU_COLOR)
+    if not colors[menu_button - 1][1]:
+        draw_centered_string(colors[menu_button - 1][3], 180, WHITE, GARAGE_MENU_COLOR)
+        draw_centered_string("to get this color", 200, WHITE, GARAGE_MENU_COLOR)
+
+    CUBE_SIDE = 40
+    CUBE_X_MARGIN = round((SCREEN_WIDTH - CUBE_SIDE) / 2)
+    fill_rect(CUBE_X_MARGIN, 50, CUBE_SIDE, CUBE_SIDE, player_color)
+
+    COLORS_COUNT = len(colors)
+    COLOR_SIDE = 30
+    X_MARGIN = 20
+    X_SPACE = SCREEN_WIDTH - (X_MARGIN * 2) - COLOR_SIDE
+    Y_MARGIN = 50
+
+
+    # Color box when chosen
+
+    CHOSEN_MARGIN = 5
+
+    for i in range(COLORS_COUNT):
+        if i + 1 == menu_button:
+            fill_rect(
+                round(X_MARGIN + (X_SPACE / (COLORS_COUNT - 1) * i)) - CHOSEN_MARGIN,
+                SCREEN_HEIGHT - Y_MARGIN - COLOR_SIDE - CHOSEN_MARGIN,
+                COLOR_SIDE + CHOSEN_MARGIN * 2,
+                COLOR_SIDE + CHOSEN_MARGIN * 2,
+                WHITE if colors[menu_button - 1][1] else GREY
+            )
+
+
+    # Regular color boxes
+
+    for i in range(COLORS_COUNT):
+        fill_rect(
+            round(X_MARGIN + (X_SPACE / (COLORS_COUNT - 1) * i)),
+            SCREEN_HEIGHT - Y_MARGIN - COLOR_SIDE,
+            COLOR_SIDE, COLOR_SIDE, colors[i][2]
+        )
 
 enter_main_menu()
 
@@ -484,189 +688,87 @@ while True:  # Game loop
                 enter_browse_levels_menu()
 
     elif menu == "garage":
-        if keydown(KEY_RIGHT):
+        if keydown(KEY_RIGHT) and not changed_page:
             menu_button += 1
             if menu_button > max_menu_buttons or menu_button < 1:
                 menu_button = 1
+            changed_page = True
+            draw_garage_menu()
 
-        if keydown(KEY_LEFT):
+        elif keydown(KEY_LEFT) and not changed_page:
             menu_button -= 1
             if menu_button > max_menu_buttons or menu_button < 1:
                 menu_button = max_menu_buttons
+            changed_page = True
+            draw_garage_menu()
 
-        if keydown(KEY_EXE) or keydown(KEY_OK):
-            if menu_button == 1:
-                pass
+        elif (not keydown(KEY_RIGHT)) and (not keydown(KEY_LEFT)) and changed_page:
+            changed_page = False
 
-            elif menu_button == 2:
-                pass
+        if (keydown(KEY_EXE) or keydown(KEY_OK)) and not clicked_enter:
+            if colors[menu_button - 1][1]:
+                player_color = colors[menu_button - 1][2]
+                draw_garage_menu()
+
+        if not (keydown(KEY_EXE) or keydown(KEY_OK)):
+            clicked_enter = False
 
         if keydown(KEY_BACKSPACE):
             enter_main_menu()
 
-        sleep(0.2)  # bigger tick for buttons to need a longer click
-
     elif menu == "browse_levels":
-        if keydown(KEY_RIGHT):
+        if keydown(KEY_RIGHT) and not changed_page:
             menu_button += 1
             if menu_button > max_menu_buttons or menu_button < 1:
                 menu_button = 1
+            changed_page = True
             draw_level_menu()
 
-        if keydown(KEY_LEFT):
+        elif keydown(KEY_LEFT) and not changed_page:
             menu_button -= 1
             if menu_button > max_menu_buttons or menu_button < 1:
                 menu_button = max_menu_buttons
+            changed_page = True
             draw_level_menu()
 
-        if keydown(KEY_EXE) or keydown(KEY_OK):
+        elif (not keydown(KEY_RIGHT)) and (not keydown(KEY_LEFT)) and changed_page:
+            changed_page = False
+
+        if (keydown(KEY_EXE) or keydown(KEY_OK)) and not clicked_enter:
             current_level = menu_button - 1
             respawn()
 
+        if not (keydown(KEY_EXE) or keydown(KEY_OK)):
+            clicked_enter = False
+
         if keydown(KEY_BACKSPACE):
             enter_main_menu()
 
-        sleep(0.2)  # bigger tick for buttons to need a longer click
-
     elif menu == "main":
-        # Big button if chosen
-        if menu_button == 2:
-            chosen_color = WHITE
-        else:
-            chosen_color = MAIN_MENU_COLOR
-
-        CHOSEN_BIG_BUTTON_SIDE = 90
-        CHOSEN_BIG_BUTTON_X_MARGIN = round((SCREEN_WIDTH - CHOSEN_BIG_BUTTON_SIDE) / 2)
-        CHOSEN_BIG_BUTTON_Y_MARGIN = round((SCREEN_HEIGHT - CHOSEN_BIG_BUTTON_SIDE) / 2)
-        fill_rect(
-            CHOSEN_BIG_BUTTON_X_MARGIN,
-            CHOSEN_BIG_BUTTON_Y_MARGIN,
-            CHOSEN_BIG_BUTTON_SIDE,
-            CHOSEN_BIG_BUTTON_SIDE,
-            chosen_color
-        )
-
-        # Big button in the center
-        BIG_BUTTON_SIDE = 70
-        BIG_BUTTON_X_MARGIN = round((SCREEN_WIDTH - BIG_BUTTON_SIDE) / 2)
-        BIG_BUTTON_Y_MARGIN = round((SCREEN_HEIGHT - BIG_BUTTON_SIDE) / 2)
-        fill_rect(
-            BIG_BUTTON_X_MARGIN,
-            BIG_BUTTON_Y_MARGIN,
-            BIG_BUTTON_SIDE,
-            BIG_BUTTON_SIDE,
-            GREEN
-        )
-
-        # Play triangle inside the big button
-        PIXELS = 5
-        PIXEL = BIG_BUTTON_SIDE / (PIXELS + 2)
-        MAX_HEIGHT = PIXELS * PIXEL
-        TOTAL_MINI_PIXELS = (PIXELS * 2 - 1)
-        MINI_PIXEL = MAX_HEIGHT / TOTAL_MINI_PIXELS
-        current_pixels = TOTAL_MINI_PIXELS
-
-        for i in range(PIXELS):
-            fill_rect(
-                round(BIG_BUTTON_X_MARGIN + PIXEL * (i + 1)),
-                round(BIG_BUTTON_Y_MARGIN + PIXEL + MINI_PIXEL * i),
-                round(PIXEL),
-                round(current_pixels * MINI_PIXEL),
-                YELLOW
-            )
-            current_pixels -= 2
-
-        # Small left button if chosen
-        if menu_button == 1:
-            chosen_color = WHITE
-        else:
-            chosen_color = MAIN_MENU_COLOR
-
-        CHOSEN_SMALL_BUTTON_SIDE = 70
-        CHOSEN_SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - CHOSEN_SMALL_BUTTON_SIDE) / 2)
-        CHOSEN_SMALL_BUTTON_Y_MARGIN = round((SCREEN_HEIGHT - CHOSEN_SMALL_BUTTON_SIDE) / 2)
-        fill_rect(
-            CHOSEN_SMALL_BUTTON_X_MARGIN,
-            CHOSEN_SMALL_BUTTON_Y_MARGIN,
-            CHOSEN_SMALL_BUTTON_SIDE,
-            CHOSEN_SMALL_BUTTON_SIDE,
-            chosen_color
-        )
-
-        # Small left button
-        SMALL_BUTTON_SIDE = 50
-        SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - SMALL_BUTTON_SIDE) / 2)
-        SMALL_BUTTON_Y_MARGIN = round((SCREEN_HEIGHT - SMALL_BUTTON_SIDE) / 2)
-        fill_rect(
-            SMALL_BUTTON_X_MARGIN,
-            SMALL_BUTTON_Y_MARGIN,
-            SMALL_BUTTON_SIDE,
-            SMALL_BUTTON_SIDE,
-            GREEN
-        )
-
-        # Icon inside the left button
-        CUBE_ICON_SIDE = 30
-        CUBE_ICON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - CUBE_ICON_SIDE) / 2)
-        CUBE_ICON_Y_MARGIN = round((SCREEN_HEIGHT - CUBE_ICON_SIDE) / 2)
-        fill_rect(
-            CUBE_ICON_X_MARGIN,
-            CUBE_ICON_Y_MARGIN,
-            CUBE_ICON_SIDE,
-            CUBE_ICON_SIDE,
-            YELLOW
-        )
-
-        # Small right button if chosen
-        if menu_button == 3:
-            chosen_color = WHITE
-        else:
-            chosen_color = MAIN_MENU_COLOR
-
-        CHOSEN_RIGHT_SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - CHOSEN_SMALL_BUTTON_SIDE) / 2 + BIG_BUTTON_SIDE + BIG_BUTTON_X_MARGIN)
-        fill_rect(CHOSEN_RIGHT_SMALL_BUTTON_X_MARGIN,
-            CHOSEN_SMALL_BUTTON_Y_MARGIN,
-            CHOSEN_SMALL_BUTTON_SIDE,
-            CHOSEN_SMALL_BUTTON_SIDE,
-            chosen_color
-        )
-
-        # Small right button
-        RIGHT_SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - SMALL_BUTTON_SIDE) / 2 + BIG_BUTTON_SIDE + BIG_BUTTON_X_MARGIN)
-        fill_rect(RIGHT_SMALL_BUTTON_X_MARGIN,
-            SMALL_BUTTON_Y_MARGIN,
-            SMALL_BUTTON_SIDE,
-            SMALL_BUTTON_SIDE,
-            GREEN
-        )
-
-        # Text
-
-        draw_centered_string("GEOMETRY WORKS", 20, WHITE, MAIN_MENU_COLOR)
-
-        draw_centered_string("Up/OK=Jump | Shift=Restart", 170, WHITE, MAIN_MENU_COLOR)
-        draw_centered_string("OK/EXE=Choose | Backspace=Exit", 190, WHITE, MAIN_MENU_COLOR)
-
-
-        # Check buttons
-
-        if keydown(KEY_RIGHT):
+        if keydown(KEY_RIGHT) and not changed_page:
             menu_button += 1
             if menu_button > max_menu_buttons or menu_button < 1:
                 menu_button = 1
+            changed_page = True
+            draw_main_menu()
 
-        if keydown(KEY_LEFT):
+        elif keydown(KEY_LEFT) and not changed_page :
             menu_button -= 1
             if menu_button > max_menu_buttons or menu_button < 1:
                 menu_button = max_menu_buttons
+            changed_page = True
+            draw_main_menu()
+
+        elif (not keydown(KEY_RIGHT)) and (not keydown(KEY_LEFT)) and changed_page:
+            changed_page = False
 
         if keydown(KEY_EXE) or keydown(KEY_OK):
             if menu_button == 1:
                 enter_garage_menu()
+                clicked_enter = True
 
             elif menu_button == 2:
                 enter_browse_levels_menu()
-
-        sleep(0.2)  # bigger tick for buttons to need a longer click
+                clicked_enter = True
 
     sleep(TICK)
