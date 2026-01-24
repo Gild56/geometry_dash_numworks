@@ -14,14 +14,15 @@ from ion import (
 """```
 levels: list[
     list[
-        list[int, int, int, int],   # [0] = blocks[x_tile, y_tile, width_tiles, height_tiles]
-        list[int, int, int],        # [1] = spikes[x_tile, y_tile, orientation (0=normal / 1=upside down)]
-        int,                        # [2] = level end (mesured in tiles)
-        tuple[int, int, int],       # [3] = bg color (red, green, blue)
-        tuple[int, int, int],       # [4] = ground color (red, green, blue)
-        str,                        # [5] = level name
-        float,                      # [6] = record (initially 0)
-        int                         # [7] = attempts (initially 0)
+        list[int, int, int, int],  [0] = blocks[x_tile, y_tile, width_tiles, height_tiles]
+        list[int, int, int],       [1] = spikes[x_tile, y_tile, orientation (0=normal / 1=upside down)]
+        int,                       [2] = level end (mesured in tiles)
+        tuple[int, int, int],      [3] = background color (red, green, blue)
+        tuple[int, int, int],      [4] = blocks color (red, green, blue)
+        str,                       [5] = level name
+        float,                     [6] = record (initially 0)
+        int,                       [7] = attempts (initially 0)
+        str                        [8] = author
     ]
 ]
 ```"""
@@ -34,7 +35,7 @@ levels = [
         [
             [218, 5, 0], [133, 4, 1], [42, 5, 0], [52, 5, 0], [62, 5, 0], [73, 5, 0], [82, 5, 0], [144, 6, 0], [146, 6, 0], [142, 2, 0], [151, 1, 0], [164, 1, 0], [160, 6, 0], [166, 5, 0], [153, 3, 1], [158, 2, 1], [176, 3, 1], [220, 5, 0], [230, 5, 0], [240, 5, 0], [268, 6, 0]
         ],
-        276, (0, 130, 240), (0, 0, 70), "Blue Madness", 0, 0
+        276, (0, 130, 240), (0, 0, 70), "Blue Madness", 0, 0, "wperez274"
     ],
     [  # Level 2
         [
@@ -43,7 +44,7 @@ levels = [
         [
             [158, 6, 0], [159, 2, 0], [126, 3, 0], [106, 4, 0], [104, 4, 0], [73, 5, 0], [63, 5, 0], [50, 4, 0], [35, 5, 0], [124, 3, 0], [149, 2, 0], [151, 2, 0], [157, 2, 0], [150, 6, 0], [156, 6, 0], [195, 6, 0], [224, 6, 0], [226, 6, 0], [181, 5, 0], [244, 5, 0]
         ],
-        272, (0, 250, 80), (0, 70, 70), "Back in Green", 0, 0
+        272, (0, 250, 80), (0, 70, 70), "Back in Green", 0, 0, "wperez274"
     ],
     [  # Level 3
         [
@@ -52,7 +53,7 @@ levels = [
         [
             [184, 6, 0], [169, 5, 0], [167, 5, 0], [121, 3, 0], [123, 3, 0], [92, 4, 0], [53, 5, 0], [41, 5, 0], [83, 4, 0], [74, 4, 0], [186, 6, 0], [194, 6, 0], [202, 6, 0], [204, 6, 0], [217, 6, 1], [217, 6, 0], [249, 5, 0], [230, 6, 0], [239, 6, 0], [259, 4, 0]
         ],
-        272, (180, 0, 0), (50, 0, 0), "Polared", 0, 0
+        272, (180, 0, 0), (50, 0, 0), "Polared", 0, 0, "wperez274"
     ],
     [  # Level 4
         [
@@ -61,7 +62,7 @@ levels = [
         [
             [92, 5, 0], [80, 5, 0], [59, 4, 0], [61, 4, 0], [36, 5, 0], [20, 6, 0], [103, 6, 0]
         ],
-        109, (0, 190, 190), (0, 30, 30), "Dry One", 0, 0
+        109, (0, 190, 190), (0, 30, 30), "Dry One", 0, 0, "wperez274"
     ]
 ]
 
@@ -73,12 +74,19 @@ random_sentences = [
 
 TICK = 1/30  # 30 FPS
 speed = 6  # pixels / frame
+RESPAWN_TIME = 1
 
+percentage = 0
 menu_button = 2
 max_menu_buttons = 3
 menu = "main"
-
+attempts = 0
+percentage_label = ""
 current_level = 0
+respawned = False
+
+
+# Physics
 
 player_x = 50
 player_y = 172
@@ -93,27 +101,26 @@ is_falling = False
 jump_velocity = 32
 air_ticks = 0
 
-respawned = False
+
+# Sizes
 
 SCREEN_WIDTH = 320
 SCREEN_HEIGHT = 222
 TILE_SIZE_X = 10
 
 CHARECTER_WIDTH = 10
-CHARACTER_HEIGHT = 20
+CHARACTER_HEIGHT = 18
 CHARACTERS_LIMIT = SCREEN_WIDTH / CHARECTER_WIDTH
 
 PLAYER_WIDTH = 20
 PLAYER_HEIGHT = 20
 
-RESPAWN_TIME = 1
 
-attempts = 0
-percentage = 0
+# Colors
 
 bg_color = (0, 0, 0)
 player_color = (0, 0, 0)
-ground_color = (0, 0, 0)
+blocks_color = (0, 0, 0)
 DARK_GREEN = (0, 150, 0)
 DARK_BLUE = (0, 0, 150)
 RED = (255, 0, 0)
@@ -141,7 +148,7 @@ def draw_spike(x_tile: int, y_tile: int, orientation: int):
     for i in range(5):
         fill_rect(
             map_offset_x + x_tile * 10 - 10 + i * 2,
-            y_tile * 32 - i * 4 + (2 * i * 4 * orientation) - 4 * (1 - orientation), 20 - i * 4, 4, ground_color
+            y_tile * 32 - i * 4 + (2 * i * 4 * orientation) - 4 * (1 - orientation), 20 - i * 4, 4, blocks_color
         )
         fill_rect(
             map_offset_x + x_tile * 10 + 10 - i * 2,
@@ -151,7 +158,7 @@ def draw_spike(x_tile: int, y_tile: int, orientation: int):
 def draw_platform(x_tile: int, y_tile: int, width_tiles: int, height_tiles: int):
     fill_rect(
         map_offset_x + x_tile * 10, y_tile * 32,
-        10 * width_tiles, height_tiles * 32, ground_color
+        10 * width_tiles, height_tiles * 32, blocks_color
     )
 
     if width_tiles < 0:
@@ -164,6 +171,7 @@ def height_tiles(tile_x: int):
     fill_rect(map_offset_x + tile_x * 10 + 10, 0, 6, SCREEN_HEIGHT, bg_color)
 
 def draw_level():
+    global attempts, percentage_label
     first_tile, last_tile = get_visible_tile_range()
 
     # Spikes
@@ -182,10 +190,42 @@ def draw_level():
         fill_rect(map_offset_x + end_x * 10, 0, 10, SCREEN_HEIGHT, GREEN)
         fill_rect(map_offset_x + end_x * 10 + 10, 0, 6, SCREEN_HEIGHT, bg_color)
 
+    # Labels
+    attempts = levels[current_level][7]
+    attempts_label = str(attempts)
+
+    if attempts < 100:
+        attempts_label = "0" + attempts_label
+        if attempts < 10:
+            attempts_label = "0" + attempts_label
+
+
+    percentage = round(  # Full Distance / Payer Position * 100
+        (
+            ((levels[current_level][2] * 10) - (levels[current_level][2] * 10 + map_offset_x))
+            / (levels[current_level][2] * 10 - (player_x + PLAYER_WIDTH))
+            * 100
+        ), 2
+    )
+
+    if percentage > 100:
+        percentage = 100.0
+
+    percentage_label = str(percentage)
+
+    if percentage < 10:
+        percentage_label = "0" + percentage_label
+
+    if len(percentage_label) < 5:
+        percentage_label += "0"
+
+    draw_string(" " + levels[current_level][5] + " ", 0, 0, bg_color, BLACK)
+    draw_string(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
+    draw_centered_string(percentage_label + "%", 20, WHITE, bg_color)
 
 def respawn():
-    global attempts, map_offset_x, player_y, bg_color, menu
-    attempts += 1
+    global current_level, map_offset_x, player_y, bg_color, menu
+    levels[current_level][7] += 1
 
     menu = "level"
     set_colors()
@@ -196,20 +236,15 @@ def respawn():
     draw_player()
 
 def set_colors():
-    global bg_color, player_color, ground_color, current_level, levels
+    global bg_color, player_color, blocks_color
     player_color = (255, 255, 0)
     bg_color = levels[current_level][3]
-    ground_color = levels[current_level][4]
+    blocks_color = levels[current_level][4]
 
 def get_player_tile_x():
     return (-map_offset_x + player_x) // 10
 
 def check_collision():
-    px = player_x
-    py = player_y
-    pw = PLAYER_WIDTH
-    ph = PLAYER_HEIGHT
-
     player_tile = get_player_tile_x()
     first_tile = player_tile - 2
     last_tile = player_tile + 2
@@ -225,8 +260,8 @@ def check_collision():
         rh = h * 32
 
         if (
-            px + pw > rx and px < rx + rw and
-            py + ph > ry and py < ry + rh
+            player_x + PLAYER_WIDTH  > rx and player_x < rx + rw and
+            player_y + PLAYER_HEIGHT > ry and player_y < ry + rh
         ):
             return True
 
@@ -246,8 +281,8 @@ def check_collision():
             hit_y2 = ry + 16
 
         if (
-            px + pw > rx and px < rx + 10 and
-            py + ph > hit_y1 and py < hit_y2
+            player_x + PLAYER_WIDTH  > rx and player_x < rx + 10 and
+            player_y + PLAYER_HEIGHT > hit_y1 and player_y < hit_y2
         ):
             return True
 
@@ -257,22 +292,44 @@ def fill_screen(color: tuple[int, int, int]):
     fill_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color)
 
 def draw_level_menu():
-    fill_screen(levels[menu_button - 1][3])
-    draw_centered_string(levels[menu_button - 1][5], 40, WHITE, levels[menu_button - 1][3])
+    completed_color = DARK_GREEN
+    bg_color = levels[menu_button - 1][3]
+    blocks_color = levels[menu_button - 1][4]
+    best = levels[menu_button - 1][6]
+
+    fill_screen(blocks_color)
+    draw_centered_string(levels[menu_button - 1][5], 40, WHITE, blocks_color)
+    draw_centered_string("by " + str(levels[menu_button - 1][8]), 70, bg_color, blocks_color)
+    draw_centered_string("Attempts: " + str(levels[menu_button - 1][7]), 150, bg_color, blocks_color)
+
+    # Progressbar
+    MARGIN = 20
+    Y_POSITION = 110
+
+    LENGTH = SCREEN_WIDTH - (MARGIN * 2)
+    fill_rect(MARGIN, Y_POSITION, LENGTH, CHARACTER_HEIGHT, bg_color)
+
+    COMPLETED_LENGTH = round(LENGTH / 100 * best)
+    fill_rect(MARGIN, Y_POSITION, COMPLETED_LENGTH, CHARACTER_HEIGHT, completed_color)
+
+    if best > 50:
+        bg_text_color = completed_color
+    else:
+        bg_text_color = bg_color
+
+    draw_centered_string(str(round(best)) + "%", Y_POSITION, WHITE, bg_text_color)
 
 def enter_browse_levels_menu():
-    global menu, menu_button, max_menu_buttons, attempts
-    attempts = 0
-    menu_button = 1
+    global menu, menu_button, max_menu_buttons
+    menu_button = current_level + 1
     max_menu_buttons = len(levels)
     menu = "browse_levels"
     draw_level_menu()
     sleep(1)
 
 def enter_main_menu():
-    global menu, menu_button, max_menu_buttons, attempts
+    global menu, menu_button, max_menu_buttons
     fill_screen(MAIN_MENU_COLOR)
-    attempts = 0
     menu_button = 2
     max_menu_buttons = 3
     menu = "main"
@@ -338,7 +395,9 @@ while True:  # Game loop
                 if player_y + 20 != levels[current_level][0][i][1] * 32:
                     is_jumping = True
                 elif (
-                    levels[current_level][0][i][0] * 10 + map_offset_x-19 < 50 < levels[current_level][0][i][0] * 10 + map_offset_x + levels[current_level][0][i][2] * 10 + 20
+                    levels[current_level][0][i][0] * 10 + map_offset_x-19
+                    < 50
+                    < levels[current_level][0][i][0] * 10 + map_offset_x + levels[current_level][0][i][2] * 10 + 20
                 ):
                     is_jumping = False
                     break
@@ -367,37 +426,6 @@ while True:  # Game loop
                 can_jump = True
 
 
-        # Labels
-
-        attempts_label = str(attempts)
-
-        if attempts < 100:
-            attempts_label = "0" + attempts_label
-            if attempts < 10:
-                attempts_label = "0" + attempts_label
-
-
-        percentage = round(  # Full Distance / Payer Position * 100
-            (
-                ((levels[current_level][2] * 10) - (levels[current_level][2] * 10 + map_offset_x))
-                / (levels[current_level][2] * 10 - (player_x + PLAYER_WIDTH))
-                * 100
-            ), 2
-        )
-
-        percentage_label = str(percentage)
-
-        if percentage < 10:
-            percentage_label = "0" + percentage_label
-
-        if len(percentage_label) < 5:
-            percentage_label += "0"
-
-        draw_string(" " + levels[current_level][5] + " ", 0, 0, bg_color, BLACK)
-        draw_string(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
-        draw_centered_string(percentage_label + "%", 20, WHITE, bg_color)
-
-
         # Drawing
 
         draw_player(player_color)
@@ -416,6 +444,7 @@ while True:  # Game loop
 
         if keydown(KEY_BACKSPACE):  # Player exits
             enter_browse_levels_menu()
+
 
         # Player Dies
 
@@ -437,9 +466,7 @@ while True:  # Game loop
             # Waiting
             draw_player(bg_color)
             draw_level()
-            draw_string(" " + levels[current_level][5] + " ", 0, 0, bg_color, BLACK)
-            draw_string(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
-            draw_centered_string("100.0%", 20, WHITE, bg_color)
+            levels[current_level][6] = 100.0
             sleep(1)
 
             # Actual edscreen
