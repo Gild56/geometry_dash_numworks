@@ -19,6 +19,7 @@ sleep(0.5)
 while not KEY(KEY_EXE):  # Waiting for a key to be pressed
     pass
 
+
 """```
 levels: list[
     list[
@@ -59,7 +60,7 @@ levels = [
         [
             [184, 6, 0], [169, 5, 0], [167, 5, 0], [121, 3, 0], [123, 3, 0], [92, 4, 0], [53, 5, 0], [41, 5, 0], [83, 4, 0], [74, 4, 0], [186, 6, 0], [194, 6, 0], [202, 6, 0], [204, 6, 0], [217, 6, 1], [217, 6, 0], [249, 5, 0], [230, 6, 0], [239, 6, 0], [259, 4, 0]
         ],
-        272, (200, 0, 0), (50, 0, 0), "Polar Hell", 0
+        272, (180, 0, 0), (50, 0, 0), "Polared", 0
     ],
     [  # Level 4
         [
@@ -75,6 +76,7 @@ levels = [
 
 game = True
 TICK = 1/30  # 30 FPS
+speed = 6  # coordinates / frame
 
 game_started = False
 
@@ -353,14 +355,20 @@ while game:  # Game loop
 
     draw_player(player_color)
 
-    map_offset_x -= 6
+    map_offset_x -= speed
     draw_level()
 
-    if player_y + PLAYER_HEIGHT > 222 or check_collision():  # player dies
-        if levels[current_level][6] < percentage:
-            levels[current_level][6] = percentage
+
+    # Player Dies
+
+    if player_y + PLAYER_HEIGHT > 222 or check_collision():
         draw_level()
         draw_player(RED)
+
+        if levels[current_level][6] < percentage:  # New best
+            levels[current_level][6] = percentage
+            STR(percentage_label + "%", 130, 80, WHITE, bg_color)
+            STR("NEW BEST!", 120, 100, WHITE, bg_color)
 
         sleep(RESPAWN_TIME)
         respawn()
@@ -372,6 +380,8 @@ while game:  # Game loop
     # Endscreen
 
     if player_x + PLAYER_WIDTH > levels[current_level][2] * 10 + map_offset_x:
+        draw_player(bg_color)
+        draw_level()
         STR(" " + levels[current_level][5] + " (" + str(current_level + 1) + ") ", 0, 0, bg_color, BLACK)
         STR(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
         STR("100.0%", 130, 20, WHITE, bg_color)

@@ -20,6 +20,7 @@ KEY_DOWN = "down"
 KEY_LEFT = "left"
 KEY_RIGHT = "right"
 
+
 # Keys per row:
 
 KEY_SHIFT = "shift"
@@ -79,13 +80,13 @@ ALL_KEYS: list[str] = [
     KEY_ZERO, KEY_DOT, KEY_EE, KEY_ANS, KEY_EXE
 ]
 
+
 def keydown(key: str):
     """Returns True if the key is pressed"""
-    if not key in ALL_KEYS:
+    if key not in ALL_KEYS:
        print(f"Key {key} doesn't exist!")
-       return
+       return False
     return keyboard.is_pressed(key)
-
 
 def get_keys():
     """Get names of currently pressed keys"""
@@ -95,7 +96,9 @@ def get_keys():
             pressed_keys.append(key)
     return pressed_keys
 
+
 # All the following functions only give a fake result to give a real look of library
+
 def battery():
     """Return battery voltage"""
     voltage = 4.2
