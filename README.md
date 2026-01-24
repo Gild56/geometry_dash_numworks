@@ -4,13 +4,20 @@ A recreation of Geometry Dash on Numworks calculators.
 
 Four levels available for now :D
 
-Donwnload the lib: `pip install kandinsky install ion-numworks` and execute `gd.py` to play the game!
+Donwnload the lib: `pip install kandinsky` and execute `gd.py` to play the game!
+
 
 ## PC Emulator Controls
 
-- OK -> Space
-- EXE -> Enter
-- UP -> Up Arrow
+| Numworks  | Keyboard    |
+|-----------|-------------|
+| OK        | Space       |
+| EXE       | Enter       |
+| Backspace | Del         |
+| Up        | Up Arrow    |
+| Left      | Left Arrow  |
+| Right     | Right Arrow |
+
 
 ## Credits
 
