@@ -146,11 +146,11 @@ color_chosen = 1
 
 colors = [
     ["yellow", True, YELLOW, "Default color"],
-    ["blue", False, BLUE, f"Complete \"{levels[0][5]}\""],
-    ["green", False, GREEN, f"Complete \"{levels[1][5]}\""],
-    ["purple", False, PURPLE, f"Complete \"{levels[2][5]}\""],
-    ["pink", False, PINK, f"Complete \"{levels[3][5]}\""],
-    ["white", False, WHITE, f"Complete every level with coins"]
+    ["blue", False, BLUE, "Complete \"" + levels[0][5] + "\""],
+    ["green", False, GREEN, "Complete \"" + levels[1][5] + "\""],
+    ["purple", False, PURPLE, "Complete \"" + levels[2][5] + "\""],
+    ["pink", False, PINK, "Complete \"" + levels[3][5] + "\""],
+    ["white", False, WHITE, "Complete every level with coins"]
 ]  # add brown, grey, black..?
 
 
@@ -327,7 +327,10 @@ def draw_centered_string(
     global SCREEN_WIDTH
 
     if len(text) > CHARACTERS_LIMIT:
-        print(f"WARNING: The string \"{text}\" is too long! ({CHARACTERS_LIMIT} characters maximum)")
+        print(
+            "WARNING: The string \""+ text +
+            "\" is too long! " + str(CHARACTERS_LIMIT) + " characters maximum)"
+        )
 
     x = round((SCREEN_WIDTH - len(text) * 10) / 2)
     draw_string(text, x, y, color, background)
