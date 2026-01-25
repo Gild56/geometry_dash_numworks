@@ -20,7 +20,7 @@ def resource_path(relative: str):
         return os.path.join(sys._MEIPASS, relative)
     return os.path.join(relative)
 
-large_font = pygame.font.Font(resource_path("resources/large_font.ttf"), 14)
+large_font = pygame.font.Font(resource_path("resources/large_font.ttf"), 16)
 small_font = pygame.font.Font(resource_path("resources/small_font.ttf"), 14)
 
 def fill_rect(x: int, y: int, w: int, h: int, color: tuple[int, int, int]):

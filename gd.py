@@ -19,22 +19,6 @@ from ion import (
 )
 
 
-"""```
-levels: list[
-    list[
-        list[int, int, int, int],  [0] = blocks[x_tile, y_tile, width_tiles, height_tiles]
-        list[int, int, int],       [1] = spikes[x_tile, y_tile, orientation (0=normal / 1=upside down)]
-        int,                       [2] = level end (mesured in tiles)
-        tuple[int, int, int],      [3] = background color (red, green, blue)
-        tuple[int, int, int],      [4] = blocks color (red, green, blue)
-        str,                       [5] = level name
-        float,                     [6] = record (initially 0)
-        int,                       [7] = attempts (initially 0)
-        str                        [8] = author of the level
-    ]
-]
-```"""
-
 levels = [
     [  # Level 1
         [
@@ -565,10 +549,10 @@ def draw_level_menu():
     Y_POSITION = 110
 
     LENGTH = SCREEN_WIDTH - (MARGIN * 2)
-    fill_rect(MARGIN, Y_POSITION, LENGTH, CHARACTER_HEIGHT, bg_color)
+    fill_rect(MARGIN, Y_POSITION, LENGTH, CHARACTER_HEIGHT + 2, bg_color)
 
     COMPLETED_LENGTH = round(LENGTH / 100 * best)
-    fill_rect(MARGIN, Y_POSITION, COMPLETED_LENGTH, CHARACTER_HEIGHT, completed_color)
+    fill_rect(MARGIN, Y_POSITION, COMPLETED_LENGTH, CHARACTER_HEIGHT + 2, completed_color)
 
     if best > 50:
         bg_text_color = completed_color
