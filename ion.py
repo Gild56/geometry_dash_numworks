@@ -87,38 +87,3 @@ def keydown(key: str):
        print(f"Key {key} doesn't exist!")
        return False
     return keyboard.is_pressed(key)
-
-def get_keys():
-    """Get names of currently pressed keys"""
-    pressed_keys: list[str] = []
-    for key in ALL_KEYS:
-        if keyboard.is_pressed(key):
-            pressed_keys.append(key)
-    return pressed_keys
-
-
-# All the following functions only give a fake result to give a real look of library
-
-def battery():
-    """Return battery voltage"""
-    voltage = 4.2
-    return voltage
-
-def battery_level() -> int:
-    """Return battery level"""
-    level = 3
-    return level
-
-def battery_ischarging() -> bool:
-    """Return True if the battery is charging"""
-    charging = True
-    return charging
-
-def set_brightness(level: int, /):
-    """Set brightness level of screen"""
-    pass
-
-def get_brightness() -> int:
-    """Get brightness level of screen"""
-    brightness = 240
-    return brightness

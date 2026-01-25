@@ -7,7 +7,7 @@ from kandinsky import fill_rect, draw_string
 from ion import (
     KEY_OK, KEY_EXE, KEY_UP,
     KEY_LEFT, KEY_RIGHT, KEY_BACKSPACE,
-    KEY_SHIFT, keydown, get_keys
+    KEY_SHIFT, keydown
 )
 
 
@@ -87,9 +87,7 @@ current_level = 0
 
 # Anti-hold variables
 
-respawned = False
-changed_page = False
-clicked_enter = False
+clicked = False
 
 
 # Physics
@@ -148,11 +146,11 @@ color_chosen = 1
 
 colors = [
     ["yellow", True, YELLOW, "Default color"],
-    ["blue", False, BLUE, "Complete \"Gild Madness\""],
-    ["green", False, GREEN, "Complete \"Back in Green\""],
-    ["purple", False, PURPLE, "Complete \"Polablue\""],
-    ["pink", False, PINK, "Complete \"Dry Red\""],
-    ["white", False, WHITE, "Complete every level with coins"]
+    ["blue", False, BLUE, f"Complete \"{levels[0][5]}\""],
+    ["green", False, GREEN, f"Complete \"{levels[1][5]}\""],
+    ["purple", False, PURPLE, f"Complete \"{levels[2][5]}\""],
+    ["pink", False, PINK, f"Complete \"{levels[3][5]}\""],
+    ["white", False, WHITE, f"Complete every level with coins"]
 ]  # add brown, grey, black..?
 
 
@@ -197,7 +195,7 @@ def height_tiles(tile_x: int):
     fill_rect(map_offset_x + tile_x * 10 + 10, 0, 6, SCREEN_HEIGHT, bg_color)
 
 def draw_level():
-    global attempts, percentage_label
+    global attempts, percentage_label, percentage
     first_tile, last_tile = get_visible_tile_range()
 
     # Spikes
@@ -336,6 +334,19 @@ def draw_centered_string(
 
 
 # Pages functions
+
+def if_clicked():
+    if (
+        keydown(KEY_EXE) or
+        keydown(KEY_OK) or
+        keydown(KEY_SHIFT) or
+        keydown(KEY_BACKSPACE) or
+        keydown(KEY_LEFT) or
+        keydown(KEY_RIGHT)
+    ):
+        return True
+    return False
+
 
 def enter_main_menu():
     global menu, menu_button, max_menu_buttons
@@ -638,16 +649,17 @@ while True:  # Game loop
         draw_level()
 
 
-        if keydown(KEY_SHIFT) and not respawned:  # Restart an attempt
+        if keydown(KEY_SHIFT) and not clicked:  # Restart an attempt
             respawn()
-            respawned = True
+            clicked = True
 
-        elif not keydown(KEY_SHIFT):
-            respawned = False
+        elif not if_clicked():
+            clicked = False
 
 
         if keydown(KEY_BACKSPACE):  # Player exits
             enter_browse_levels_menu()
+            clicked = True
 
 
         # Player Dies
@@ -668,107 +680,113 @@ while True:  # Game loop
 
         elif player_x + PLAYER_WIDTH > levels[current_level][2] * 10 + map_offset_x:
             # Waiting
+
             draw_player(bg_color)
             draw_level()
+
             levels[current_level][6] = 100.0
+            colors[current_level + 1][1] = True
+
             sleep(1)
 
+
             # Actual edscreen
+
             fill_screen(BLACK)
             draw_centered_string("LEVEL COMPLETED", 60, GREEN, BLACK)
             draw_centered_string("Attempts: " + str(attempts), 100, WHITE, BLACK)
             draw_centered_string(choice(random_sentences), 140, WHITE, BLACK)
 
-            while not get_keys():  # Waiting for a key to be pressed
-                pass
+            while not (
+                keydown(KEY_EXE) or
+                keydown(KEY_BACKSPACE) or
+                keydown(KEY_OK) or
+                keydown(KEY_SHIFT)
+            ):
+                pass  # Waiting for a key to be pressed
 
+            clicked = True
             if keydown(KEY_SHIFT):
                 respawn()
             else:
                 enter_browse_levels_menu()
 
     elif menu == "garage":
-        if keydown(KEY_RIGHT) and not changed_page:
+        if keydown(KEY_RIGHT) and not clicked:
             menu_button += 1
             if menu_button > max_menu_buttons or menu_button < 1:
                 menu_button = 1
-            changed_page = True
+            clicked = True
             draw_garage_menu()
 
-        elif keydown(KEY_LEFT) and not changed_page:
+        elif keydown(KEY_LEFT) and not clicked:
             menu_button -= 1
             if menu_button > max_menu_buttons or menu_button < 1:
                 menu_button = max_menu_buttons
-            changed_page = True
+            clicked = True
             draw_garage_menu()
 
-        elif (not keydown(KEY_RIGHT)) and (not keydown(KEY_LEFT)) and changed_page:
-            changed_page = False
-
-        if (keydown(KEY_EXE) or keydown(KEY_OK)) and not clicked_enter:
+        if (keydown(KEY_EXE) or keydown(KEY_OK)) and not clicked:
             if colors[menu_button - 1][1]:
                 player_color = colors[menu_button - 1][2]
                 draw_garage_menu()
 
-        if not (keydown(KEY_EXE) or keydown(KEY_OK)):
-            clicked_enter = False
-
-        if keydown(KEY_BACKSPACE):
+        if keydown(KEY_BACKSPACE) and not clicked:
             enter_main_menu()
 
+        if not if_clicked() and clicked:
+            clicked = False
+
     elif menu == "browse_levels":
-        if keydown(KEY_RIGHT) and not changed_page:
+        if keydown(KEY_RIGHT) and not clicked:
             menu_button += 1
             if menu_button > max_menu_buttons or menu_button < 1:
                 menu_button = 1
-            changed_page = True
+            clicked = True
             draw_level_menu()
 
-        elif keydown(KEY_LEFT) and not changed_page:
+        if keydown(KEY_LEFT) and not clicked:
             menu_button -= 1
             if menu_button > max_menu_buttons or menu_button < 1:
                 menu_button = max_menu_buttons
-            changed_page = True
+            clicked = True
             draw_level_menu()
 
-        elif (not keydown(KEY_RIGHT)) and (not keydown(KEY_LEFT)) and changed_page:
-            changed_page = False
-
-        if (keydown(KEY_EXE) or keydown(KEY_OK)) and not clicked_enter:
+        if (keydown(KEY_EXE) or keydown(KEY_OK)) and not clicked:
             current_level = menu_button - 1
             respawn()
 
-        if not (keydown(KEY_EXE) or keydown(KEY_OK)):
-            clicked_enter = False
-
-        if keydown(KEY_BACKSPACE):
+        if keydown(KEY_BACKSPACE) and not clicked:
             enter_main_menu()
 
+        if not if_clicked() and clicked:
+            clicked = False
+
     elif menu == "main":
-        if keydown(KEY_RIGHT) and not changed_page:
+        if keydown(KEY_RIGHT) and not clicked:
             menu_button += 1
             if menu_button > max_menu_buttons or menu_button < 1:
                 menu_button = 1
-            changed_page = True
+            clicked = True
             draw_main_menu()
 
-        elif keydown(KEY_LEFT) and not changed_page :
+        elif keydown(KEY_LEFT) and not clicked :
             menu_button -= 1
             if menu_button > max_menu_buttons or menu_button < 1:
                 menu_button = max_menu_buttons
-            changed_page = True
+            clicked = True
             draw_main_menu()
 
-        elif (not keydown(KEY_RIGHT)) and (not keydown(KEY_LEFT)) and changed_page:
-            changed_page = False
+        elif (not keydown(KEY_RIGHT)) and (not keydown(KEY_LEFT)) and clicked:
+            clicked = False
 
         if keydown(KEY_EXE) or keydown(KEY_OK):
             if menu_button == 1:
                 enter_garage_menu()
-                clicked_enter = True
+                clicked = True
 
             elif menu_button == 2:
                 enter_browse_levels_menu()
-                clicked_enter = True
+                clicked = True
 
     sleep(TICK)
