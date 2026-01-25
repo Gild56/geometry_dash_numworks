@@ -262,8 +262,8 @@ def draw_level():
     draw_string(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
     draw_centered_string(percentage_label + "%", 20, BLACK, bg_color)
 
-    #test show screen min and max x
-    draw_string(str(first_tile) + " to " + str(last_tile), 0, 20, BLACK, bg_color)
+    # For testing: shows screen min and max on the x axis
+    #draw_string(str(first_tile) + " to " + str(last_tile), 0, 20, BLACK, bg_color)
 
 
 # Physics
