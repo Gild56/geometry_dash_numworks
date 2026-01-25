@@ -25,42 +25,44 @@ levels = [
             [0, 6, 32, 1], [48, 4, 23, 1], [35, 5, 36, 1], [32, 6, 77, 1], [104, 5, 5, 1], [79, 5, 14, 1]
         ],
         [
-            [92, 5, 0], [80, 5, 0], [59, 4, 0], [61, 4, 0], [36, 5, 0], [20, 6, 0], [103, 6, 0]
+            [20, 6, 0], [36, 5, 0], [59, 4, 0], [61, 4, 0], [80, 5, 0], [92, 5, 0], [103, 6, 0]
         ],
-        109, (0, 190, 190), (0, 30, 30), "Gild Madness", 0, 0, "wperez274"
+        109, (0, 190, 190), (0, 30, 30), "Gild Madness", 0, 0, "wperez274", [[13, 5]]
     ],
     [  # Level 2
         [
-            [0, 6, 32,1], [28, 5, 26, 1], [42, 4, 12, 1], [62, 5, 24, 1], [82, 4, 4, 1], [94, 6, 108, 1], [94, 5, 42, 1], [94, 4, 38, 1], [118, 3, 14, 1], [138, 3, 8, 1], [142, 2, 24, 1], [162, 3, 8, 1], [174, 5, 14, 1], [206, 6, 4, 1], [216, 6, 20, 1], [240, 5, 10, 1], [254, 4, 8, 1], [266, 3, 6, 1], [32, 6, 54, 1]
+            [0, 6, 32,1], [28, 5, 26, 1], [42, 4, 12, 1], [62, 5, 24, 1], [82, 4, 4, 1], [94, 6, 108, 1], [94, 5, 42, 1], [94, 4, 38, 1], [118, 3, 14, 1], [138, 3, 8, 1], [142, 2, 24, 1], [174, 5, 14, 1], [206, 6, 4, 1], [216, 6, 20, 1], [240, 5, 10, 1], [254, 4, 8, 1], [266, 3, 6, 1], [32, 6, 54, 1]
         ],
         [
-            [158, 6, 0], [159, 2, 0], [126, 3, 0], [106, 4, 0], [104, 4, 0], [73, 5, 0], [63, 5, 0], [50, 4, 0], [35, 5, 0], [124, 3, 0], [149, 2, 0], [151, 2, 0], [157, 2, 0], [150, 6, 0], [156, 6, 0], [195, 6, 0], [224, 6, 0], [226, 6, 0], [181, 5, 0], [244, 5, 0]
+            [35, 5, 0], [50, 4, 0], [63, 5, 0], [73, 5, 0], [104, 4, 0], [106, 4, 0], [124, 3, 0], [126, 3, 0], [149, 2, 0], [150, 6, 0], [151, 2, 0], [156, 6, 0], [157, 2, 0], [158, 6, 0], [159, 2, 0], [181, 5, 0], [195, 6, 0], [224, 6, 0], [226, 6, 0], [244, 5, 0]
         ],
-        272, (0, 250, 80), (0, 70, 70), "Back in Green", 0, 0, "wperez274"
+        272, (0, 250, 80), (0, 70, 70), "Back in Green", 0, 0, "wperez274", []
     ],
     [  # Level 3
         [
             [0, 6, 32, 1], [32, 5, 58, 2], [90, 4, 30, 3], [108, 3, 12, 1], [120, 6, 74, 1], [128, 3, 8, 1], [132, 2, 22, 1], [150, 1, 26, 1], [162, 5, 32, 1], [172, 2, 20, 1], [202, 5, 42, 2], [248, 4, 4, 3], [254, 5, 4, 2], [260, 6, 16, 1]
         ],
         [
-            [218, 5, 0], [133, 4, 1], [42, 5, 0], [52, 5, 0], [62, 5, 0], [73, 5, 0], [82, 5, 0], [144, 6, 0], [146, 6, 0], [142, 2, 0], [151, 1, 0], [164, 1, 0], [160, 6, 0], [166, 5, 0], [153, 3, 1], [158, 2, 1], [176, 3, 1], [220, 5, 0], [230, 5, 0], [240, 5, 0], [268, 6, 0]
+            [42, 5, 0], [52, 5, 0], [62, 5, 0], [73, 5, 0], [82, 5, 0], [133, 4, 1], [142, 2, 0], [144, 6, 0], [146, 6, 0], [151, 1, 0], [153, 3, 1], [158, 2, 1], [160, 6, 0], [164, 1, 0], [166, 5, 0], [176, 3, 1], [218, 5, 0], [220, 5, 0], [230, 5, 0], [240, 5, 0], [268, 6, 0]
         ],
-        276, (0, 130, 240), (0, 0, 70), "Polablue", 0, 0, "wperez274"
+        276, (0, 130, 240), (0, 0, 70), "Polablue", 0, 0, "wperez274", []
     ],
     [  # Level 4
         [
             [0, 6, 32, 1], [172, 6, 42, 1], [110, 6, 24, 1], [66, 4, 32, 1], [56, 5, 46, 2], [52, 5, 2, 2], [32, 5, 18, 2], [120, 5, 4, 1], [120, 3, 4, 1], [140, 5, 4, 2], [148, 4, 4, 3], [154, 3, 4, 4], [160, 4, 4, 3], [166, 5, 4, 2], [220, 6, 52, 1], [248, 5, 24, 1], [258, 4, 14, 1]
         ],
         [
-            [184, 6, 0], [169, 5, 0], [167, 5, 0], [121, 3, 0], [123, 3, 0], [92, 4, 0], [53, 5, 0], [41, 5, 0], [83, 4, 0], [74, 4, 0], [186, 6, 0], [194, 6, 0], [202, 6, 0], [204, 6, 0], [217, 6, 1], [217, 6, 0], [249, 5, 0], [230, 6, 0], [239, 6, 0], [259, 4, 0]
+            [41, 5, 0], [53, 5, 0], [74, 4, 0], [83, 4, 0], [92, 4, 0], [121, 3, 0], [123, 3, 0], [167, 5, 0], [169, 5, 0], [184, 6, 0], [186, 6, 0], [194, 6, 0], [202, 6, 0], [204, 6, 0], [217, 6, 1], [217, 6, 0], [230, 6, 0], [239, 6, 0], [249, 5, 0], [259, 4, 0]
         ],
-        272, (180, 0, 0), (50, 0, 0), "Dry Red", 0, 0, "wperez274"
+        272, (180, 0, 0), (50, 0, 0), "Dry Red", 0, 0, "wperez274", []
     ]
 ]
 
 random_sentences = [
     "brih", "yea", "wiw", "loll", "wot", "wha", "xd",
-    "This is a serious question...", "Don't hack like uranium"
+    "This is a serious question", "Don't hack like uranium",
+    "Ty Roxy for playtesting", "Ty Minh for playtesting",
+    "Ty Ihv2010 for support", "Subscribe to Gild56 on YT"
 ]
 
 
@@ -98,6 +100,9 @@ is_falling = False
 
 jump_velocity = 32
 air_ticks = 0
+
+ORB_SIDE = 20
+took_pad = False
 
 
 # Sizes
@@ -166,11 +171,13 @@ def draw_spike(x_tile: int, y_tile: int, orientation: int):
     for i in range(5):
         fill_rect(
             map_offset_x + x_tile * 10 - 10 + i * 2,
-            y_tile * 32 - i * 4 + (2 * i * 4 * orientation) - 4 * (1 - orientation), 20 - i * 4, 4, blocks_color
+            y_tile * 32 - i * 4 + (2 * i * 4 * orientation) - 4 * (1 - orientation),
+            20 - i * 4, 4, blocks_color
         )
         fill_rect(
             map_offset_x + x_tile * 10 + 10 - i * 2,
-            y_tile * 32 - i * 4 + (2 * i * 4 * orientation) - 4 * (1 - orientation), 6, 4, bg_color
+            y_tile * 32 - i * 4 + (2 * i * 4 * orientation) - 4 * (1 - orientation),
+            speed, 4, bg_color
         )
 
 def draw_platform(x_tile: int, y_tile: int, width_tiles: int, height_tiles: int):
@@ -182,11 +189,20 @@ def draw_platform(x_tile: int, y_tile: int, width_tiles: int, height_tiles: int)
     if width_tiles < 0:
         fill_rect(map_offset_x + x_tile * 10, y_tile * 32, 6, height_tiles * 32, bg_color)
     else:
-        fill_rect(map_offset_x + x_tile * 10 + width_tiles * 10, y_tile * 32, 6, height_tiles*32, bg_color)
+        fill_rect(
+            map_offset_x + x_tile * 10 + width_tiles * 10, y_tile * 32,
+            speed, height_tiles * 32, bg_color
+        )
 
-def height_tiles(tile_x: int):
-    fill_rect(map_offset_x + tile_x * 10, 0, 10, SCREEN_HEIGHT, GREEN)
-    fill_rect(map_offset_x + tile_x * 10 + 10, 0, 6, SCREEN_HEIGHT, bg_color)
+def draw_pad(x_tile: int, y_tile: int):
+    fill_rect(
+        round(map_offset_x + (x_tile + 0.2) * 10), round((y_tile + 0.7) * 32),
+        ORB_SIDE, ORB_SIDE // 2, YELLOW
+    )
+    fill_rect(
+        map_offset_x + x_tile * 10 + ORB_SIDE, round((y_tile + 0.7) * 32),
+        speed, ORB_SIDE // 2, bg_color
+    )
 
 def draw_level():
     global attempts, percentage_label, percentage
@@ -201,6 +217,11 @@ def draw_level():
     for x, y, w, h in levels[current_level][0]:
         if x + w >= first_tile and x <= last_tile:
             draw_platform(x, y, w, h)
+
+    # Pads
+    for x, y in levels[current_level][9]:
+        if x + 10 >= first_tile and x <= last_tile:
+            draw_pad(x, y)
 
     # Endwall
     end_x = levels[current_level][2]
@@ -240,6 +261,9 @@ def draw_level():
     draw_string(" " + levels[current_level][5] + " ", 0, 0, bg_color, BLACK)
     draw_string(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
     draw_centered_string(percentage_label + "%", 20, BLACK, bg_color)
+
+    #test show screen min and max x
+    draw_string(str(first_tile) + " to " + str(last_tile), 0, 20, BLACK, bg_color)
 
 
 # Physics
@@ -287,6 +311,26 @@ def check_collision():
             return True
 
     return False
+
+def check_pad_collision():
+    player_tile = (-map_offset_x + player_x) // 10
+    first_tile = player_tile - 2
+    last_tile = player_tile + 2
+    for x, y in levels[current_level][9]:
+        if x < first_tile or x > last_tile:
+            continue
+
+        rx = x * 10 + map_offset_x
+        ry = y * 32
+
+        hit_y1 = ry - 16
+        hit_y2 = ry + 16
+
+        if (
+            player_x + PLAYER_WIDTH  > rx and player_x < rx + 10 and
+            player_y + PLAYER_HEIGHT > hit_y1 and player_y < hit_y2
+        ):
+            return True
 
 def respawn():
     global current_level, map_offset_x, player_y, bg_color
@@ -632,10 +676,13 @@ while True:  # Game loop
         if not is_jumping:
             for i in range(len(levels[current_level][0])):
                 if (
-                    player_y + 20 == levels[current_level][0][i][1] * 32 and levels[current_level][0][i][0] * 10 + map_offset_x -19 <= 50 <= levels[current_level][0][i][2] * 10 + levels[current_level][0][i][0] * 10 + map_offset_x
+                    player_y + 20 == levels[current_level][0][i][1] * 32
+                    and levels[current_level][0][i][0] * 10 + map_offset_x -19
+                    <= 50 <=
+                    levels[current_level][0][i][2] * 10 + levels[current_level][0][i][0] * 10 + map_offset_x
                 ):
                     can_jump = True
-                    is_falling=False
+                    is_falling = False
                     break
                 else:
                     can_jump = False
@@ -645,10 +692,14 @@ while True:  # Game loop
                 draw_player(bg_color)
                 player_y += 16
 
+            if check_pad_collision():
+                took_pad = True
+                jump_velocity *= 2
+
             if (
-                keydown(KEY_OK) and can_jump == True
-                or keydown(KEY_UP) and can_jump == True
-            ):
+                (keydown(KEY_OK) and can_jump == True) or
+                (keydown(KEY_UP) and can_jump == True)
+            ) or check_pad_collision():
                 draw_player(bg_color)
                 is_jumping = True
                 player_y -= int(jump_velocity)
@@ -666,6 +717,7 @@ while True:  # Game loop
                     < levels[current_level][0][i][0] * 10 + map_offset_x + levels[current_level][0][i][2] * 10 + 20
                 ):
                     is_jumping = False
+                    jump_velocity = 32
                     break
 
             if is_jumping:
@@ -689,7 +741,9 @@ while True:  # Game loop
             else:
                 is_jumping  = False
                 jump_velocity = 32
-                can_jump = True
+
+        if not (keydown(KEY_OK) or keydown(KEY_UP)):
+            clicked = False
 
 
         # Drawing

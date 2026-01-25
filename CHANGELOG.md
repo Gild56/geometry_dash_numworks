@@ -21,3 +21,7 @@
 - Font size on emulator fixed
 - Progressbar height fixed
 - Floating-point precision error on Numworks fixed
+
+## v.1.1.2
+- Level 2 bottom path fixed
+- Jump Pads added (example in the 1st level)

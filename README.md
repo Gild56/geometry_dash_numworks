@@ -34,6 +34,7 @@ To build your own levels you will need to modify `levels: list[list[Any]]`
 | float,                    | [6]   | record (initially 0)                                               |
 | int,                      | [7]   | attempts (initially 0)                                             |
 | str                       | [8]   | author of the level                                                |
+| list[int, int]            | [9]   | jump pads[x, y]                                                    |
 
 Example of use:
 
