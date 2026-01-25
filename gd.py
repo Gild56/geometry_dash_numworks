@@ -4,7 +4,7 @@
 from random import choice
 from time import monotonic
 try:
-    #raise  # Try original kandinsky emulator
+    raise  # Try the original kandinsky emulator
     from emulator import fill_rect, draw_string, update, sleep
     emulated = True
 except:
@@ -229,7 +229,7 @@ def draw_level():
     if percentage > 100:
         percentage = 100.0
 
-    percentage_label = str(percentage)
+    percentage_label = "{:.2f}".format(percentage)
 
     if percentage < 10:
         percentage_label = "0" + percentage_label

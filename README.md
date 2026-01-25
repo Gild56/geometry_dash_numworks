@@ -4,7 +4,7 @@ A recreation of Geometry Dash on Numworks calculators (MicroPython 1.17 compatib
 
 Four levels available for now :D
 
-Donwnload the lib: `pip install kandinsky` and execute `gd.py` to play the game!
+Donwnload the libs: `pip install -m requirements.py` and execute `gd.py` to play the game!
 
 
 ## PC Emulator Controls
@@ -21,7 +21,7 @@ Donwnload the lib: `pip install kandinsky` and execute `gd.py` to play the game!
 
 ## Levels
 
-`levels: list[list[Any]]`
+To build your own levels you will need to modify `levels: list[list[Any]]`
 
 | Type                      | Index | Meaning
 |---------------------------|-------|--------------------------------------------------------------------|
@@ -41,7 +41,7 @@ Example of use:
 
 Gets the name of the current level
 
-`current_level` should be from `0` to `len(levels) - 1`
+`current_level` should go from `0` to `len(levels) - 1`
 
 
 ## Credits

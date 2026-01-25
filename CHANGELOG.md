@@ -1,9 +1,9 @@
 # Geometry Works public stable versions
 
-## Geometry Works v1.0.0
+## v1.0.0
 - 4 basic levels played after each other
 
-## Geometry Works v1.1.0
+## v1.1.0
 - Main menu
 - Garage with 5 colors available (4 of them unlocked after beating the 4 levels and one is default)
 - Levels browsing menu
@@ -16,3 +16,8 @@
 - Reordering the 4 levels
 - Restart level button
 - My own emulator for better and smoother performance and the possibility of turning the program into an executable (Pygame)
+
+## v.1.1.1
+- Font size on emulator fixed
+- Progressbar height fixed
+- Floating-point precision error on Numworks fixed
