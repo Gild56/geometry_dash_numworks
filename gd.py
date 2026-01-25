@@ -389,18 +389,18 @@ def draw_main_menu():
     )
 
     # Play triangle inside the big button
-    PIXELS = 5
-    PIXEL = BIG_BUTTON_SIDE / (PIXELS + 2)
-    MAX_HEIGHT = PIXELS * PIXEL
-    TOTAL_MINI_PIXELS = (PIXELS * 2 - 1)
+    PIXELS_X = 5
+    PIXEL_WIDTH = BIG_BUTTON_SIDE / (PIXELS_X + 2)
+    MAX_HEIGHT = PIXELS_X * PIXEL_WIDTH
+    TOTAL_MINI_PIXELS = (PIXELS_X * 2 - 1)
     MINI_PIXEL = MAX_HEIGHT / TOTAL_MINI_PIXELS
     current_pixels = TOTAL_MINI_PIXELS
 
-    for i in range(PIXELS):
+    for i in range(PIXELS_X):
         fill_rect(
-            round(BIG_BUTTON_X_MARGIN + PIXEL * (i + 1)),
-            round(BIG_BUTTON_Y_MARGIN + PIXEL + MINI_PIXEL * i),
-            round(PIXEL),
+            round(BIG_BUTTON_X_MARGIN + PIXEL_WIDTH * (i + 1)),
+            round(BIG_BUTTON_Y_MARGIN + PIXEL_WIDTH + MINI_PIXEL * i),
+            round(PIXEL_WIDTH),
             round(current_pixels * MINI_PIXEL),
             YELLOW
         )
@@ -454,7 +454,8 @@ def draw_main_menu():
         chosen_color = MAIN_MENU_COLOR
 
     CHOSEN_RIGHT_SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - CHOSEN_SMALL_BUTTON_SIDE) / 2 + BIG_BUTTON_SIDE + BIG_BUTTON_X_MARGIN)
-    fill_rect(CHOSEN_RIGHT_SMALL_BUTTON_X_MARGIN,
+    fill_rect(
+        CHOSEN_RIGHT_SMALL_BUTTON_X_MARGIN,
         CHOSEN_SMALL_BUTTON_Y_MARGIN,
         CHOSEN_SMALL_BUTTON_SIDE,
         CHOSEN_SMALL_BUTTON_SIDE,
@@ -463,12 +464,35 @@ def draw_main_menu():
 
     # Small right button
     RIGHT_SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - SMALL_BUTTON_SIDE) / 2 + BIG_BUTTON_SIDE + BIG_BUTTON_X_MARGIN)
-    fill_rect(RIGHT_SMALL_BUTTON_X_MARGIN,
+    fill_rect(
+        RIGHT_SMALL_BUTTON_X_MARGIN,
         SMALL_BUTTON_Y_MARGIN,
         SMALL_BUTTON_SIDE,
         SMALL_BUTTON_SIDE,
         GREEN
     )
+
+    # Platformer controls button on the small right button
+
+    CONTROLS_MARGIN = 5
+    CONTROLS_X = RIGHT_SMALL_BUTTON_X_MARGIN + CONTROLS_MARGIN
+    CONTROLS_Y = SMALL_BUTTON_Y_MARGIN + CONTROLS_MARGIN
+    CONTROLS_SIDE = SMALL_BUTTON_SIDE - (CONTROLS_MARGIN * 2)
+    CONTROL_MAP_Y = [1, 2, 3, 0, 3, 2, 1]  # Height of every column of the pixel art
+    CONTROLS_PIXELS_X = len(CONTROL_MAP_Y)
+    CONTROLS_MAX_PIXELS_Y = max(CONTROL_MAP_Y)
+    CONTROLS_PIXEL_SIZE_Y = CONTROLS_SIDE / CONTROLS_MAX_PIXELS_Y
+    CONTROLS_PIXEL_SIZE_X = CONTROLS_SIDE / CONTROLS_PIXELS_X
+
+    for i in range(CONTROLS_PIXELS_X):
+        current_height = CONTROLS_PIXEL_SIZE_Y * CONTROL_MAP_Y[i]
+        fill_rect(
+            round(CONTROLS_X + CONTROLS_PIXEL_SIZE_X * i),
+            round(CONTROLS_Y + ((CONTROLS_SIDE - current_height) / 2)),
+            round(CONTROLS_PIXEL_SIZE_X),
+            round(current_height),
+            YELLOW
+        )
 
     # Text
 
