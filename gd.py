@@ -366,11 +366,9 @@ def draw_main_menu():
         chosen_color = MAIN_MENU_COLOR
 
     CHOSEN_BIG_BUTTON_SIDE = 90
-    CHOSEN_BIG_BUTTON_X_MARGIN = round((SCREEN_WIDTH - CHOSEN_BIG_BUTTON_SIDE) / 2)
-    CHOSEN_BIG_BUTTON_Y_MARGIN = round((SCREEN_HEIGHT - CHOSEN_BIG_BUTTON_SIDE) / 2)
     fill_rect(
-        CHOSEN_BIG_BUTTON_X_MARGIN,
-        CHOSEN_BIG_BUTTON_Y_MARGIN,
+        round((SCREEN_WIDTH - CHOSEN_BIG_BUTTON_SIDE) / 2),
+        round((SCREEN_HEIGHT - CHOSEN_BIG_BUTTON_SIDE) / 2),
         CHOSEN_BIG_BUTTON_SIDE,
         CHOSEN_BIG_BUTTON_SIDE,
         chosen_color
@@ -378,11 +376,11 @@ def draw_main_menu():
 
     # Big button in the center
     BIG_BUTTON_SIDE = 70
-    BIG_BUTTON_X_MARGIN = round((SCREEN_WIDTH - BIG_BUTTON_SIDE) / 2)
-    BIG_BUTTON_Y_MARGIN = round((SCREEN_HEIGHT - BIG_BUTTON_SIDE) / 2)
+    BIG_BUTTON_X_MARGIN = (SCREEN_WIDTH - BIG_BUTTON_SIDE) / 2
+    BIG_BUTTON_Y_MARGIN = (SCREEN_HEIGHT - BIG_BUTTON_SIDE) / 2
     fill_rect(
-        BIG_BUTTON_X_MARGIN,
-        BIG_BUTTON_Y_MARGIN,
+        round(BIG_BUTTON_X_MARGIN),
+        round(BIG_BUTTON_Y_MARGIN),
         BIG_BUTTON_SIDE,
         BIG_BUTTON_SIDE,
         GREEN
@@ -413,10 +411,11 @@ def draw_main_menu():
         chosen_color = MAIN_MENU_COLOR
 
     CHOSEN_SMALL_BUTTON_SIDE = 70
-    CHOSEN_SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - CHOSEN_SMALL_BUTTON_SIDE) / 2)
-    CHOSEN_SMALL_BUTTON_Y_MARGIN = round((SCREEN_HEIGHT - CHOSEN_SMALL_BUTTON_SIDE) / 2)
+    CHOSEN_SMALL_BUTTON_Y_MARGIN = round(
+        (SCREEN_HEIGHT - CHOSEN_SMALL_BUTTON_SIDE) / 2
+    )
     fill_rect(
-        CHOSEN_SMALL_BUTTON_X_MARGIN,
+        round((BIG_BUTTON_X_MARGIN - CHOSEN_SMALL_BUTTON_SIDE) / 2),
         CHOSEN_SMALL_BUTTON_Y_MARGIN,
         CHOSEN_SMALL_BUTTON_SIDE,
         CHOSEN_SMALL_BUTTON_SIDE,
@@ -425,10 +424,11 @@ def draw_main_menu():
 
     # Small left button
     SMALL_BUTTON_SIDE = 50
-    SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - SMALL_BUTTON_SIDE) / 2)
-    SMALL_BUTTON_Y_MARGIN = round((SCREEN_HEIGHT - SMALL_BUTTON_SIDE) / 2)
+    SMALL_BUTTON_Y_MARGIN = round(
+        (SCREEN_HEIGHT - SMALL_BUTTON_SIDE) / 2
+    )
     fill_rect(
-        SMALL_BUTTON_X_MARGIN,
+        round((BIG_BUTTON_X_MARGIN - SMALL_BUTTON_SIDE) / 2),
         SMALL_BUTTON_Y_MARGIN,
         SMALL_BUTTON_SIDE,
         SMALL_BUTTON_SIDE,
@@ -437,8 +437,12 @@ def draw_main_menu():
 
     # Icon inside the left button
     CUBE_ICON_SIDE = 30
-    CUBE_ICON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - CUBE_ICON_SIDE) / 2)
-    CUBE_ICON_Y_MARGIN = round((SCREEN_HEIGHT - CUBE_ICON_SIDE) / 2)
+    CUBE_ICON_X_MARGIN = round(
+        (BIG_BUTTON_X_MARGIN - CUBE_ICON_SIDE) / 2
+    )
+    CUBE_ICON_Y_MARGIN = round(
+        (SCREEN_HEIGHT - CUBE_ICON_SIDE) / 2
+    )
     fill_rect(
         CUBE_ICON_X_MARGIN,
         CUBE_ICON_Y_MARGIN,
@@ -453,7 +457,11 @@ def draw_main_menu():
     else:
         chosen_color = MAIN_MENU_COLOR
 
-    CHOSEN_RIGHT_SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - CHOSEN_SMALL_BUTTON_SIDE) / 2 + BIG_BUTTON_SIDE + BIG_BUTTON_X_MARGIN)
+    CHOSEN_RIGHT_SMALL_BUTTON_X_MARGIN = round(
+        (BIG_BUTTON_X_MARGIN - CHOSEN_SMALL_BUTTON_SIDE) / 2
+        + BIG_BUTTON_SIDE + BIG_BUTTON_X_MARGIN
+    )
+
     fill_rect(
         CHOSEN_RIGHT_SMALL_BUTTON_X_MARGIN,
         CHOSEN_SMALL_BUTTON_Y_MARGIN,
@@ -463,7 +471,11 @@ def draw_main_menu():
     )
 
     # Small right button
-    RIGHT_SMALL_BUTTON_X_MARGIN = round((BIG_BUTTON_X_MARGIN - SMALL_BUTTON_SIDE) / 2 + BIG_BUTTON_SIDE + BIG_BUTTON_X_MARGIN)
+    RIGHT_SMALL_BUTTON_X_MARGIN = round(
+        (BIG_BUTTON_X_MARGIN - SMALL_BUTTON_SIDE) / 2
+        + BIG_BUTTON_SIDE + BIG_BUTTON_X_MARGIN
+    )
+
     fill_rect(
         RIGHT_SMALL_BUTTON_X_MARGIN,
         SMALL_BUTTON_Y_MARGIN,
