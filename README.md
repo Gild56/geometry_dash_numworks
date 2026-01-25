@@ -49,3 +49,5 @@ Gets the name of the current level
 - Calm_Repeat_7267
 - wperez274
 - ZetaMap
+- NumWorks Team
+- PyGame Team
