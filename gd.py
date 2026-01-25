@@ -2,8 +2,16 @@
 # Credits: Calm_Repeat_7267 and wperez274
 
 from random import choice
-from time import sleep
-from kandinsky import fill_rect, draw_string
+from time import monotonic
+try:
+    #raise  # Try original kandinsky emulator
+    from emulator import fill_rect, draw_string, update, sleep
+    emulated = True
+except:
+    emulated = False
+    from kandinsky import fill_rect, draw_string
+    from time import sleep
+
 from ion import (
     KEY_OK, KEY_EXE, KEY_UP,
     KEY_LEFT, KEY_RIGHT, KEY_BACKSPACE,
@@ -84,6 +92,8 @@ attempts = 0
 percentage_label = ""
 current_level = 0
 
+start_wait = None
+
 
 # Anti-hold variables
 
@@ -150,7 +160,7 @@ colors = [
     ["green", False, GREEN, "Complete \"" + levels[1][5] + "\""],
     ["purple", False, PURPLE, "Complete \"" + levels[2][5] + "\""],
     ["pink", False, PINK, "Complete \"" + levels[3][5] + "\""],
-    ["white", False, WHITE, "Complete every level with coins"]
+    #["white", False, WHITE, "Complete every level with coins"]
 ]  # add brown, grey, black..?
 
 
@@ -245,7 +255,7 @@ def draw_level():
 
     draw_string(" " + levels[current_level][5] + " ", 0, 0, bg_color, BLACK)
     draw_string(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
-    draw_centered_string(percentage_label + "%", 20, WHITE, bg_color)
+    draw_centered_string(percentage_label + "%", 20, BLACK, bg_color)
 
 
 # Physics
@@ -296,11 +306,12 @@ def check_collision():
 
 def respawn():
     global current_level, map_offset_x, player_y, bg_color
-    global menu, bg_color, player_color, blocks_color
+    global menu, bg_color, player_color, blocks_color, start_wait
 
     levels[current_level][7] += 1
 
     menu = "level"
+    start_wait = None
 
     bg_color = levels[current_level][3]
     blocks_color = levels[current_level][4]
@@ -349,6 +360,20 @@ def if_clicked():
     ):
         return True
     return False
+
+
+def enter_endscreen():
+    global menu
+    menu = "endscreen"
+    draw_endscreen()
+
+def draw_endscreen():
+    fill_screen(blocks_color)
+    MARGIN = 30
+    fill_rect(MARGIN, MARGIN, SCREEN_WIDTH - MARGIN * 2, SCREEN_HEIGHT - MARGIN * 2, bg_color)
+    draw_centered_string("LEVEL COMPLETED", 60, DARK_GREEN, bg_color)
+    draw_centered_string("Attempts: " + str(attempts), 100, BLACK, bg_color)
+    draw_centered_string(choice(random_sentences), 140, BLACK, bg_color)
 
 
 def enter_main_menu():
@@ -610,11 +635,14 @@ def draw_garage_menu():
             COLOR_SIDE, COLOR_SIDE, colors[i][2]
         )
 
+
 enter_main_menu()
 
 
 while True:  # Game loop
-    if menu == "level":
+    start = monotonic()
+
+    if menu == "level" and not start_wait:
         # Physics
 
         if not is_jumping:
@@ -711,39 +739,40 @@ while True:  # Game loop
                 draw_centered_string(percentage_label + "%", 80, WHITE, bg_color)
                 draw_centered_string("NEW BEST!", 100, WHITE, bg_color)
 
-            sleep(RESPAWN_TIME)
-            respawn()
+            start_wait = monotonic()
 
 
         # Endscreen
 
         elif player_x + PLAYER_WIDTH > levels[current_level][2] * 10 + map_offset_x:
-            # Waiting
-
             draw_player(bg_color)
             draw_level()
+            draw_centered_string("LEVEL COMPLETED!", 100, DARK_GREEN, bg_color)
 
             levels[current_level][6] = 100.0
             colors[current_level + 1][1] = True
 
-            sleep(1)
+            start_wait = monotonic()
 
+    elif menu == "level":
+        current_wait = monotonic()
+        if current_wait - start_wait < RESPAWN_TIME:
+            continue
 
-            # Actual edscreen
+        if player_x + PLAYER_WIDTH > levels[current_level][2] * 10 + map_offset_x:
+            enter_endscreen()
+        else:  # Player died
+            respawn()
 
-            fill_screen(BLACK)
-            draw_centered_string("LEVEL COMPLETED", 60, GREEN, BLACK)
-            draw_centered_string("Attempts: " + str(attempts), 100, WHITE, BLACK)
-            draw_centered_string(choice(random_sentences), 140, WHITE, BLACK)
+    elif menu == "endscreen":
+        start_wait = None
 
-            while not (
-                keydown(KEY_EXE) or
-                keydown(KEY_BACKSPACE) or
-                keydown(KEY_OK) or
-                keydown(KEY_SHIFT)
-            ):
-                pass  # Waiting for a key to be pressed
-
+        if (
+            keydown(KEY_EXE) or
+            keydown(KEY_BACKSPACE) or
+            keydown(KEY_OK) or
+            keydown(KEY_SHIFT)
+        ):  # Waiting for a key to be pressed
             clicked = True
             if keydown(KEY_SHIFT):
                 respawn()
@@ -828,4 +857,11 @@ while True:  # Game loop
                 enter_browse_levels_menu()
                 clicked = True
 
-    sleep(TICK)
+    if emulated:
+        update()
+
+    else:
+        end = monotonic()
+        wait = TICK - (end - start)
+        if wait > 0:
+            sleep(wait)

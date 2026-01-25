@@ -84,6 +84,6 @@ ALL_KEYS: list[str] = [
 def keydown(key: str):
     """Returns True if the key is pressed"""
     if key not in ALL_KEYS:
-       print("Key " + key + " doesn't exist!")
+       print("WARNING: Key " + key + " doesn't exist!")
        return False
     return keyboard.is_pressed(key)

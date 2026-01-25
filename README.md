@@ -1,6 +1,6 @@
 # Geometry Works
 
-A recreation of Geometry Dash on Numworks calculators.
+A recreation of Geometry Dash on Numworks calculators (MicroPython 1.17 compatible with Python 3.4).
 
 Four levels available for now :D
 
