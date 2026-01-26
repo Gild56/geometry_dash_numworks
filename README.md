@@ -47,8 +47,13 @@ Gets the name of the current level
 
 ## Credits
 
-- Calm_Repeat_7267
-- wperez274
-- ZetaMap
-- NumWorks Team
-- PyGame Team
+- [Calm_Repeat_7267](https://www.reddit.com/r/numworks/comments/s60imu/i_made_geometry_dash_on_my_calculator/?tl=fr)
+- [wperez274](https://my.numworks.com/python/wperez274/geometry_dash_x)
+- [ZetaMap](https://github.com/ZetaMap/Ion-numworks/tree/main/src/ion)
+- [NumWorks Team](https://github.com/numworks/epsilon)
+- [PyGame Team](https://www.pygame.org/news)
+
+
+## Thanks to:
+
+Minh, Roxy, Malo, Lowan, Matthieu for playtesting, suggesting ideas, etc...

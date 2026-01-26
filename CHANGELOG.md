@@ -17,11 +17,15 @@
 - Restart level button
 - My own emulator for better and smoother performance and the possibility of turning the program into an executable (Pygame)
 
-## v.1.1.1
+## v1.1.1
 - Font size on emulator fixed
 - Progressbar height fixed
 - Floating-point precision error on Numworks fixed
 
-## v.1.1.2
+## v1.1.2
 - Level 2 bottom path fixed
 - Jump Pads added (example in the 1st level)
+
+## v1.1.3
+- Shift buffering patched
+- Minor fixes

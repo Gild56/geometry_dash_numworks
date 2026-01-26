@@ -19,6 +19,8 @@ from ion import (
 )
 
 
+VERSION = "v1.1.4"
+
 levels = [
     [  # Level 1
         [
@@ -31,7 +33,7 @@ levels = [
     ],
     [  # Level 2
         [
-            [0, 6, 32,1], [28, 5, 26, 1], [42, 4, 12, 1], [62, 5, 24, 1], [82, 4, 4, 1], [94, 6, 108, 1], [94, 5, 42, 1], [94, 4, 38, 1], [118, 3, 14, 1], [138, 3, 8, 1], [142, 2, 24, 1], [174, 5, 14, 1], [206, 6, 4, 1], [216, 6, 20, 1], [240, 5, 10, 1], [254, 4, 8, 1], [266, 3, 6, 1], [32, 6, 54, 1]
+            [0, 6, 32, 1], [28, 5, 26, 1], [42, 4, 12, 1], [62, 5, 24, 1], [82, 4, 4, 1], [94, 6, 108, 1], [94, 5, 42, 1], [94, 4, 38, 1], [118, 3, 14, 1], [138, 3, 8, 1], [142, 2, 24, 1], [174, 5, 14, 1], [206, 6, 4, 1], [216, 6, 20, 1], [240, 5, 10, 1], [254, 4, 8, 1], [266, 3, 6, 1], [32, 6, 54, 1]
         ],
         [
             [35, 5, 0], [50, 4, 0], [63, 5, 0], [73, 5, 0], [104, 4, 0], [106, 4, 0], [124, 3, 0], [126, 3, 0], [149, 2, 0], [150, 6, 0], [151, 2, 0], [156, 6, 0], [157, 2, 0], [158, 6, 0], [159, 2, 0], [181, 5, 0], [195, 6, 0], [224, 6, 0], [226, 6, 0], [244, 5, 0]
@@ -58,7 +60,7 @@ levels = [
     ]
 ]
 
-random_sentences = [
+random_sentences = [  # 26 letters max
     "brih", "yea", "wiw", "loll", "wot", "wha", "xd",
     "This is a serious question", "Don't hack like uranium",
     "Ty Roxy for playtesting", "Ty Minh for playtesting",
@@ -258,8 +260,8 @@ def draw_level():
     if len(percentage_label) < 5:
         percentage_label += "0"
 
-    draw_string(" " + levels[current_level][5] + " ", 0, 0, bg_color, BLACK)
-    draw_string(" Attempts:" + attempts_label + " ", 180, 0, RED, BLACK)
+    draw_centered_string(" " + levels[current_level][5] + " ", 0, bg_color, BLACK, "left")
+    draw_centered_string(" Attempts:" + attempts_label + " ", 0, RED, BLACK, "right")
     draw_centered_string(percentage_label + "%", 20, BLACK, bg_color)
 
     # For testing: shows screen min and max on the x axis
@@ -361,7 +363,8 @@ def draw_centered_string(
         text: str,
         y: int,
         color: tuple[int, int, int],
-        background: tuple[int, int, int]
+        background: tuple[int, int, int],
+        side: str | None = None
     ):
     global SCREEN_WIDTH
 
@@ -371,7 +374,17 @@ def draw_centered_string(
             "\" is too long! " + str(CHARACTERS_LIMIT) + " characters maximum)"
         )
 
-    x = round((SCREEN_WIDTH - len(text) * 10) / 2)
+    if not side:
+        x = round((SCREEN_WIDTH - (len(text) * CHARECTER_WIDTH)) / 2)
+    elif side == "left":
+        x = 0
+    elif side == "right":
+        x = SCREEN_WIDTH - (len(text) * CHARECTER_WIDTH)
+        pass
+    else:
+        print("WARNING: the side \"" + side + "\" doesn't exist!")
+        x = round((SCREEN_WIDTH - (len(text) * CHARECTER_WIDTH)) / 2)
+
     draw_string(text, x, y, color, background)
 
 
@@ -401,7 +414,7 @@ def draw_endscreen():
     fill_rect(MARGIN, MARGIN, SCREEN_WIDTH - MARGIN * 2, SCREEN_HEIGHT - MARGIN * 2, bg_color)
     draw_centered_string("LEVEL COMPLETED", 60, DARK_GREEN, bg_color)
     draw_centered_string("Attempts: " + str(attempts), 100, BLACK, bg_color)
-    draw_centered_string(choice(random_sentences), 140, BLACK, bg_color)
+    draw_centered_string(choice(random_sentences[:26]), 140, BLACK, bg_color)
 
 
 def enter_main_menu():
@@ -546,14 +559,14 @@ def draw_main_menu():
     CONTROLS_X = RIGHT_SMALL_BUTTON_X_MARGIN + CONTROLS_MARGIN
     CONTROLS_Y = SMALL_BUTTON_Y_MARGIN + CONTROLS_MARGIN
     CONTROLS_SIDE = SMALL_BUTTON_SIDE - (CONTROLS_MARGIN * 2)
-    CONTROL_MAP_Y = [1, 2, 3, 0, 3, 2, 1]  # Height of every column of the pixel art
-    CONTROLS_PIXELS_X = len(CONTROL_MAP_Y)
-    CONTROLS_MAX_PIXELS_Y = max(CONTROL_MAP_Y)
+    CONTROLS_MAP_Y = [1, 2, 3, 0, 3, 2, 1]  # Height of every column of the pixel art
+    CONTROLS_PIXELS_X = len(CONTROLS_MAP_Y)
+    CONTROLS_MAX_PIXELS_Y = max(CONTROLS_MAP_Y)
     CONTROLS_PIXEL_SIZE_Y = CONTROLS_SIDE / CONTROLS_MAX_PIXELS_Y
     CONTROLS_PIXEL_SIZE_X = CONTROLS_SIDE / CONTROLS_PIXELS_X
 
     for i in range(CONTROLS_PIXELS_X):
-        current_height = CONTROLS_PIXEL_SIZE_Y * CONTROL_MAP_Y[i]
+        current_height = CONTROLS_PIXEL_SIZE_Y * CONTROLS_MAP_Y[i]
         fill_rect(
             round(CONTROLS_X + CONTROLS_PIXEL_SIZE_X * i),
             round(CONTROLS_Y + ((CONTROLS_SIDE - current_height) / 2)),
@@ -566,8 +579,10 @@ def draw_main_menu():
 
     draw_centered_string("GEOMETRY WORKS", 20, WHITE, MAIN_MENU_COLOR)
 
-    draw_centered_string("Up/OK=Jump | Shift=Restart", 170, WHITE, MAIN_MENU_COLOR)
-    draw_centered_string("OK/EXE=Choose | Backspace=Exit", 190, WHITE, MAIN_MENU_COLOR)
+    draw_centered_string("Up/OK=Jump | Shift=Restart", SCREEN_HEIGHT - CHARACTER_HEIGHT * 3 - 5, WHITE, MAIN_MENU_COLOR)
+    draw_centered_string("OK/EXE=Choose | Backspace=Exit", SCREEN_HEIGHT - CHARACTER_HEIGHT * 2 - 5, WHITE, MAIN_MENU_COLOR)
+    draw_centered_string(" Game By Gild56 (on YT)", SCREEN_HEIGHT - CHARACTER_HEIGHT - 5, WHITE, MAIN_MENU_COLOR, "left")
+    draw_centered_string(VERSION + " ", SCREEN_HEIGHT - CHARACTER_HEIGHT - 5, WHITE, MAIN_MENU_COLOR, "right")
 
 
 def enter_browse_levels_menu():
@@ -697,8 +712,10 @@ while True:  # Game loop
                 jump_velocity *= 2
 
             if (
-                (keydown(KEY_OK) and can_jump == True) or
-                (keydown(KEY_UP) and can_jump == True)
+                (
+                    (keydown(KEY_OK) and can_jump == True) or
+                    (keydown(KEY_UP) and can_jump == True)
+                ) and not clicked
             ) or check_pad_collision():
                 draw_player(bg_color)
                 is_jumping = True
@@ -741,9 +758,6 @@ while True:  # Game loop
             else:
                 is_jumping  = False
                 jump_velocity = 32
-
-        if not (keydown(KEY_OK) or keydown(KEY_UP)):
-            clicked = False
 
 
         # Drawing
@@ -860,9 +874,11 @@ while True:  # Game loop
 
         if (keydown(KEY_EXE) or keydown(KEY_OK)) and not clicked:
             current_level = menu_button - 1
+            clicked = True
             respawn()
 
         if keydown(KEY_BACKSPACE) and not clicked:
+            clicked = True
             enter_main_menu()
 
         if not if_clicked() and clicked:
