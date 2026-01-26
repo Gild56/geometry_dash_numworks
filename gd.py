@@ -9,8 +9,8 @@ try:
     emulated = True
 except:
     emulated = False
-    from kandinsky import fill_rect, draw_string   # Comment these lines before compiling to .exe
-    from time import sleep                         # Comment these lines before compiling to .exe
+    #from kandinsky import fill_rect, draw_string   #! Comment these lines before compiling to .exe !!!
+    #from time import sleep                         #! Comment these lines before compiling to .exe !!!
 
 from ion import (
     KEY_OK, KEY_EXE, KEY_UP,
