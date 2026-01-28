@@ -19,7 +19,7 @@ from ion import (
 )
 
 
-VERSION = "v1.1.3"
+VERSION = "v1.1.4"
 
 levels = [
     [  # Level 1
@@ -29,7 +29,7 @@ levels = [
         [
             [20, 6, 0], [36, 5, 0], [59, 4, 0], [61, 4, 0], [80, 5, 0], [92, 5, 0], [103, 6, 0]
         ],
-        109, (0, 190, 190), (0, 30, 30), "Gild Madness", 0, 0, "wperez274", [[13, 5]]
+        109, (0, 190, 190), (0, 30, 30), "Gild Madness", 0, 0, "wperez274", [[13, 5]], 0, []
     ],
     [  # Level 2
         [
@@ -38,7 +38,7 @@ levels = [
         [
             [35, 5, 0], [50, 4, 0], [63, 5, 0], [73, 5, 0], [104, 4, 0], [106, 4, 0], [124, 3, 0], [126, 3, 0], [149, 2, 0], [150, 6, 0], [151, 2, 0], [156, 6, 0], [157, 2, 0], [158, 6, 0], [159, 2, 0], [181, 5, 0], [195, 6, 0], [224, 6, 0], [226, 6, 0], [244, 5, 0]
         ],
-        272, (0, 250, 80), (0, 70, 70), "Back in Green", 0, 0, "wperez274", []
+        272, (0, 250, 80), (0, 70, 70), "Back in Green", 0, 0, "wperez274", [], 0, []
     ],
     [  # Level 3
         [
@@ -47,7 +47,7 @@ levels = [
         [
             [42, 5, 0], [52, 5, 0], [62, 5, 0], [73, 5, 0], [82, 5, 0], [133, 4, 1], [142, 2, 0], [144, 6, 0], [146, 6, 0], [151, 1, 0], [153, 3, 1], [158, 2, 1], [160, 6, 0], [164, 1, 0], [166, 5, 0], [176, 3, 1], [218, 5, 0], [220, 5, 0], [230, 5, 0], [240, 5, 0], [268, 6, 0]
         ],
-        276, (0, 130, 240), (0, 0, 70), "Polablue", 0, 0, "wperez274", []
+        276, (0, 130, 240), (0, 0, 70), "Polablue", 0, 0, "Calm_Repeat_7267", [], 0, []
     ],
     [  # Level 4
         [
@@ -56,16 +56,45 @@ levels = [
         [
             [41, 5, 0], [53, 5, 0], [74, 4, 0], [83, 4, 0], [92, 4, 0], [121, 3, 0], [123, 3, 0], [167, 5, 0], [169, 5, 0], [184, 6, 0], [186, 6, 0], [194, 6, 0], [202, 6, 0], [204, 6, 0], [217, 6, 1], [217, 6, 0], [230, 6, 0], [239, 6, 0], [249, 5, 0], [259, 4, 0]
         ],
-        272, (180, 0, 0), (50, 0, 0), "Dry Red", 0, 0, "wperez274", []
+        272, (180, 0, 0), (50, 0, 0), "Dry Red", 0, 0, "wperez274", [], 0, []
     ]
 ]
 
-random_sentences = [  # 26 letters max
-    "brih", "yea", "wiw", "loll", "wot", "wha", "xd",
+
+# Meaning per index of levels[]
+# to make the code more readable
+
+BLOCKS = 0
+SPIKES = 1
+END = 2
+BG_COLOR = 3
+BLOCKS_COLOR = 4
+NAME = 5
+RECORD = 6
+ATTEMPTS = 7
+AUTHOR = 8
+JUMP_PADS = 9
+JUMPS = 10
+COINS = 11
+
+
+endscreen_sentences = [  # 26 letters max
     "This is a serious question", "Don't hack like uranium",
     "Ty Roxy for playtesting", "Ty Minh for playtesting",
-    "Ty Ihv2010 for support", "Subscribe to Gild56 on YT"
+    "Ty Ihv2010 for support", "Subscribe to Gild56 on YT",
+    "Eat, sleep, dash, repeat", "C'est très fort"
 ]
+
+new_best_sentences = [  # 32 letters max
+    "brih", "yea", "wiw", "loll", "wot", "wha", "xd",
+    "Nope", "Pauvre jeune homme...", "RIP"
+]
+
+
+if __name__ == "__main__":
+    game = True
+else:
+    game = False
 
 
 TICK = 1/30  # 30 FPS
@@ -76,16 +105,19 @@ percentage = 0
 menu_button = 2
 max_menu_buttons = 3
 menu = "main"
-attempts = 0
 percentage_label = ""
 current_level = 0
-
 start_wait = None
-
-
-# Anti-hold variables
-
 clicked = False
+attempts = 0  # current level attempts
+
+total_attempts = 0
+total_jumps = 0
+total_coins = 0
+
+max_coins = 0
+for level in levels:
+    max_coins += len(level[COINS])
 
 
 # Physics
@@ -142,17 +174,20 @@ PINK = (255, 150, 150)
 PURPLE = (255, 0, 255)
 BLUE = (0, 0, 255)
 GREY = (170, 170, 170)
+BROWN = (117, 39, 0)
 
 color_chosen = 1
 
 colors = [
     ["yellow", True, YELLOW, "Default color"],
-    ["blue", False, BLUE, "Complete \"" + levels[0][5] + "\""],
-    ["green", False, GREEN, "Complete \"" + levels[1][5] + "\""],
-    ["purple", False, PURPLE, "Complete \"" + levels[2][5] + "\""],
-    ["pink", False, PINK, "Complete \"" + levels[3][5] + "\""],
-    #["white", False, WHITE, "Complete every level with coins"]
-]  # add brown, grey, black..?
+    ["blue", False, BLUE, "Complete \"" + levels[0][NAME] + "\""],
+    ["green", False, GREEN, "Complete \"" + levels[1][NAME] + "\""],
+    ["purple", False, PURPLE, "Complete \"" + levels[2][NAME] + "\""],
+    ["pink", False, PINK, "Complete \"" + levels[3][NAME] + "\""],
+    ["brown", False, BROWN, "Do 100 jumps"],
+    ["black", False, BLACK, "Die 100 times"],
+    ["white", False, WHITE, "Complete every level with coins"]
+]  # add grey?
 
 
 # Drawing level
@@ -211,28 +246,28 @@ def draw_level():
     first_tile, last_tile = get_visible_tile_range()
 
     # Spikes
-    for x, y, orientation in levels[current_level][1]:
+    for x, y, orientation in levels[current_level][SPIKES]:
         if first_tile <= x <= last_tile:
             draw_spike(x, y, orientation)
 
     # Platforms
-    for x, y, w, h in levels[current_level][0]:
+    for x, y, w, h in levels[current_level][BLOCKS]:
         if x + w >= first_tile and x <= last_tile:
             draw_platform(x, y, w, h)
 
     # Pads
-    for x, y in levels[current_level][9]:
+    for x, y in levels[current_level][JUMP_PADS]:
         if x + 10 >= first_tile and x <= last_tile:
             draw_pad(x, y)
 
     # Endwall
-    end_x = levels[current_level][2]
+    end_x = levels[current_level][END]
     if first_tile <= end_x <= last_tile:
         fill_rect(map_offset_x + end_x * 10, 0, 10, SCREEN_HEIGHT, GREEN)
         fill_rect(map_offset_x + end_x * 10 + 10, 0, 6, SCREEN_HEIGHT, bg_color)
 
     # Labels
-    attempts = levels[current_level][7]
+    attempts = levels[current_level][ATTEMPTS]
     attempts_label = str(attempts)
 
     if attempts < 100:
@@ -243,8 +278,8 @@ def draw_level():
 
     percentage = round(  # Full Distance / Payer Position * 100
         (
-            ((levels[current_level][2] * 10) - (levels[current_level][2] * 10 + map_offset_x))
-            / (levels[current_level][2] * 10 - (player_x + PLAYER_WIDTH))
+            ((levels[current_level][END] * 10) - (levels[current_level][END] * 10 + map_offset_x))
+            / (levels[current_level][END] * 10 - (player_x + PLAYER_WIDTH))
             * 100
         ), 2
     )
@@ -260,7 +295,7 @@ def draw_level():
     if len(percentage_label) < 5:
         percentage_label += "0"
 
-    draw_centered_string(" " + levels[current_level][5] + " ", 0, bg_color, BLACK, "left")
+    draw_centered_string(" " + levels[current_level][NAME] + " ", 0, bg_color, BLACK, "left")
     draw_centered_string(" Attempts:" + attempts_label + " ", 0, RED, BLACK, "right")
     draw_centered_string(percentage_label + "%", 20, BLACK, bg_color)
 
@@ -276,7 +311,7 @@ def check_collision():
     last_tile = player_tile + 2
 
     # Platforms
-    for x, y, w, h in levels[current_level][0]:
+    for x, y, w, h in levels[current_level][BLOCKS]:
         if x > last_tile or x + w < first_tile:
             continue
 
@@ -292,7 +327,7 @@ def check_collision():
             return True
 
     # Spikes
-    for x, y, orientation in levels[current_level][1]:
+    for x, y, orientation in levels[current_level][SPIKES]:
         if x < first_tile or x > last_tile:
             continue
 
@@ -318,7 +353,7 @@ def check_pad_collision():
     player_tile = (-map_offset_x + player_x) // 10
     first_tile = player_tile - 2
     last_tile = player_tile + 2
-    for x, y in levels[current_level][9]:
+    for x, y in levels[current_level][JUMP_PADS]:
         if x < first_tile or x > last_tile:
             continue
 
@@ -335,16 +370,17 @@ def check_pad_collision():
             return True
 
 def respawn():
-    global current_level, map_offset_x, player_y, bg_color
+    global current_level, map_offset_x, player_y, bg_color, total_attempts
     global menu, bg_color, player_color, blocks_color, start_wait
 
-    levels[current_level][7] += 1
+    levels[current_level][ATTEMPTS] += 1
+    total_attempts += 1
 
     menu = "level"
     start_wait = None
 
-    bg_color = levels[current_level][3]
-    blocks_color = levels[current_level][4]
+    bg_color = levels[current_level][BG_COLOR]
+    blocks_color = levels[current_level][BLOCKS_COLOR]
     fill_screen(bg_color)
 
     map_offset_x = 0
@@ -368,24 +404,27 @@ def draw_centered_string(
     ):
     global SCREEN_WIDTH
 
+    formatted_text = text
+
     if len(text) > CHARACTERS_LIMIT:
+        formatted_text = text[:CHARACTERS_LIMIT]
         print(
             "WARNING: The string \""+ text +
             "\" is too long! " + str(CHARACTERS_LIMIT) + " characters maximum)"
         )
 
     if not side:
-        x = round((SCREEN_WIDTH - (len(text) * CHARECTER_WIDTH)) / 2)
+        x = round((SCREEN_WIDTH - (len(formatted_text) * CHARECTER_WIDTH)) / 2)
     elif side == "left":
         x = 0
     elif side == "right":
-        x = SCREEN_WIDTH - (len(text) * CHARECTER_WIDTH)
+        x = SCREEN_WIDTH - (len(formatted_text) * CHARECTER_WIDTH)
         pass
     else:
         print("WARNING: the side \"" + side + "\" doesn't exist!")
-        x = round((SCREEN_WIDTH - (len(text) * CHARECTER_WIDTH)) / 2)
+        x = round((SCREEN_WIDTH - (len(formatted_text) * CHARECTER_WIDTH)) / 2)
 
-    draw_string(text, x, y, color, background)
+    draw_string(formatted_text, x, y, color, background)
 
 
 # Pages functions
@@ -414,7 +453,7 @@ def draw_endscreen():
     fill_rect(MARGIN, MARGIN, SCREEN_WIDTH - MARGIN * 2, SCREEN_HEIGHT - MARGIN * 2, bg_color)
     draw_centered_string("LEVEL COMPLETED", 60, DARK_GREEN, bg_color)
     draw_centered_string("Attempts: " + str(attempts), 100, BLACK, bg_color)
-    draw_centered_string(choice(random_sentences[:26]), 140, BLACK, bg_color)
+    draw_centered_string(choice(endscreen_sentences[:26]), 140, BLACK, bg_color)
 
 
 def enter_main_menu():
@@ -594,14 +633,15 @@ def enter_browse_levels_menu():
 
 def draw_level_menu():
     completed_color = DARK_GREEN
-    bg_color = levels[menu_button - 1][3]
-    blocks_color = levels[menu_button - 1][4]
-    best = levels[menu_button - 1][6]
+    bg_color = levels[menu_button - 1][BG_COLOR]
+    blocks_color = levels[menu_button - 1][BLOCKS_COLOR]
+    best = levels[menu_button - 1][RECORD]
 
     fill_screen(blocks_color)
-    draw_centered_string(levels[menu_button - 1][5], 40, WHITE, blocks_color)
-    draw_centered_string("by " + str(levels[menu_button - 1][8]), 70, bg_color, blocks_color)
-    draw_centered_string("Attempts: " + str(levels[menu_button - 1][7]), 150, bg_color, blocks_color)
+    draw_centered_string(levels[menu_button - 1][NAME], 40, WHITE, blocks_color)
+    draw_centered_string("by " + str(levels[menu_button - 1][AUTHOR]), 70, bg_color, blocks_color)
+    draw_centered_string("Attempts: " + str(levels[menu_button - 1][ATTEMPTS]), 150, bg_color, blocks_color)
+    draw_centered_string("Jumps: " + str(levels[menu_button - 1][JUMPS]), 175, bg_color, blocks_color)
 
     # Progressbar
     MARGIN = 30
@@ -620,18 +660,33 @@ def draw_level_menu():
         bg_text_color = bg_color
         letters_color = blocks_color
 
+    draw_centered_string(str(round(best)) + "%", Y_POSITION, letters_color, bg_text_color)
+
+    # Left / right "buttons"
     LITTLE_MARGIN = 10
     draw_string("<", LITTLE_MARGIN, Y_POSITION, WHITE, blocks_color)
     draw_string(">", SCREEN_WIDTH - LITTLE_MARGIN - CHARECTER_WIDTH, Y_POSITION, WHITE, blocks_color)
 
-    draw_centered_string(str(round(best)) + "%", Y_POSITION, letters_color, bg_text_color)
-
 
 def enter_garage_menu():
     global menu, menu_button, max_menu_buttons
+
     menu_button = 1
     max_menu_buttons = len(colors)
     menu = "garage"
+
+
+    # Check achievements
+
+    if not colors[5][1] and total_jumps >= 100:
+        colors[5][1] = True
+
+    if not colors[6][1] and total_attempts >= 100:
+        colors[6][1] = True
+
+    if not colors[7][1] and total_coins == max_coins:
+        colors[7][1] = True
+
     draw_garage_menu()
 
 def draw_garage_menu():
@@ -639,7 +694,7 @@ def draw_garage_menu():
     fill_screen(GARAGE_MENU_COLOR)
     draw_centered_string("You:", 20, WHITE, GARAGE_MENU_COLOR)
     draw_centered_string("Choose your color:", 110, WHITE, GARAGE_MENU_COLOR)
-    if not colors[menu_button - 1][1]:
+    if not colors[menu_button - 1][SPIKES]:
         draw_centered_string(colors[menu_button - 1][3], 180, WHITE, GARAGE_MENU_COLOR)
         draw_centered_string("to get this color", 200, WHITE, GARAGE_MENU_COLOR)
 
@@ -648,7 +703,7 @@ def draw_garage_menu():
     fill_rect(CUBE_X_MARGIN, 50, CUBE_SIDE, CUBE_SIDE, player_color)
 
     COLORS_COUNT = len(colors)
-    COLOR_SIDE = 30
+    COLOR_SIDE = 25
     X_MARGIN = 20
     X_SPACE = SCREEN_WIDTH - (X_MARGIN * 2) - COLOR_SIDE
     Y_MARGIN = 50
@@ -656,7 +711,7 @@ def draw_garage_menu():
 
     # Color box when chosen
 
-    CHOSEN_MARGIN = 5
+    CHOSEN_MARGIN = 3
 
     for i in range(COLORS_COUNT):
         if i + 1 == menu_button:
@@ -682,19 +737,22 @@ def draw_garage_menu():
 enter_main_menu()
 
 
-while True:  # Game loop
+while game:  # Game loop
     start = monotonic()
 
     if menu == "level" and not start_wait:
         # Physics
 
         if not is_jumping:
-            for i in range(len(levels[current_level][0])):
+            for i in range(len(levels[current_level][BLOCKS])):
                 if (
-                    player_y + 20 == levels[current_level][0][i][1] * 32
-                    and levels[current_level][0][i][0] * 10 + map_offset_x -19
+                    player_y + 20 == levels[current_level][BLOCKS][i][1] * 32
+                    and levels[current_level][BLOCKS][i][0] * 10 + map_offset_x -19
                     <= 50 <=
-                    levels[current_level][0][i][2] * 10 + levels[current_level][0][i][0] * 10 + map_offset_x
+                    (
+                        levels[current_level][BLOCKS][i][2] * 10 +
+                        levels[current_level][BLOCKS][i][0] * 10 + map_offset_x
+                    )
                 ):
                     can_jump = True
                     is_falling = False
@@ -711,27 +769,37 @@ while True:  # Game loop
                 took_pad = True
                 jump_velocity *= 2
 
-            if (
-                (
-                    (keydown(KEY_OK) and can_jump == True) or
-                    (keydown(KEY_UP) and can_jump == True)
-                ) and not clicked
-            ) or check_pad_collision():
+            if (  # Jumped
+                (keydown(KEY_OK) and can_jump == True) or
+                (keydown(KEY_UP) and can_jump == True)
+            ) and not clicked:
+                draw_player(bg_color)
+                is_jumping = True
+                player_y -= int(jump_velocity)
+                jump_velocity = jump_velocity / 2
+                total_jumps += 1
+                levels[current_level][JUMPS] += 1
+
+            elif check_pad_collision():  # Took a jump pad
                 draw_player(bg_color)
                 is_jumping = True
                 player_y -= int(jump_velocity)
                 jump_velocity = jump_velocity / 2
 
+
         elif can_jump:
             draw_player(bg_color)
 
-            for i in range(len(levels[current_level][0])):
-                if player_y + 20 != levels[current_level][0][i][1] * 32:
+            for i in range(len(levels[current_level][BLOCKS])):
+                if player_y + 20 != levels[current_level][BLOCKS][i][1] * 32:
                     is_jumping = True
                 elif (
-                    levels[current_level][0][i][0] * 10 + map_offset_x-19
-                    < 50
-                    < levels[current_level][0][i][0] * 10 + map_offset_x + levels[current_level][0][i][2] * 10 + 20
+                    levels[current_level][BLOCKS][i][0] * 10 + map_offset_x - 19
+                    < 50 <
+                    (
+                        levels[current_level][BLOCKS][i][0] * 10 + map_offset_x +
+                        levels[current_level][BLOCKS][i][2] * 10 + 20
+                    )
                 ):
                     is_jumping = False
                     jump_velocity = 32
@@ -786,35 +854,40 @@ while True:  # Game loop
         elif player_y + PLAYER_HEIGHT > SCREEN_HEIGHT or check_collision():
             draw_player(RED)
 
-            if levels[current_level][6] < percentage:  # New best
-                levels[current_level][6] = percentage
-                draw_centered_string(percentage_label + "%", 80, WHITE, bg_color)
-                draw_centered_string("NEW BEST!", 100, WHITE, bg_color)
+            if levels[current_level][RECORD] < percentage:  # New best
+                levels[current_level][RECORD] = percentage
+                draw_centered_string(percentage_label + "%", 70, WHITE, bg_color)
+                draw_centered_string("NEW BEST!", 90, WHITE, bg_color)
+                draw_centered_string(choice(new_best_sentences[:32]), 120, WHITE, bg_color)
 
             start_wait = monotonic()
 
 
         # Endscreen
 
-        elif player_x + PLAYER_WIDTH > levels[current_level][2] * 10 + map_offset_x:
+        elif player_x + PLAYER_WIDTH > levels[current_level][END] * 10 + map_offset_x:
             draw_player(bg_color)
             draw_level()
             draw_centered_string("LEVEL COMPLETED!", 100, DARK_GREEN, bg_color)
 
-            levels[current_level][6] = 100.0
+            levels[current_level][RECORD] = 100.0
             colors[current_level + 1][1] = True
 
             start_wait = monotonic()
 
+
     elif menu == "level":
+        # Waiting for the animation to end (endscreen or death)
+
         current_wait = monotonic()
         if current_wait - start_wait < RESPAWN_TIME:
             continue
 
-        if player_x + PLAYER_WIDTH > levels[current_level][2] * 10 + map_offset_x:
+        if player_x + PLAYER_WIDTH > levels[current_level][END] * 10 + map_offset_x:
             enter_endscreen()
         else:  # Player died
             respawn()
+
 
     elif menu == "endscreen":
         start_wait = None
@@ -830,6 +903,7 @@ while True:  # Game loop
                 respawn()
             else:
                 enter_browse_levels_menu()
+
 
     elif menu == "garage":
         if keydown(KEY_RIGHT) and not clicked:
@@ -848,6 +922,7 @@ while True:  # Game loop
 
         if (keydown(KEY_EXE) or keydown(KEY_OK)) and not clicked:
             if colors[menu_button - 1][1]:
+                clicked = True
                 player_color = colors[menu_button - 1][2]
                 draw_garage_menu()
 
@@ -856,6 +931,7 @@ while True:  # Game loop
 
         if not if_clicked() and clicked:
             clicked = False
+
 
     elif menu == "browse_levels":
         if keydown(KEY_RIGHT) and not clicked:
@@ -884,6 +960,7 @@ while True:  # Game loop
         if not if_clicked() and clicked:
             clicked = False
 
+
     elif menu == "main":
         if keydown(KEY_RIGHT) and not clicked:
             menu_button += 1
@@ -910,6 +987,7 @@ while True:  # Game loop
             elif menu_button == 2:
                 enter_browse_levels_menu()
                 clicked = True
+
 
     if emulated:
         update()

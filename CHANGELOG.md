@@ -29,3 +29,10 @@
 ## v1.1.3
 - Shift buffering patched
 - Minor fixes
+
+## v1.1.4
+- More achievements
+- Jumps counter
+- Fixes
+- Improving code readability
+- Optimizing

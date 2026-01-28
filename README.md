@@ -35,10 +35,12 @@ To build your own levels you will need to modify `levels: list[list[Any]]`
 | int,                      | [7]   | attempts (initially 0)                                             |
 | str                       | [8]   | author of the level                                                |
 | list[int, int]            | [9]   | jump pads[x, y]                                                    |
+| int                       | [10]  | total jumps in a level                                             |
+| list[int, int]            | [11]  | coins[x, y]                                                        |
 
 Example of use:
 
-`levels[current_level][5]`
+`levels[current_level][NAME]`
 
 Gets the name of the current level
 

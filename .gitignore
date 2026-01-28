@@ -1,7 +1,13 @@
 __pycache__/
 .vscode/
+
 build/
 dist/
-original.py
 *.spec
+
+make_exe.py
+original.py
+optimize.py
+optimized.py
+
 TODO.md
