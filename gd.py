@@ -19,7 +19,7 @@ from ion import (
 )
 
 
-VERSION = "v1.1.4"
+VERSION = "v1.1.3"
 
 levels = [
     [  # Level 1
