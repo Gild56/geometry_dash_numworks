@@ -7,7 +7,5 @@ dist/
 
 make_exe.py
 original.py
-optimize.py
-optimized.py
 
 TODO.md
