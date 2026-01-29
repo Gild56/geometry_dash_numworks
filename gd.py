@@ -202,7 +202,6 @@ def get_visible_tile_range():
     return first_tile, last_tile
 
 def draw_player(color: tuple[int, int, int] | None = None):
-    global PLAYER_WIDTH, PLAYER_HEIGHT, player_color
     if color:
         fill_rect(player_x, player_y, PLAYER_WIDTH, PLAYER_HEIGHT, color)
     else:
@@ -544,8 +543,8 @@ def is_level_finished() -> bool:
     return player_x + PLAYER_WIDTH > levels[current_level][END] * 10 + map_offset_x
 
 def respawn():
-    global current_level, map_offset_x, player_y, bg_color
-    global menu, bg_color, player_color, blocks_color
+    global map_offset_x, player_y, bg_color
+    global menu, bg_color, blocks_color
     global start_wait, current_coins_taken, total_attempts
 
     levels[current_level][ATTEMPTS] += 1
@@ -579,7 +578,6 @@ def draw_centered_string(
         background: tuple[int, int, int],
         side: str | None = None
     ):
-    global SCREEN_WIDTH
 
     formatted_text = text
 
@@ -884,7 +882,6 @@ def enter_garage_menu():
     draw_garage_menu()
 
 def draw_garage_menu():
-    global player_color
     fill_screen(GARAGE_MENU_COLOR)
     draw_centered_string("You:", 20, WHITE, GARAGE_MENU_COLOR)
     draw_centered_string("Choose your color:", 110, WHITE, GARAGE_MENU_COLOR)
@@ -958,7 +955,7 @@ while game:  # Game loop
 
             jumped = keydown(KEY_OK) or keydown(KEY_UP)
 
-            if is_falling == True:
+            if is_falling:
                 draw_player(bg_color)
                 player_y += 16
 
