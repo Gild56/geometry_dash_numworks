@@ -10,7 +10,7 @@ import keyboard
 # Useless
 KEY_BACK = "backspace"
 KEY_HOME = "escape"
-KEY_ONOFF = "end" #??
+KEY_ONOFF = "end"
 
 # Upper keys
 KEY_OK = "space"

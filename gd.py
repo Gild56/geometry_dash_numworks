@@ -4,7 +4,7 @@
 from random import choice
 from time import monotonic
 try:
-    #raise  # Try the original kandinsky emulator
+    raise  # Try the original kandinsky emulator
     from emulator import fill_rect, draw_string, update, sleep
     emulated = True
 except:
@@ -15,11 +15,11 @@ except:
 from ion import (
     KEY_OK, KEY_EXE, KEY_UP,
     KEY_LEFT, KEY_RIGHT, KEY_BACKSPACE,
-    KEY_SHIFT, keydown
+    KEY_SHIFT, KEY_SEVEN, keydown
 )
 
 
-VERSION = "v1.1.4"
+VERSION = "v1.2.0"
 
 levels = [
     [  # Level 1
@@ -29,7 +29,7 @@ levels = [
         [
             [20, 6, 0], [36, 5, 0], [59, 4, 0], [61, 4, 0], [80, 5, 0], [92, 5, 0], [103, 6, 0]
         ],
-        109, (0, 190, 190), (0, 30, 30), "Gild Madness", 0, 0, "wperez274", [[13, 5]], 0, []
+        109, (0, 190, 190), (0, 30, 30), "Gild Madness", 0, 0, "wperez274", [[13, 5]], 0, [[13, 3, False], [17, 3, False]]
     ],
     [  # Level 2
         [
@@ -101,6 +101,8 @@ TICK = 1/30  # 30 FPS
 speed = 6  # pixels / frame
 RESPAWN_TIME = 1
 
+hitboxes = False
+
 percentage = 0
 menu_button = 2
 max_menu_buttons = 3
@@ -110,6 +112,8 @@ current_level = 0
 start_wait = None
 clicked = False
 attempts = 0  # current level attempts
+current_coins_taken = []
+coins_just_taken = []
 
 total_attempts = 0
 total_jumps = 0
@@ -135,7 +139,7 @@ is_falling = False
 jump_velocity = 32
 air_ticks = 0
 
-ORB_SIDE = 20
+COIN_SIDE = 20
 took_pad = False
 
 
@@ -145,9 +149,9 @@ SCREEN_WIDTH = 320
 SCREEN_HEIGHT = 222
 TILE_SIZE_X = 10
 
-CHARECTER_WIDTH = 10
+CHARACTER_WIDTH = 10
 CHARACTER_HEIGHT = 18
-CHARACTERS_LIMIT = SCREEN_WIDTH / CHARECTER_WIDTH
+CHARACTERS_LIMIT = SCREEN_WIDTH / CHARACTER_WIDTH
 
 PLAYER_WIDTH = 20
 PLAYER_HEIGHT = 20
@@ -234,11 +238,27 @@ def draw_platform(x_tile: int, y_tile: int, width_tiles: int, height_tiles: int)
 def draw_pad(x_tile: int, y_tile: int):
     fill_rect(
         round(map_offset_x + (x_tile + 0.2) * 10), round((y_tile + 0.7) * 32),
-        ORB_SIDE, ORB_SIDE // 2, YELLOW
+        COIN_SIDE, COIN_SIDE // 2, YELLOW
     )
     fill_rect(
-        map_offset_x + x_tile * 10 + ORB_SIDE, round((y_tile + 0.7) * 32),
-        speed, ORB_SIDE // 2, bg_color
+        round(map_offset_x + (x_tile + 0.2) * 10 + COIN_SIDE), round((y_tile + 0.7) * 32),
+        speed, COIN_SIDE // 2, bg_color
+    )
+
+def draw_coin(x_tile: int, y_tile: int, taken: bool):
+    fill_rect(
+        round(map_offset_x + (x_tile + 0.2) * 10), round((y_tile + 0.7) * 32),
+        COIN_SIDE, COIN_SIDE, GREY if taken else WHITE
+    )
+    fill_rect(
+        round(map_offset_x + (x_tile + 0.2) * 10 + COIN_SIDE), round((y_tile + 0.7) * 32),
+        speed, COIN_SIDE, bg_color
+    )
+
+def erase_coin(x_tile: int, y_tile: int):
+    fill_rect(
+        round(map_offset_x + (x_tile + 0.2) * 10), round((y_tile + 0.7) * 32),
+        COIN_SIDE + speed, COIN_SIDE, bg_color
     )
 
 def draw_level():
@@ -260,6 +280,15 @@ def draw_level():
         if x + 10 >= first_tile and x <= last_tile:
             draw_pad(x, y)
 
+    # Coins
+    for i, (x, y, taken) in enumerate(levels[current_level][COINS]):
+        if i in current_coins_taken:
+            if i in coins_just_taken:
+                erase_coin(x, y)
+            continue
+        if x + 10 >= first_tile and x <= last_tile:
+            draw_coin(x, y, taken)
+
     # Endwall
     end_x = levels[current_level][END]
     if first_tile <= end_x <= last_tile:
@@ -276,7 +305,7 @@ def draw_level():
             attempts_label = "0" + attempts_label
 
 
-    percentage = round(  # Full Distance / Payer Position * 100
+    percentage = round(  # Full Distance / Player Position * 100
         (
             ((levels[current_level][END] * 10) - (levels[current_level][END] * 10 + map_offset_x))
             / (levels[current_level][END] * 10 - (player_x + PLAYER_WIDTH))
@@ -300,7 +329,36 @@ def draw_level():
     draw_centered_string(percentage_label + "%", 20, BLACK, bg_color)
 
     # For testing: shows screen min and max on the x axis
-    #draw_string(str(first_tile) + " to " + str(last_tile), 0, 20, BLACK, bg_color)
+    #draw_centered_string(str(first_tile) + " to " + str(last_tile), 20, BLACK, bg_color, "right")
+
+def draw_hitbox(
+        left: float,
+        top: float,
+        right: float,
+        bottom: float,
+        color: tuple[int, int, int]
+    ):
+    if not hitboxes:
+        return
+
+    if right + (right - left) < 0 or left > SCREEN_WIDTH:
+        return
+
+    fill_rect(
+        int(left) + speed,
+        int(top),
+        int(right - left),
+        int(bottom - top),
+        bg_color
+    )
+
+    fill_rect(
+        int(left),
+        int(top),
+        int(right - left),
+        int(bottom - top),
+        color
+    )
 
 
 # Physics
@@ -310,42 +368,104 @@ def check_collision():
     first_tile = player_tile - 2
     last_tile = player_tile + 2
 
+    player_left   = player_x
+    player_right  = player_x + PLAYER_WIDTH
+    player_top    = player_y
+    player_bottom = player_y + PLAYER_HEIGHT
+
     # Platforms
     for x, y, w, h in levels[current_level][BLOCKS]:
         if x > last_tile or x + w < first_tile:
             continue
 
-        rx = x * 10 + map_offset_x
-        ry = y * 32
-        rw = w * 10
-        rh = h * 32
+        plat_left   = x * 10 + map_offset_x
+        plat_top    = y * 32
+        plat_right  = plat_left + w * 10
+        plat_bottom = plat_top + h * 32
 
         if (
-            player_x + PLAYER_WIDTH  > rx and player_x < rx + rw and
-            player_y + PLAYER_HEIGHT > ry and player_y < ry + rh
+            player_right  > plat_left and
+            player_left   < plat_right and
+            player_bottom > plat_top and
+            player_top    < plat_bottom
         ):
             return True
 
     # Spikes
     for x, y, orientation in levels[current_level][SPIKES]:
-        if x < first_tile or x > last_tile:
+        if (x < first_tile or x > last_tile) and not hitboxes:
             continue
 
-        rx = x * 10 + map_offset_x
-        ry = y * 32
+        spike_left  = x * 10 + map_offset_x
+        spike_right = spike_left + 10
+        spike_y     = y * 32
 
-        if orientation == 0:  # regular spike
-            hit_y1 = ry - 16
-            hit_y2 = ry
-        else:  # upside down spike
-            hit_y1 = ry
-            hit_y2 = ry + 16
+        if orientation == 0:  # normal
+            spike_top    = spike_y - 16
+            spike_bottom = spike_y
+        else:  # upside-down
+            spike_top    = spike_y
+            spike_bottom = spike_y + 16
+
+        draw_hitbox(
+            spike_left, spike_top,
+            spike_right, spike_bottom,
+            RED
+        )
 
         if (
-            player_x + PLAYER_WIDTH  > rx and player_x < rx + 10 and
-            player_y + PLAYER_HEIGHT > hit_y1 and player_y < hit_y2
+            player_right  > spike_left and
+            player_left   < spike_right and
+            player_bottom > spike_top and
+            player_top    < spike_bottom
         ):
             return True
+
+    if not hitboxes:
+        return False
+
+    # Pads hitboxes
+    for x, y in levels[current_level][JUMP_PADS]:
+        if (x < first_tile or x > last_tile) and not hitboxes:
+            continue
+
+        pad_left   = map_offset_x + (x + 0.2) * 10
+        pad_top    = (y + 0.7) * 32
+        pad_right  = pad_left + COIN_SIDE
+        pad_bottom = pad_top + COIN_SIDE // 2
+
+        player_left   = player_x
+        player_right  = player_x + PLAYER_WIDTH
+        player_top    = player_y
+        player_bottom = player_y + PLAYER_HEIGHT
+
+        draw_hitbox(
+            pad_left, pad_top,
+            pad_right, pad_bottom,
+            GREEN
+        )
+
+    # Coins hitboxes
+    for x, y, _ in levels[current_level][COINS]:
+        if (x < first_tile or x > last_tile) and not hitboxes:
+            continue
+
+        coin_left   = map_offset_x + (x + 0.2) * 10
+        coin_top    = (y + 0.7) * 32
+        coin_right  = coin_left + COIN_SIDE
+        coin_bottom = coin_top + COIN_SIDE
+
+        player_left   = player_x
+        player_right  = player_x + PLAYER_WIDTH
+        player_top    = player_y
+        player_bottom = player_y + PLAYER_HEIGHT
+
+        draw_hitbox(
+            coin_left, coin_top,
+            coin_right, coin_bottom,
+            GREEN
+        )
+
 
     return False
 
@@ -353,28 +473,85 @@ def check_pad_collision():
     player_tile = (-map_offset_x + player_x) // 10
     first_tile = player_tile - 2
     last_tile = player_tile + 2
+
     for x, y in levels[current_level][JUMP_PADS]:
-        if x < first_tile or x > last_tile:
+        if (x < first_tile or x > last_tile) and not hitboxes:
             continue
 
-        rx = x * 10 + map_offset_x
-        ry = y * 32
+        pad_left   = map_offset_x + (x + 0.2) * 10
+        pad_top    = (y + 0.7) * 32
+        pad_right  = pad_left + COIN_SIDE
+        pad_bottom = pad_top + COIN_SIDE // 2
 
-        hit_y1 = ry - 16
-        hit_y2 = ry + 16
+        player_left   = player_x
+        player_right  = player_x + PLAYER_WIDTH
+        player_top    = player_y
+        player_bottom = player_y + PLAYER_HEIGHT
 
         if (
-            player_x + PLAYER_WIDTH  > rx and player_x < rx + 10 and
-            player_y + PLAYER_HEIGHT > hit_y1 and player_y < hit_y2
+            player_right  > pad_left
+            and player_left < pad_right
+            and player_bottom > pad_top
+            and player_top < pad_bottom
         ):
             return True
 
+    return False
+
+def check_coin_collision() -> list[int | None]:
+    player_tile = (-map_offset_x + player_x) // 10
+    first_tile = player_tile - 2
+    last_tile = player_tile + 2
+
+    i = 0
+    coins_taken = []
+    for i, (x, y, _) in enumerate(levels[current_level][COINS]):
+        if (x < first_tile or x > last_tile) and not hitboxes:
+            continue
+
+        coin_left   = map_offset_x + (x + 0.2) * 10
+        coin_top    = (y + 0.7) * 32
+        coin_right  = coin_left + COIN_SIDE
+        coin_bottom = coin_top + COIN_SIDE
+
+        player_left   = player_x
+        player_right  = player_x + PLAYER_WIDTH
+        player_top    = player_y
+        player_bottom = player_y + PLAYER_HEIGHT
+
+        if (
+            player_right  > coin_left
+            and player_left < coin_right
+            and player_bottom > coin_top
+            and player_top < coin_bottom
+        ):
+            coins_taken.append(i)
+
+    return coins_taken
+
+def is_player_on_block():
+    for x, y, w, _ in levels[current_level][BLOCKS]:  # x, y, w, h
+        if (
+            player_y + PLAYER_HEIGHT == y * 32
+            and x * 10 + map_offset_x - 19
+            <= player_x <=
+            x * 10 + w * 10 + map_offset_x
+        ):
+            return True
+    return False
+
+def is_level_finished() -> bool:
+    return player_x + PLAYER_WIDTH > levels[current_level][END] * 10 + map_offset_x
+
 def respawn():
-    global current_level, map_offset_x, player_y, bg_color, total_attempts
-    global menu, bg_color, player_color, blocks_color, start_wait
+    global current_level, map_offset_x, player_y, bg_color
+    global menu, bg_color, player_color, blocks_color
+    global start_wait, current_coins_taken, total_attempts
 
     levels[current_level][ATTEMPTS] += 1
     total_attempts += 1
+
+    current_coins_taken = []
 
     menu = "level"
     start_wait = None
@@ -414,15 +591,15 @@ def draw_centered_string(
         )
 
     if not side:
-        x = round((SCREEN_WIDTH - (len(formatted_text) * CHARECTER_WIDTH)) / 2)
+        x = round((SCREEN_WIDTH - (len(formatted_text) * CHARACTER_WIDTH)) / 2)
     elif side == "left":
         x = 0
     elif side == "right":
-        x = SCREEN_WIDTH - (len(formatted_text) * CHARECTER_WIDTH)
+        x = SCREEN_WIDTH - (len(formatted_text) * CHARACTER_WIDTH)
         pass
     else:
         print("WARNING: the side \"" + side + "\" doesn't exist!")
-        x = round((SCREEN_WIDTH - (len(formatted_text) * CHARECTER_WIDTH)) / 2)
+        x = round((SCREEN_WIDTH - (len(formatted_text) * CHARACTER_WIDTH)) / 2)
 
     draw_string(formatted_text, x, y, color, background)
 
@@ -445,15 +622,22 @@ def if_clicked():
 def enter_endscreen():
     global menu
     menu = "endscreen"
-    draw_endscreen()
+    coins = levels[menu_button - 1][COINS]
+    amount_of_coins = str(len(coins))
+    coins_taken = 0
+    for coin in coins:
+        if coin[2]:
+            coins_taken += 1
+    coins_taken = str(coins_taken)
 
-def draw_endscreen():
     fill_screen(blocks_color)
     MARGIN = 30
     fill_rect(MARGIN, MARGIN, SCREEN_WIDTH - MARGIN * 2, SCREEN_HEIGHT - MARGIN * 2, bg_color)
     draw_centered_string("LEVEL COMPLETED", 60, DARK_GREEN, bg_color)
     draw_centered_string("Attempts: " + str(attempts), 100, BLACK, bg_color)
-    draw_centered_string(choice(endscreen_sentences[:26]), 140, BLACK, bg_color)
+    draw_centered_string(choice(endscreen_sentences[:26]), 130, BLACK, bg_color)
+    if coins:
+        draw_centered_string("Coins: " + coins_taken + "/" + amount_of_coins, 160, BLACK, bg_color)
 
 
 def enter_main_menu():
@@ -637,11 +821,21 @@ def draw_level_menu():
     blocks_color = levels[menu_button - 1][BLOCKS_COLOR]
     best = levels[menu_button - 1][RECORD]
 
+    coins = levels[menu_button - 1][COINS]
+    amount_of_coins = str(len(coins))
+    coins_taken = 0
+    for coin in coins:
+        if coin[2]:
+            coins_taken += 1
+    coins_taken = str(coins_taken)
+
     fill_screen(blocks_color)
     draw_centered_string(levels[menu_button - 1][NAME], 40, WHITE, blocks_color)
     draw_centered_string("by " + str(levels[menu_button - 1][AUTHOR]), 70, bg_color, blocks_color)
     draw_centered_string("Attempts: " + str(levels[menu_button - 1][ATTEMPTS]), 150, bg_color, blocks_color)
-    draw_centered_string("Jumps: " + str(levels[menu_button - 1][JUMPS]), 175, bg_color, blocks_color)
+    draw_centered_string("Jumps: " + str(levels[menu_button - 1][JUMPS]), 170, bg_color, blocks_color)
+    if coins:
+        draw_centered_string("Coins: " + coins_taken + "/" + amount_of_coins, 190, bg_color, blocks_color)
 
     # Progressbar
     MARGIN = 30
@@ -665,7 +859,7 @@ def draw_level_menu():
     # Left / right "buttons"
     LITTLE_MARGIN = 10
     draw_string("<", LITTLE_MARGIN, Y_POSITION, WHITE, blocks_color)
-    draw_string(">", SCREEN_WIDTH - LITTLE_MARGIN - CHARECTER_WIDTH, Y_POSITION, WHITE, blocks_color)
+    draw_string(">", SCREEN_WIDTH - LITTLE_MARGIN - CHARACTER_WIDTH, Y_POSITION, WHITE, blocks_color)
 
 
 def enter_garage_menu():
@@ -734,57 +928,55 @@ def draw_garage_menu():
         )
 
 
-enter_main_menu()
+enter_main_menu()  # Starting in the main menu
 
 
 while game:  # Game loop
-    start = monotonic()
+    start_frame = monotonic()  # Start of a frame
 
     if menu == "level" and not start_wait:
+
+        if keydown(KEY_SEVEN):
+            hitboxes = True
+        else:
+            hitboxes = False
+
+        coins_just_taken = []
+        coins_touched = check_coin_collision()
+        if len(coins_touched) > 0:
+            for coin in coins_touched:
+                if coin not in current_coins_taken:
+                    current_coins_taken.append(coin)
+                    coins_just_taken.append(coin)
+
         # Physics
 
         if not is_jumping:
-            for i in range(len(levels[current_level][BLOCKS])):
-                if (
-                    player_y + 20 == levels[current_level][BLOCKS][i][1] * 32
-                    and levels[current_level][BLOCKS][i][0] * 10 + map_offset_x -19
-                    <= 50 <=
-                    (
-                        levels[current_level][BLOCKS][i][2] * 10 +
-                        levels[current_level][BLOCKS][i][0] * 10 + map_offset_x
-                    )
-                ):
-                    can_jump = True
-                    is_falling = False
-                    break
-                else:
-                    can_jump = False
-                    is_falling = True
+            on_block = is_player_on_block()
+            can_jump = on_block
+            is_falling = not on_block
+
+            jumped = keydown(KEY_OK) or keydown(KEY_UP)
 
             if is_falling == True:
                 draw_player(bg_color)
                 player_y += 16
 
-            if check_pad_collision():
+            if check_pad_collision():  # Took a jump pad
                 took_pad = True
                 jump_velocity *= 2
+                draw_player(bg_color)
+                is_jumping = True
+                player_y -= int(jump_velocity)
+                jump_velocity = jump_velocity / 2
 
-            if (  # Jumped
-                (keydown(KEY_OK) and can_jump == True) or
-                (keydown(KEY_UP) and can_jump == True)
-            ) and not clicked:
+            elif jumped and not clicked and can_jump:
                 draw_player(bg_color)
                 is_jumping = True
                 player_y -= int(jump_velocity)
                 jump_velocity = jump_velocity / 2
                 total_jumps += 1
                 levels[current_level][JUMPS] += 1
-
-            elif check_pad_collision():  # Took a jump pad
-                draw_player(bg_color)
-                is_jumping = True
-                player_y -= int(jump_velocity)
-                jump_velocity = jump_velocity / 2
 
 
         elif can_jump:
@@ -807,26 +999,30 @@ while game:  # Game loop
 
             if is_jumping:
                 player_y -= int(jump_velocity)
+
                 if jump_velocity > 2:
                     jump_velocity = jump_velocity / 2
+
                 elif jump_velocity == 2:
                     jump_velocity = 0
+
                 elif jump_velocity == 0:
                     air_ticks += 1
-
                     if air_ticks == 4:
                         air_ticks = 0
                         jump_velocity = -2
+
                 elif jump_velocity <= (-2) and jump_velocity > (-32):
-                    jump_velocity=jump_velocity*2
+                    jump_velocity = jump_velocity * 2
+
                 else:
-                    is_jumping  = False
+                    is_jumping = False
                     jump_velocity = 32
                     can_jump = True
-            else:
-                is_jumping  = False
-                jump_velocity = 32
 
+            else:
+                is_jumping = False
+                jump_velocity = 32
 
         # Drawing
 
@@ -840,7 +1036,7 @@ while game:  # Game loop
             respawn()
             clicked = True
 
-        elif not if_clicked():
+        elif not if_clicked() and clicked:
             clicked = False
 
 
@@ -865,7 +1061,7 @@ while game:  # Game loop
 
         # Endscreen
 
-        elif player_x + PLAYER_WIDTH > levels[current_level][END] * 10 + map_offset_x:
+        elif is_level_finished():
             draw_player(bg_color)
             draw_level()
             draw_centered_string("LEVEL COMPLETED!", 100, DARK_GREEN, bg_color)
@@ -873,19 +1069,32 @@ while game:  # Game loop
             levels[current_level][RECORD] = 100.0
             colors[current_level + 1][1] = True
 
+            for coin in current_coins_taken:
+                levels[current_level][COINS][coin][2] = True
+
+            total_coins = 0
+            for level in levels:
+                for coin in level[COINS]:
+                    if coin[2]:
+                        total_coins += 1
+
             start_wait = monotonic()
 
 
     elif menu == "level":
         # Waiting for the animation to end (endscreen or death)
+        if keydown(KEY_SHIFT):
+            respawn()
+            clicked = True
+            continue
 
         current_wait = monotonic()
         if current_wait - start_wait < RESPAWN_TIME:
             continue
 
-        if player_x + PLAYER_WIDTH > levels[current_level][END] * 10 + map_offset_x:
+        if is_level_finished():
             enter_endscreen()
-        else:  # Player died
+        else:  # Player died before entering the animation screen
             respawn()
 
 
@@ -993,7 +1202,6 @@ while game:  # Game loop
         update()
 
     else:
-        end = monotonic()
-        wait = TICK - (end - start)
+        wait = TICK - (monotonic() - start_frame)
         if wait > 0:
             sleep(wait)

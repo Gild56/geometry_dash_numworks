@@ -4,7 +4,7 @@ A recreation of Geometry Dash on [Numworks](https://my.numworks.com/python/gild5
 
 Four levels available for now :D
 
-Donwnload the libs: `pip install -m requirements.py` and execute `gd.py` to play the game!
+Download the libs: `pip install -m requirements.py` and execute `gd.py` to play the game!
 
 
 ## PC Emulator Controls
@@ -27,7 +27,7 @@ To build your own levels you will need to modify `levels: list[list[Any]]`
 |---------------------------|-------|--------------------------------------------------------------------|
 | list[int, int, int, int], | [0]   | blocks[x_tile, y_tile, width_tiles, height_tiles]                  |
 | list[int, int, int],      | [1]   | spikes[x_tile, y_tile, orientation (0=normal / 1=upside down)]     |
-| int,                      | [2]   | level end (mesured in tiles)                                       |
+| int,                      | [2]   | level end (measured in tiles)                                      |
 | tuple[int, int, int],     | [3]   | background color (red, green, blue)                                |
 | tuple[int, int, int],     | [4]   | blocks color (red, green, blue)                                    |
 | str,                      | [5]   | level name                                                         |
@@ -36,7 +36,7 @@ To build your own levels you will need to modify `levels: list[list[Any]]`
 | str                       | [8]   | author of the level                                                |
 | list[int, int]            | [9]   | jump pads[x, y]                                                    |
 | int                       | [10]  | total jumps in a level                                             |
-| list[int, int]            | [11]  | coins[x, y]                                                        |
+| list[int, int]            | [11]  | coins[x, y, taken (True / false)]                                  |
 
 Example of use:
 
