@@ -4,7 +4,7 @@
 from random import choice
 from time import monotonic
 try:
-    raise  # Try the original kandinsky emulator
+    #raise  # Try the original kandinsky emulator
     from emulator import fill_rect, draw_string, update, sleep
     emulated = True
 except:
