@@ -2,48 +2,12 @@ from random import choice
 from time import monotonic
 from kandinsky import fill_rect,draw_string
 from time import sleep
-from ion import (
- KEY_OK,KEY_EXE,KEY_UP,
- KEY_LEFT,KEY_RIGHT,KEY_BACKSPACE,
- KEY_SHIFT,KEY_SEVEN,keydown
-)
+from ion import KEY_OK,KEY_EXE,KEY_UP,KEY_LEFT,KEY_RIGHT,KEY_BACKSPACE,KEY_SHIFT,KEY_SEVEN,keydown
 l=[
- [
-  [
-   [0,6,32,1],[48,4,23,1],[35,5,36,1],[32,6,77,1],[104,5,5,1],[79,5,14,1]
-  ],
-  [
-   [20,6,0],[36,5,0],[59,4,0],[61,4,0],[80,5,0],[92,5,0],[103,6,0]
-  ],
-  109,(0,190,190),(0,30,30),"Gild Madness",0,0,"wperez274",[[13,5]],0,[[13,3,0],[17,3,0]]
- ],
- [
-  [
-   [0,6,32,1],[28,5,26,1],[42,4,12,1],[62,5,24,1],[82,4,4,1],[94,6,108,1],[94,5,42,1],[94,4,38,1],[118,3,14,1],[138,3,8,1],[142,2,24,1],[174,5,14,1],[206,6,4,1],[216,6,20,1],[240,5,10,1],[254,4,8,1],[266,3,6,1],[32,6,54,1]
-  ],
-  [
-   [35,5,0],[50,4,0],[63,5,0],[73,5,0],[104,4,0],[106,4,0],[124,3,0],[126,3,0],[149,2,0],[150,6,0],[151,2,0],[156,6,0],[157,2,0],[158,6,0],[159,2,0],[181,5,0],[195,6,0],[224,6,0],[226,6,0],[244,5,0]
-  ],
-  272,(0,250,80),(0,70,70),"Back in Green",0,0,"wperez274",[],0,[]
- ],
- [
-  [
-   [0,6,32,1],[32,5,58,2],[90,4,30,3],[108,3,12,1],[120,6,74,1],[128,3,8,1],[132,2,22,1],[150,1,26,1],[162,5,32,1],[172,2,20,1],[202,5,42,2],[248,4,4,3],[254,5,4,2],[260,6,16,1]
-  ],
-  [
-   [42,5,0],[52,5,0],[62,5,0],[73,5,0],[82,5,0],[133,4,1],[142,2,0],[144,6,0],[146,6,0],[151,1,0],[153,3,1],[158,2,1],[160,6,0],[164,1,0],[166,5,0],[176,3,1],[218,5,0],[220,5,0],[230,5,0],[240,5,0],[268,6,0]
-  ],
-  276,(0,130,240),(0,0,70),"Polablue",0,0,"Calm_Repeat_7267",[],0,[]
- ],
- [
-  [
-   [0,6,32,1],[172,6,42,1],[110,6,24,1],[66,4,32,1],[56,5,46,2],[52,5,2,2],[32,5,18,2],[120,5,4,1],[120,3,4,1],[140,5,4,2],[148,4,4,3],[154,3,4,4],[160,4,4,3],[166,5,4,2],[220,6,52,1],[248,5,24,1],[258,4,14,1]
-  ],
-  [
-   [41,5,0],[53,5,0],[74,4,0],[83,4,0],[92,4,0],[121,3,0],[123,3,0],[167,5,0],[169,5,0],[184,6,0],[186,6,0],[194,6,0],[202,6,0],[204,6,0],[217,6,1],[217,6,0],[230,6,0],[239,6,0],[249,5,0],[259,4,0]
-  ],
-  272,(180,0,0),(50,0,0),"Dry Red",0,0,"wperez274",[],0,[]
- ]
+ [[[0,6,32,1],[48,4,23,1],[35,5,36,1],[32,6,77,1],[104,5,5,1],[79,5,14,1]],[[20,6,0],[36,5,0],[59,4,0],[61,4,0],[80,5,0],[92,5,0],[103,6,0]],109,(0,190,190),(0,30,30),"Gild Madness",0,0,"wperez274",[[13,5]],0,[[13,3,0],[17,3,0]]],
+ [[[0,6,32,1],[28,5,26,1],[42,4,12,1],[62,5,24,1],[82,4,4,1],[94,6,108,1],[94,5,42,1],[94,4,38,1],[118,3,14,1],[138,3,8,1],[142,2,24,1],[174,5,14,1],[206,6,4,1],[216,6,20,1],[240,5,10,1],[254,4,8,1],[266,3,6,1],[32,6,54,1]],[[35,5,0],[50,4,0],[63,5,0],[73,5,0],[104,4,0],[106,4,0],[124,3,0],[126,3,0],[149,2,0],[150,6,0],[151,2,0],[156,6,0],[157,2,0],[158,6,0],[159,2,0],[181,5,0],[195,6,0],[224,6,0],[226,6,0],[244,5,0]],272,(0,250,80),(0,70,70),"Back in Green",0,0,"wperez274",[],0,[]],
+ [[[0,6,32,1],[32,5,58,2],[90,4,30,3],[108,3,12,1],[120,6,74,1],[128,3,8,1],[132,2,22,1],[150,1,26,1],[162,5,32,1],[172,2,20,1],[202,5,42,2],[248,4,4,3],[254,5,4,2],[260,6,16,1]],[[42,5,0],[52,5,0],[62,5,0],[73,5,0],[82,5,0],[133,4,1],[142,2,0],[144,6,0],[146,6,0],[151,1,0],[153,3,1],[158,2,1],[160,6,0],[164,1,0],[166,5,0],[176,3,1],[218,5,0],[220,5,0],[230,5,0],[240,5,0],[268,6,0]],276,(0,130,240),(0,0,70),"Polablue",0,0,"Calm_Repeat_7267",[],0,[]],
+ [[[0,6,32,1],[172,6,42,1],[110,6,24,1],[66,4,32,1],[56,5,46,2],[52,5,2,2],[32,5,18,2],[120,5,4,1],[120,3,4,1],[140,5,4,2],[148,4,4,3],[154,3,4,4],[160,4,4,3],[166,5,4,2],[220,6,52,1],[248,5,24,1],[258,4,14,1]],[[41,5,0],[53,5,0],[74,4,0],[83,4,0],[92,4,0],[121,3,0],[123,3,0],[167,5,0],[169,5,0],[184,6,0],[186,6,0],[194,6,0],[202,6,0],[204,6,0],[217,6,1],[217,6,0],[230,6,0],[239,6,0],[249,5,0],[259,4,0]],272,(180,0,0),(50,0,0),"Dry Red",0,0,"wperez274",[],0,[]]
 ]
 endscreen_sentences=[
  "This is a serious question","Don't hack like uranium",
@@ -55,10 +19,6 @@ new_best_sentences=[
  "brih","yea","wiw","loll","wot","wha","xd",
  "Nope","Pauvre jeune homme...","RIP"
 ]
-if __name__=="__main__":
- game=1
-else:
- game=0
 hitboxes=0
 percentage=0
 menu_button=2
@@ -92,10 +52,10 @@ blocks_color=(0,0,0)
 color_chosen=1
 colors=[
  ["yellow",1,(255,255,0),"Default color"],
- ["blue",0,(0,0,255),"Complete \""+l[0][5]+"\""],
- ["green",0,(0,255,0),"Complete \""+l[1][5]+"\""],
- ["purple",0,(255,0,255),"Complete \""+l[2][5]+"\""],
- ["pink",0,(255,150,150),"Complete \""+l[3][5]+"\""],
+ ["blue",0,(0,0,255),"Complete level 1"],
+ ["green",0,(0,255,0),"Complete level 2"],
+ ["purple",0,(255,0,255),"Complete level 3"],
+ ["pink",0,(255,150,150),"Complete level 4"],
  ["brown",0,(117,39,0),"Do 100 jumps"],
  ["black",0,(0,0,0),"Die 100 times"],
  ["white",0,(255,255,255),"Complete every level with coins"]
@@ -111,51 +71,22 @@ def draw_player(color:tuple[int,int,int] | None=None):
   fill_rect(px,py,20,20,player_color)
 def draw_spike(x_tile:int,y_tile:int,orientation:int):
  for i in range(5):
-  fill_rect(
-   mx+x_tile*10-10+i*2,
-   y_tile*32-i*4+(2*i*4*orientation)-4*(1-orientation),
-   20-i*4,4,blocks_color
-  )
-  fill_rect(
-   mx+x_tile*10+10-i*2,
-   y_tile*32-i*4+(2*i*4*orientation)-4*(1-orientation),
-   6,4,bg_color
-  )
+  fill_rect(mx+x_tile*10-10+i*2,y_tile*32-i*4+(2*i*4*orientation)-4*(1-orientation),20-i*4,4,blocks_color)
+  fill_rect(mx+x_tile*10+10-i*2,y_tile*32-i*4+(2*i*4*orientation)-4*(1-orientation),6,4,bg_color)
 def draw_platform(x_tile:int,y_tile:int,width_tiles:int,height_tiles:int):
- fill_rect(
-  mx+x_tile*10,y_tile*32,
-  10*width_tiles,height_tiles*32,blocks_color
- )
+ fill_rect(mx+x_tile*10,y_tile*32,10*width_tiles,height_tiles*32,blocks_color)
  if width_tiles < 0:
   fill_rect(mx+x_tile*10,y_tile*32,6,height_tiles*32,bg_color)
  else:
-  fill_rect(
-   mx+x_tile*10+width_tiles*10,y_tile*32,
-   6,height_tiles*32,bg_color
-  )
+  fill_rect(mx+x_tile*10+width_tiles*10,y_tile*32,6,height_tiles*32,bg_color)
 def draw_pad(x_tile:int,y_tile:int):
- fill_rect(
-  round(mx+(x_tile+0.2)*10),round((y_tile+0.7)*32),
-  20,20 // 2,(255,255,0)
- )
- fill_rect(
-  round(mx+(x_tile+0.2)*10+20),round((y_tile+0.7)*32),
-  6,20 // 2,bg_color
- )
+ fill_rect(round(mx+(x_tile+0.2)*10),round((y_tile+0.7)*32),20,20 // 2,(255,255,0))
+ fill_rect(round(mx+(x_tile+0.2)*10+20),round((y_tile+0.7)*32),6,20 // 2,bg_color)
 def draw_coin(x_tile:int,y_tile:int,taken:bool):
- fill_rect(
-  round(mx+(x_tile+0.2)*10),round((y_tile+0.7)*32),
-  20,20,(170,170,170) if taken else (255,255,255)
- )
- fill_rect(
-  round(mx+(x_tile+0.2)*10+20),round((y_tile+0.7)*32),
-  6,20,bg_color
- )
+ fill_rect(round(mx+(x_tile+0.2)*10),round((y_tile+0.7)*32),20,20,(170,170,170) if taken else (255,255,255))
+ fill_rect(round(mx+(x_tile+0.2)*10+20),round((y_tile+0.7)*32),6,20,bg_color)
 def erase_coin(x_tile:int,y_tile:int):
- fill_rect(
-  round(mx+(x_tile+0.2)*10),round((y_tile+0.7)*32),
-  20+6,20,bg_color
- )
+ fill_rect(round(mx+(x_tile+0.2)*10),round((y_tile+0.7)*32),20+6,20,bg_color)
 def draw_level():
  global attempts,percentage_label,percentage
  first_tile,last_tile=get_visible_tile_range()
@@ -185,13 +116,7 @@ def draw_level():
   attempts_label="0"+attempts_label
   if attempts < 10:
    attempts_label="0"+attempts_label
- percentage=round(
-  (
-   ((l[cl][2]*10)-(l[cl][2]*10+mx))
-  /(l[cl][2]*10-(px+20))
-  *100
-  ),2
- )
+ percentage=round((((l[cl][2]*10)-(l[cl][2]*10+mx))/(l[cl][2]*10-(px+20))*100),2)
  if percentage > 100:
   percentage=100.0
  percentage_label="{:.2f}".format(percentage)
@@ -202,31 +127,13 @@ def draw_level():
  dc(" "+l[cl][5]+" ",0,bg_color,(0,0,0),"left")
  dc(" Attempts:"+attempts_label+" ",0,(255,0,0),(0,0,0),"right")
  dc(percentage_label+"%",20,(0,0,0),bg_color)
-def draw_hitbox(
-  left:float,
-  top:float,
-  right:float,
-  bottom:float,
-  color:tuple[int,int,int]
- ):
+def draw_hitbox(left:float,top:float,right:float,bottom:float,color:tuple[int,int,int]):
  if not hitboxes:
   return
  if right+(right-left) < 0 or left > 320:
   return
- fill_rect(
-  int(left)+6,
-  int(top),
-  int(right-left),
-  int(bottom-top),
-  bg_color
- )
- fill_rect(
-  int(left),
-  int(top),
-  int(right-left),
-  int(bottom-top),
-  color
- )
+ fill_rect(int(left)+6,int(top),int(right-left),int(bottom-top),bg_color)
+ fill_rect(int(left),int(top),int(right-left),int(bottom-top),color)
 def check_collision():
  player_tile=(-mx+px) // 10
  first_tile=player_tile-2
@@ -242,12 +149,7 @@ def check_collision():
   plat_top   =y*32
   plat_right =plat_left+w*10
   plat_bottom=plat_top+h*32
-  if (
-   player_right  > plat_left and
-   player_left   < plat_right and
-   player_bottom > plat_top and
-   player_top    < plat_bottom
-  ):
+  if player_right>plat_left and player_left<plat_right and player_bottom>plat_top and player_top<plat_bottom:
    return 1
  for x,y,orientation in l[cl][1]:
   if (x < first_tile or x > last_tile) and not hitboxes:
@@ -261,78 +163,56 @@ def check_collision():
   else:
    spike_top   =spike_y
    spike_bottom=spike_y+16
-  draw_hitbox(
-   spike_left,spike_top,
-   spike_right,spike_bottom,
-   (255,0,0)
-  )
-  if (
-   player_right  > spike_left and
-   player_left   < spike_right and
-   player_bottom > spike_top and
-   player_top    < spike_bottom
-  ):
+  draw_hitbox(spike_left,spike_top,spike_right,spike_bottom,(255,0,0))
+  if player_right>spike_left and player_left<spike_right and player_bottom>spike_top and player_top<spike_bottom:
    return 1
  if not hitboxes:
   return 0
  for x,y in l[cl][9]:
   if (x < first_tile or x > last_tile) and not hitboxes:
    continue
-  pad_left  =mx+(x+0.2)*10
-  pad_top   =(y+0.7)*32
-  pad_right =pad_left+20
+  pad_left=mx+(x+0.2)*10
+  pad_top=(y+0.7)*32
+  pad_right=pad_left+20
   pad_bottom=pad_top+20 // 2
-  player_left  =px
-  player_right =px+20
-  player_top   =py
+  player_left=px
+  player_right=px+20
+  player_top=py
   player_bottom=py+20
-  draw_hitbox(
-   pad_left,pad_top,
-   pad_right,pad_bottom,
-   (0,255,0)
-  )
+  draw_hitbox(pad_left,pad_top,pad_right,pad_bottom,(0,255,0))
  for x,y,_ in l[cl][11]:
   if (x < first_tile or x > last_tile) and not hitboxes:
    continue
-  coin_left  =mx+(x+0.2)*10
-  coin_top   =(y+0.7)*32
-  coin_right =coin_left+20
+  coin_left=mx+(x+0.2)*10
+  coin_top=(y+0.7)*32
+  coin_right=coin_left+20
   coin_bottom=coin_top+20
-  player_left  =px
-  player_right =px+20
-  player_top   =py
+  player_left=px
+  player_right=px+20
+  player_top=py
   player_bottom=py+20
-  draw_hitbox(
-   coin_left,coin_top,
-   coin_right,coin_bottom,
-   (0,255,0)
-  )
+  draw_hitbox(coin_left,coin_top,coin_right,coin_bottom,(0,255,0))
  return 0
 def check_pad_collision():
- player_tile=(-mx+px) // 10
+ player_tile=(-mx+px)//10
  first_tile=player_tile-2
  last_tile=player_tile+2
  for x,y in l[cl][9]:
   if (x < first_tile or x > last_tile) and not hitboxes:
    continue
-  pad_left  =mx+(x+0.2)*10
-  pad_top   =(y+0.7)*32
+  pad_left=mx+(x+0.2)*10
+  pad_top=(y+0.7)*32
   pad_right =pad_left+20
-  pad_bottom=pad_top+20 // 2
+  pad_bottom=pad_top+20//2
   player_left  =px
   player_right =px+20
   player_top   =py
   player_bottom=py+20
-  if (
-   player_right  > pad_left
-   and player_left < pad_right
-   and player_bottom > pad_top
-   and player_top < pad_bottom
-  ):
+  if player_right  > pad_left and player_left < pad_right and player_bottom > pad_top and player_top < pad_bottom:
    return 1
  return 0
 def check_coin_collision() -> list[int | None]:
- player_tile=(-mx+px) // 10
+ player_tile=(-mx+px)//10
  first_tile=player_tile-2
  last_tile=player_tile+2
  i=0
@@ -340,30 +220,20 @@ def check_coin_collision() -> list[int | None]:
  for i,(x,y,_) in enumerate(l[cl][11]):
   if (x < first_tile or x > last_tile) and not hitboxes:
    continue
-  coin_left  =mx+(x+0.2)*10
-  coin_top   =(y+0.7)*32
-  coin_right =coin_left+20
+  coin_left=mx+(x+0.2)*10
+  coin_top=(y+0.7)*32
+  coin_right=coin_left+20
   coin_bottom=coin_top+20
-  player_left  =px
-  player_right =px+20
-  player_top   =py
+  player_left=px
+  player_right=px+20
+  player_top=py
   player_bottom=py+20
-  if (
-   player_right  > coin_left
-   and player_left < coin_right
-   and player_bottom > coin_top
-   and player_top < coin_bottom
-  ):
+  if player_right  > coin_left and player_left < coin_right and player_bottom > coin_top and player_top < coin_bottom:
    coins_taken.append(i)
  return coins_taken
 def is_player_on_block():
  for x,y,w,_ in l[cl][0]:
-  if (
-   py+20==y*32
-   and x*10+mx-19
-  <=px <=
-   x*10+w*10+mx
-  ):
+  if py+20==y*32 and x*10+mx-19<=px<=x*10+w*10+mx:
    return 1
  return 0
 def is_level_finished() -> bool:
@@ -386,13 +256,7 @@ def respawn():
  draw_player()
 def fill_screen(color:tuple[int,int,int]):
  fill_rect(0,0,320,222,color)
-def dc(
-  text:str,
-  y:int,
-  color:tuple[int,int,int],
-  background:tuple[int,int,int],
-  side:str | None=None
- ):
+def dc(text:str,y:int,color:tuple[int,int,int],background:tuple[int,int,int],side:str | None=None):
  formatted_text=text
  if len(text) > 32:
   formatted_text=text[:32]
@@ -407,14 +271,7 @@ def dc(
   x=round((320-(len(formatted_text)*10))/2)
  draw_string(formatted_text,x,y,color,background)
 def if_clicked():
- if (
-  keydown(KEY_EXE) or
-  keydown(KEY_OK) or
-  keydown(KEY_SHIFT) or
-  keydown(KEY_BACKSPACE) or
-  keydown(KEY_LEFT) or
-  keydown(KEY_RIGHT)
- ):
+ if (keydown(KEY_EXE) or keydown(KEY_OK) or keydown(KEY_SHIFT) or keydown(KEY_BACKSPACE) or keydown(KEY_LEFT) or keydown(KEY_RIGHT)):
   return 1
  return 0
 def enter_endscreen():
@@ -448,23 +305,11 @@ def draw_main_menu():
  else:
   chosen_color=(0,60,255)
  CHOSEN_BIG_BUTTON_SIDE=90
- fill_rect(
-  round((320-CHOSEN_BIG_BUTTON_SIDE)/2),
-  round((222-CHOSEN_BIG_BUTTON_SIDE)/2),
-  CHOSEN_BIG_BUTTON_SIDE,
-  CHOSEN_BIG_BUTTON_SIDE,
-  chosen_color
- )
+ fill_rect(round((320-CHOSEN_BIG_BUTTON_SIDE)/2),round((222-CHOSEN_BIG_BUTTON_SIDE)/2),CHOSEN_BIG_BUTTON_SIDE,CHOSEN_BIG_BUTTON_SIDE,chosen_color)
  BIG_BUTTON_SIDE=70
  BIG_BUTTON_X_MARGIN=(320-BIG_BUTTON_SIDE)/2
  BIG_BUTTON_Y_MARGIN=(222-BIG_BUTTON_SIDE)/2
- fill_rect(
-  round(BIG_BUTTON_X_MARGIN),
-  round(BIG_BUTTON_Y_MARGIN),
-  BIG_BUTTON_SIDE,
-  BIG_BUTTON_SIDE,
-  (0,255,0)
- )
+ fill_rect(round(BIG_BUTTON_X_MARGIN),round(BIG_BUTTON_Y_MARGIN),BIG_BUTTON_SIDE,BIG_BUTTON_SIDE,(0,255,0))
  PIXELS_X=5
  PIXEL_WIDTH=BIG_BUTTON_SIDE/(PIXELS_X+2)
  MAX_HEIGHT=PIXELS_X*PIXEL_WIDTH
@@ -472,80 +317,30 @@ def draw_main_menu():
  MINI_PIXEL=MAX_HEIGHT/TOTAL_MINI_PIXELS
  current_pixels=TOTAL_MINI_PIXELS
  for i in range(PIXELS_X):
-  fill_rect(
-   round(BIG_BUTTON_X_MARGIN+PIXEL_WIDTH*(i+1)),
-   round(BIG_BUTTON_Y_MARGIN+PIXEL_WIDTH+MINI_PIXEL*i),
-   round(PIXEL_WIDTH),
-   round(current_pixels*MINI_PIXEL),
-   (255,255,0)
-  )
+  fill_rect(round(BIG_BUTTON_X_MARGIN+PIXEL_WIDTH*(i+1)),round(BIG_BUTTON_Y_MARGIN+PIXEL_WIDTH+MINI_PIXEL*i),round(PIXEL_WIDTH),round(current_pixels*MINI_PIXEL),(255,255,0))
   current_pixels -= 2
  if menu_button==1:
   chosen_color=(255,255,255)
  else:
   chosen_color=(0,60,255)
  CHOSEN_SMALL_BUTTON_SIDE=70
- CHOSEN_SMALL_BUTTON_Y_MARGIN=round(
-  (222-CHOSEN_SMALL_BUTTON_SIDE)/2
- )
- fill_rect(
-  round((BIG_BUTTON_X_MARGIN-CHOSEN_SMALL_BUTTON_SIDE)/2),
-  CHOSEN_SMALL_BUTTON_Y_MARGIN,
-  CHOSEN_SMALL_BUTTON_SIDE,
-  CHOSEN_SMALL_BUTTON_SIDE,
-  chosen_color
- )
+ CHOSEN_SMALL_BUTTON_Y_MARGIN=round((222-CHOSEN_SMALL_BUTTON_SIDE)/2)
+ fill_rect(round((BIG_BUTTON_X_MARGIN-CHOSEN_SMALL_BUTTON_SIDE)/2),CHOSEN_SMALL_BUTTON_Y_MARGIN,CHOSEN_SMALL_BUTTON_SIDE,CHOSEN_SMALL_BUTTON_SIDE,chosen_color)
  SMALL_BUTTON_SIDE=50
- SMALL_BUTTON_Y_MARGIN=round(
-  (222-SMALL_BUTTON_SIDE)/2
- )
- fill_rect(
-  round((BIG_BUTTON_X_MARGIN-SMALL_BUTTON_SIDE)/2),
-  SMALL_BUTTON_Y_MARGIN,
-  SMALL_BUTTON_SIDE,
-  SMALL_BUTTON_SIDE,
-  (0,255,0)
- )
+ SMALL_BUTTON_Y_MARGIN=round((222-SMALL_BUTTON_SIDE)/2)
+ fill_rect(round((BIG_BUTTON_X_MARGIN-SMALL_BUTTON_SIDE)/2),SMALL_BUTTON_Y_MARGIN,SMALL_BUTTON_SIDE,SMALL_BUTTON_SIDE,(0,255,0))
  CUBE_ICON_SIDE=30
- CUBE_ICON_X_MARGIN=round(
-  (BIG_BUTTON_X_MARGIN-CUBE_ICON_SIDE)/2
- )
- CUBE_ICON_Y_MARGIN=round(
-  (222-CUBE_ICON_SIDE)/2
- )
- fill_rect(
-  CUBE_ICON_X_MARGIN,
-  CUBE_ICON_Y_MARGIN,
-  CUBE_ICON_SIDE,
-  CUBE_ICON_SIDE,
-  (255,255,0)
- )
+ CUBE_ICON_X_MARGIN=round((BIG_BUTTON_X_MARGIN-CUBE_ICON_SIDE)/2)
+ CUBE_ICON_Y_MARGIN=round((222-CUBE_ICON_SIDE)/2)
+ fill_rect(CUBE_ICON_X_MARGIN,CUBE_ICON_Y_MARGIN,CUBE_ICON_SIDE,CUBE_ICON_SIDE,(255,255,0))
  if menu_button==3:
   chosen_color=(255,255,255)
  else:
   chosen_color=(0,60,255)
- CHOSEN_RIGHT_SMALL_BUTTON_X_MARGIN=round(
-  (BIG_BUTTON_X_MARGIN-CHOSEN_SMALL_BUTTON_SIDE)/2
- +BIG_BUTTON_SIDE+BIG_BUTTON_X_MARGIN
- )
- fill_rect(
-  CHOSEN_RIGHT_SMALL_BUTTON_X_MARGIN,
-  CHOSEN_SMALL_BUTTON_Y_MARGIN,
-  CHOSEN_SMALL_BUTTON_SIDE,
-  CHOSEN_SMALL_BUTTON_SIDE,
-  chosen_color
- )
- RIGHT_SMALL_BUTTON_X_MARGIN=round(
-  (BIG_BUTTON_X_MARGIN-SMALL_BUTTON_SIDE)/2
- +BIG_BUTTON_SIDE+BIG_BUTTON_X_MARGIN
- )
- fill_rect(
-  RIGHT_SMALL_BUTTON_X_MARGIN,
-  SMALL_BUTTON_Y_MARGIN,
-  SMALL_BUTTON_SIDE,
-  SMALL_BUTTON_SIDE,
-  (0,255,0)
- )
+ CHOSEN_RIGHT_SMALL_BUTTON_X_MARGIN=round((BIG_BUTTON_X_MARGIN-CHOSEN_SMALL_BUTTON_SIDE)/2+BIG_BUTTON_SIDE+BIG_BUTTON_X_MARGIN)
+ fill_rect(CHOSEN_RIGHT_SMALL_BUTTON_X_MARGIN,CHOSEN_SMALL_BUTTON_Y_MARGIN,CHOSEN_SMALL_BUTTON_SIDE,CHOSEN_SMALL_BUTTON_SIDE,chosen_color)
+ RIGHT_SMALL_BUTTON_X_MARGIN=round((BIG_BUTTON_X_MARGIN-SMALL_BUTTON_SIDE)/2+BIG_BUTTON_SIDE+BIG_BUTTON_X_MARGIN)
+ fill_rect(RIGHT_SMALL_BUTTON_X_MARGIN,SMALL_BUTTON_Y_MARGIN,SMALL_BUTTON_SIDE,SMALL_BUTTON_SIDE,(0,255,0))
  CONTROLS_MARGIN=5
  CONTROLS_X=RIGHT_SMALL_BUTTON_X_MARGIN+CONTROLS_MARGIN
  CONTROLS_Y=SMALL_BUTTON_Y_MARGIN+CONTROLS_MARGIN
@@ -557,13 +352,7 @@ def draw_main_menu():
  CONTROLS_PIXEL_SIZE_X=CONTROLS_SIDE/CONTROLS_PIXELS_X
  for i in range(CONTROLS_PIXELS_X):
   current_height=CONTROLS_PIXEL_SIZE_Y*CONTROLS_MAP_Y[i]
-  fill_rect(
-   round(CONTROLS_X+CONTROLS_PIXEL_SIZE_X*i),
-   round(CONTROLS_Y+((CONTROLS_SIDE-current_height)/2)),
-   round(CONTROLS_PIXEL_SIZE_X),
-   round(current_height),
-   (255,255,0)
-  )
+  fill_rect(round(CONTROLS_X+CONTROLS_PIXEL_SIZE_X*i),round(CONTROLS_Y+((CONTROLS_SIDE-current_height)/2)),round(CONTROLS_PIXEL_SIZE_X),round(current_height),(255,255,0))
  dc("GEOMETRY WORKS",20,(255,255,255),(0,60,255))
  dc("Up/OK=Jump | Shift=Restart",222-18*3-5,(255,255,255),(0,60,255))
  dc("OK/EXE=Choose | Backspace=Exit",222-18*2-5,(255,255,255),(0,60,255))
@@ -640,21 +429,11 @@ def draw_garage_menu():
  CHOSEN_MARGIN=3
  for i in range(COLORS_COUNT):
   if i+1==menu_button:
-   fill_rect(
-    round(X_MARGIN+(X_SPACE/(COLORS_COUNT-1)*i))-CHOSEN_MARGIN,
-    222-Y_MARGIN-COLOR_SIDE-CHOSEN_MARGIN,
-    COLOR_SIDE+CHOSEN_MARGIN*2,
-    COLOR_SIDE+CHOSEN_MARGIN*2,
-    (255,255,255) if colors[menu_button-1][1] else (170,170,170)
-   )
+   fill_rect(round(X_MARGIN+(X_SPACE/(COLORS_COUNT-1)*i))-CHOSEN_MARGIN,222-Y_MARGIN-COLOR_SIDE-CHOSEN_MARGIN,COLOR_SIDE+CHOSEN_MARGIN*2,COLOR_SIDE+CHOSEN_MARGIN*2,(255,255,255) if colors[menu_button-1][1] else (170,170,170))
  for i in range(COLORS_COUNT):
-  fill_rect(
-   round(X_MARGIN+(X_SPACE/(COLORS_COUNT-1)*i)),
-   222-Y_MARGIN-COLOR_SIDE,
-   COLOR_SIDE,COLOR_SIDE,colors[i][2]
-  )
+  fill_rect(round(X_MARGIN+(X_SPACE/(COLORS_COUNT-1)*i)),222-Y_MARGIN-COLOR_SIDE,COLOR_SIDE,COLOR_SIDE,colors[i][2])
 enter_main_menu()
-while game:
+while True:
  start_frame=monotonic()
  if menu=="level" and not start_wait:
   if keydown(KEY_SEVEN):
